@@ -33,7 +33,7 @@ const router = createBrowserRouter([
       },
       {
         path:"verify-email",
-        Component: <EmailVerificationPage/>
+        Component: EmailVerificationPage
       },
       {
         path:"forgot-password",
