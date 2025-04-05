@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { formatDate } from "../utils/date.js";
 import { useAuthStore } from "../store/authStore";
+import { NavLink } from "react-router";
 
 const DashboardPage = () => {
 	const { user, logout } = useAuthStore();
@@ -60,7 +61,7 @@ const DashboardPage = () => {
 				initial={{ opacity: 0, y: 20 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ delay: 0.6 }}
-				className='mt-4'
+				className='mt-4 flex flex-col gap-2'
 			>
 				<motion.button
 					whileHover={{ scale: 1.05 }}
@@ -72,6 +73,7 @@ const DashboardPage = () => {
 				>
 					Logout
 				</motion.button>
+				<NavLink to="/portfolio" className="text-gray-200 font-semibold pt-4 text-right">{`Portfolio >>`}</NavLink>
 			</motion.div>
 		</motion.div>
 	);

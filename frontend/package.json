@@ -13,6 +13,7 @@
     "@tailwindcss/vite": "^4.1.1",
     "@vitejs/plugin-react": "^4.3.4",
     "axios": "^1.8.4",
+    "email-js": "^2.0.3",
     "framer-motion": "^12.6.3",
     "lucide-react": "^0.487.0",
     "react": "^19.0.0",

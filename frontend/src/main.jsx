@@ -11,6 +11,7 @@ import DashboardPage from './pages/DashboardPage.jsx';
 import { ProtectedRoute, RedirectAuthenticatedUser } from './pages/RedirectAuthenticatedUser.jsx';
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
+import Layout from './components/profile/Layout.jsx';
 
 
 const router = createBrowserRouter([
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
       {
         path:"password-reset/:token",
         Component: ()=><RedirectAuthenticatedUser><ResetPasswordPage/></RedirectAuthenticatedUser>
+      },
+      {
+        path:"portfolio",
+        Component: ()=><Layout/>
       }
     ]
   },
