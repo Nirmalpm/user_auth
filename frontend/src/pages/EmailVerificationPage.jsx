@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 
 
 const EmailVerificationPage = () => {
-    const [code, setCode] = useState(["","","","",""]);
+    const [code, setCode] = useState(["","","","","",""]);
     const inputRefs = useRef([]);
     const navigate = useNavigate();
 
