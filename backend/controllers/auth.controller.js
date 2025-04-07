@@ -10,6 +10,7 @@ import {
 } from "../mailtrap/emails.js";
 
 import { User } from "../models/user.model.js";
+import { addUser } from "./user.controller.js";
 
 export const signup = async (req, res) => {
   const { email, password, name } = req.body;
@@ -76,6 +77,8 @@ export const verifyEmail = async (req, res) => {
     user.verificationTokenExpiresAt = undefined;
 
     await user.save();
+
+    await addUser({ email: user.email, name: user.name, userId: user.id });
 
     await sendWelcomeEmail(user.email, user.name);
 
@@ -202,7 +205,7 @@ export const logout = async (req, res) => {
 };
 
 export const checkAuth = async (req, res) => {
-  console.log(req.userId)
+  console.log(req.userId);
   try {
     const user = await User.findById(req.userId).select("-password"); // This will select the user record without password
     if (!user) {

@@ -1,9 +1,12 @@
-import React from 'react'
-import RevealOnScroll from '../../RevealOnScroll'
+import React, { useEffect } from 'react'
+import RevealOnScroll from '../../../components/RevealOnScroll';
 import myImage from "../../../assets/images/profile-pic.jpeg"; 
 import { NavLink } from 'react-router';
 
 const Home = () => {
+
+ 
+
   return (
     
     <section id="home" className="min-h-screen flex items-center justify-center relative">

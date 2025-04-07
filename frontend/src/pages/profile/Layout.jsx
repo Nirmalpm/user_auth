@@ -44,25 +44,41 @@
 // }
 
 // export default Layout
-
-import { useState } from "react";
-import Navbar from "./Navbar";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import MobileMenu from "./MobileMenu";
-import Home from "./sections/Home";
+import Navbar from "./Navbar";
 import About from "./sections/About";
-import Projects from "./sections/Projects";
 import Contact from "./sections/Contact";
+import Home from "./sections/Home";
+import Projects from "./sections/Projects";
 
-import LoadingScreen from "../LoadingScreen";
+import LoadingScreen from "../../components/LoadingScreen";
+
+import { NavLink } from "react-router";
+import { isUserProfilePresent } from "../../apis/user.api";
+import { useAuthStore } from '../../store/authStore';
 
 function Layout() {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isProfileSet, setIsProfileSet] = useState(false);
 
-  return (
-    <>
+  const {user} =  useAuthStore();
+  useEffect(()=>{
+    const fetchData = async ()=>{
+      const data = await isUserProfilePresent(user._id);
+      const {count} = data;
+      console.log(count)
+      setIsProfileSet((prev)=> count > 0);
+    }
+    fetchData();  
+  },[]);
+
+  const comp = () => {
+    return (
+      <>      
       {!isLoaded && <LoadingScreen onComplete={() => setIsLoaded(true)} />}
-      {""}
       <div
         className={`min-h-screen transition-opacity duration-700 w-full ${
           isLoaded ? "opacity-100" : "opacity-0"
@@ -78,7 +94,36 @@ function Layout() {
         <Contact/>
       </div>
     </>
-  );
+    )
+  }
+  return (
+    <>
+    {isProfileSet ? comp() : 
+    <div className="text-amber-300 text-2xl font-bold flex items-center flex-col">
+       <p>Please set up your portfolio  </p>
+       <motion.div
+				initial={{ opacity: 0, y: 20 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{ delay: 0.6 }}
+				className='mt-4 flex flex-col gap-2'
+			>
+				<motion.button
+					whileHover={{ scale: 1.05 }}
+					whileTap={{ scale: 0.95 }}
+					onClick={()=>{}}
+					className='w-full py-3 px-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white 
+				font-bold rounded-lg shadow-lg hover:from-green-600 hover:to-emerald-700
+				 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-900'
+				>
+					Setup Portfolio
+				</motion.button>
+				<NavLink to="/" className="text-gray-200 font-semibold pt-4 text-right">{`back `}</NavLink>
+      
+			</motion.div>
+       </div>
+    }
+    </>
+  )
 }
 
 export default Layout;

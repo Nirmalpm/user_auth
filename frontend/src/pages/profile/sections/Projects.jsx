@@ -1,5 +1,5 @@
 import React from 'react'
-import RevealOnScroll from '../../RevealOnScroll'
+import RevealOnScroll from '../../../components/RevealOnScroll';
 
 const Projects = () => {
   return (

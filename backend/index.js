@@ -6,6 +6,7 @@ import cors from "cors";
 import path from "path";
 
 import authRoutes from "./routes/auth.route.js";
+import userRoutes from "./routes/user.route.js";
 
 dotenv.config(); //Env file values to access we need to make use of dotenv
 
@@ -18,10 +19,11 @@ app.use(express.json()); // this middleware parse incoming requests, req.body, w
 app.use(cookieParser()); // allows to parse incoming cookies
 
 app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "frontend", "dist")));
-  app.get("*splat",(req, res) => {
+  app.get("*splat", (req, res) => {
     res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
   });
 }

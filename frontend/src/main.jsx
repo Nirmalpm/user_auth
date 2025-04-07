@@ -11,7 +11,7 @@ import DashboardPage from './pages/DashboardPage.jsx';
 import { ProtectedRoute, RedirectAuthenticatedUser } from './pages/RedirectAuthenticatedUser.jsx';
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
-import Layout from './components/profile/Layout.jsx';
+import Layout from './pages/profile/Layout.jsx';
 
 
 const router = createBrowserRouter([
