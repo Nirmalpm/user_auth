@@ -56,24 +56,27 @@ import Projects from "./sections/Projects";
 import LoadingScreen from "../../components/LoadingScreen";
 
 import { NavLink } from "react-router";
-import { isUserProfilePresent } from "../../apis/user.api";
 import { useAuthStore } from '../../store/authStore';
+import { useUserStore } from "../../store/userStore";
 
 function Layout() {
   const [isLoaded, setIsLoaded] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isProfileSet, setIsProfileSet] = useState(false);
+  const [isProfilePresent, setIsProfilePresent] = useState(false);
 
   const {user} =  useAuthStore();
+  const {isUserProfileAdded, userProfile,isUserProfilePresent} = useUserStore();
+
   useEffect(()=>{
     const fetchData = async ()=>{
-      const data = await isUserProfilePresent(user._id);
-      const {count} = data;
-      console.log(count)
-      setIsProfileSet((prev)=> count > 0);
+      const result = await isUserProfilePresent(user);
+      if(result.userId){
+        setIsProfilePresent(true)
+      }
+      console.log(isUserProfileAdded,userProfile,result)
     }
     fetchData();  
-  },[]);
+  },[isUserProfilePresent]);
 
   const comp = () => {
     return (
@@ -98,7 +101,7 @@ function Layout() {
   }
   return (
     <>
-    {isProfileSet ? comp() : 
+    {isUserProfileAdded ? comp() : 
     <div className="text-amber-300 text-2xl font-bold flex items-center flex-col">
        <p>Please set up your portfolio  </p>
        <motion.div

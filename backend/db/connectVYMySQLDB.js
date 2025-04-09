@@ -25,11 +25,12 @@ connection.connect((err) => {
     connection.query("SELECT 1", (err) => {
       if (err) {
         console.error("MySQL keep-alive failed:", err);
-      } else {
-        console.log("💓 MySQL keep-alive ping");
+        // } else {
+        //   console.log("💓 MySQL keep-alive ping");
+        // }
       }
     });
-  }, 15000);
+  }, 5000);
 });
 
-export default connection;
+export default connection.promise();

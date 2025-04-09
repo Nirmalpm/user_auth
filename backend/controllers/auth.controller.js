@@ -78,7 +78,7 @@ export const verifyEmail = async (req, res) => {
 
     await user.save();
 
-    await addUser({ email: user.email, name: user.name, userId: user.id });
+    //await addUser({ email: user.email, name: user.name, userId: user.id });
 
     await sendWelcomeEmail(user.email, user.name);
 
@@ -205,7 +205,7 @@ export const logout = async (req, res) => {
 };
 
 export const checkAuth = async (req, res) => {
-  console.log(req.userId);
+  //console.log(req.userId);
   try {
     const user = await User.findById(req.userId).select("-password"); // This will select the user record without password
     if (!user) {

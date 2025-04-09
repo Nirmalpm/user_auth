@@ -7,6 +7,7 @@ import path from "path";
 
 import authRoutes from "./routes/auth.route.js";
 import userRoutes from "./routes/user.route.js";
+import uploadRoute from "./routes/upload.route.js";
 
 dotenv.config(); //Env file values to access we need to make use of dotenv
 
@@ -20,6 +21,13 @@ app.use(cookieParser()); // allows to parse incoming cookies
 
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
+app.use("/fileupload", uploadRoute);
+
+app.use("/uploads", express.static(path.resolve(__dirname, "../uploads")));
+
+console.log("Serving static files from:", path.resolve(__dirname, "../../uploads"));
+
+console.log("Serving static files from:", path.resolve(__dirname, "../uploads"));
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "frontend", "dist")));

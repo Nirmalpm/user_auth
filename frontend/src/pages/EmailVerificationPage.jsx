@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import {motion} from 'framer-motion';
 import { useAuthStore } from '../store/authStore';
 import toast from 'react-hot-toast';
+import { useUserStore } from '../store/userStore';
 
 
 
@@ -11,7 +12,8 @@ const EmailVerificationPage = () => {
     const inputRefs = useRef([]);
     const navigate = useNavigate();
 
-    const {error, isLoading, verifyEmail}=useAuthStore();
+    const {error, isLoading, verifyEmail, user}=useAuthStore();
+    const {addUserProfile} = useUserStore();
     // Auto submit when all fields are filled
 	useEffect(() => {
 		if (code.every((digit) => digit !== "")) {
@@ -23,7 +25,8 @@ const EmailVerificationPage = () => {
         e.preventDefault();
         const verificationCode = code.join("");
         try {
-         await verifyEmail(verificationCode);        
+         await verifyEmail(verificationCode);
+         await addUserProfile(user);        
          navigate("/");
          toast.success("Email verified successfully!");
         } catch (error) {
