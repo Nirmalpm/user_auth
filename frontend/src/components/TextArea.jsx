@@ -3,8 +3,8 @@ import React from 'react'
 //pointer-events-none: User cannot select
 const TextArea = ({icon:Icon,...props}) => {
   return (
-    <div className="relative mb-6">
-      <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+    <div className="relative mb-6  w-full flex">
+      <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none ">
         <Icon className="size-5 text-green-500"/>
       </div>
       <textarea

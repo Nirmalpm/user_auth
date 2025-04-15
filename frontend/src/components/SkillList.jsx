@@ -1,0 +1,112 @@
+import { Edit, Minus, Plus, RefreshCw, SaveAll, X } from 'lucide-react';
+import React, { useEffect, useRef, useState } from 'react';
+
+const ItemList = (props) => {
+  //const initialItemsRef = useRef([...props.itemList]); // true original
+  const inputRefs = useRef([]);
+  const [items, setItems] = useState([...props.itemList]);
+  const [isEditMode, setIsEditMode]    = useState(false);
+  const {userId, profileUserId, handleSave} = props;
+   //console.log(items),console.log(inputRefs.current)
+
+  useEffect(() => {
+    setItems([...props.itemList]);
+  }, [props.itemList]);
+
+  const handleAddItem = () => {
+    setIsEditMode(true);
+    setItems((prev) => {
+        const updated = [...prev, { name: "" }];
+        // Wait for DOM update, then focus
+        //Below will run at the end of call satck, ie. after rendering and stuffs
+        setTimeout(() => {
+          inputRefs.current[updated.length - 1]?.focus();
+        }, 0);
+        return updated;
+      });
+  }
+  const handleItemChange = (e,index) =>{   
+    const newItems = [...items];
+    newItems[index] = {
+        ...newItems[index],
+        [e.target.name]: e.target.value,
+    };
+    setItems(newItems);
+  }
+
+  const save = async() =>{
+    setIsEditMode(!isEditMode);
+    await handleSave(userId, profileUserId, items);
+  }
+
+  const handleDisplayItems = () => {
+    if(isEditMode){
+        return (
+        <div className="flex flex-row items-center justify-start m-2 flex-wrap">
+            {items.map((item, index)=>  
+                <div className="flex flex-row items-center justify-start m-2" key={item.id}>
+                    <input className="m-1 pl-2 bg-green-100 rounded w-75" type="text" 
+                    name="name" key={item.id} value={item.name} onChange={(e)=>handleItemChange(e, index)} 
+                    ref={(el) => (inputRefs.current[index] = el)} />
+                    <Minus className="size-5 bg-amber-300 hover:-translate-y-0.5 rounded 
+                    hover:shadow-[0_0_25px_rgba(255,255,255,0.8)] " onClick={
+                        (e)=>{
+                        setItems((prev) => prev.filter((_, i) => i !== index));
+                        inputRefs.current[index] = null;
+                        }
+                    }/>
+                </div>  
+            )
+            }
+        </div>)
+    }else {
+        return (
+        <div className="flex flex-row items-center justify-start m-2 flex-wrap gap-2">
+            { items.map((item, index)=>
+                <span className="w-40 bg-blue-500/10 text-blue-500 py-1 px-3 rounded-full 
+            text-sm hover:bg-blue-500/20 hover:shadow-[0_2px_8px_rgba(59,130,246,0.2)] 
+            transition " key={item.id}>{item.name}</span>
+            )
+            }
+        </div>
+    )}
+}
+    
+ 
+  return (
+    <div className="flex flex-col">
+    <div className="flex flex-row gap-3 items-center justify-end relative w-100">
+        <div className="flex flex-row  items-center justify-center w-100">
+        <h3 className="flex text-xl font-semibold mb-4 text-amber-100 text-left">{props.title}</h3>
+        </div>
+        {isEditMode || props.itemList?.length === 0 ?
+        <Plus className="size-5 bg-amber-300 hover:-translate-y-0.5 rounded 
+        hover:shadow-[0_0_25px_rgba(255,255,255,0.8)] " onClick={handleAddItem}/> : null}
+
+        <RefreshCw className="size-5 bg-amber-300 hover:-translate-y-0.5 rounded  
+        hover:shadow-[0_0_25px_rgba(255,255,255,0.8)] " onClick={()=> {
+            //setItems([...initialItemsRef.current]);
+            setItems([...props.itemList]);
+            setIsEditMode(false);
+            }}/>
+
+        {isEditMode ? (       
+          <>   
+            <SaveAll className="size-5 bg-blue-300 hover:-translate-y-0.5 rounded  
+        hover:shadow-[0_0_25px_rgba(255,255,255,0.8)] " onClick={save} />
+            <X title="Edit" className="size-5 bg-amber-300 hover:-translate-y-0.5 text-gray-900  rounded 
+                    hover:shadow-[0_0_25px_rgba(255,255,255,0.8)] cursor-pointer" onClick={()=> setIsEditMode(!isEditMode)}/>
+          </>  
+        ) :(
+            props.itemList?.length !== 0 && <Edit className="size-5 bg-red-300 hover:-translate-y-0.5 rounded 
+            hover:shadow-[0_0_25px_rgba(255,255,255,0.8)] " onClick={()=> setIsEditMode(!isEditMode)}/>
+        )}
+        
+    </div>      
+      {handleDisplayItems()}
+    
+    </div>
+  )
+}
+
+export default ItemList

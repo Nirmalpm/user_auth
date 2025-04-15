@@ -1,37 +1,122 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import RevealOnScroll from '../../../components/RevealOnScroll';
+import { Edit, X, Text, Save } from 'lucide-react';
+import TextArea from '../../../components/TextArea';
+import ItemList from '../../../components/SkillList';
+import { useUserStore } from '../../../store/userStore';
+import EducationList from '../../../components/EducationList';
+import WorkExpList from '../../../components/WorkExpList';
+import CertificationList from '../../../components/CertificationList';
 
 const About = () => {
-    const frontendSkills =["React","TailwindCSS", "Javascript","CSS"];
-    const backendSkills = ["Node.js","SpringBoot","Struts2","Oracle","MongoDB","PostgreSQL"]
+    const [aboutInfo, setAboutInfo] = useState({});
+    const [frontendSkills, setFrontendSkills] = useState([]);
+    const [backendSkills, setBackendSkills] = useState([]);
+    const [otherSkills, setOtherSkills] = useState([]);
+
+    const [isEdit, setIsEdit] = useState(false);
+    const [userId, setUserId] = useState("");
+    const [profileUserId, setProfileUserId] = useState("");    
+
+    const {addUpdateUserAbout,saveFrontend, saveBackend, saveOther, userProfile} = useUserStore();   
+
+    useEffect(()=>{
+        console.log(userProfile,userId, profileUserId)
+        if(userProfile){
+            const fskills  = userProfile.frontend.map((skill)=>{
+                return {id:skill.id, name:skill.skillName}
+            });
+            const bskills  = userProfile.backend.map((skill)=>{
+                return {id:skill.id, name:skill.skillName}
+            });
+            const oskills  = userProfile.other.map((skill)=>{
+                return {id:skill.id, name:skill.skillName}
+            });
+            setUserId(userProfile.userId);
+            setProfileUserId(userProfile.profileUserId);
+            setFrontendSkills(fskills);
+            setBackendSkills(bskills);
+            setOtherSkills(oskills);
+            setAboutInfo({...userProfile.aboutInfo})
+        }
+    },[userProfile]);
+
+    const handleSaveUserAbout = async() => {
+        await addUpdateUserAbout({userId, profileUserId, userDesc:aboutInfo.userDesc, isUpdate:isEdit});
+        setIsEdit(!isEdit);
+    }
+
+    const handleSaveFrontend = async (userId,profileUserId,skills )=>{
+        console.log(userId,profileUserId,skills);
+        const data = await saveFrontend({userId, profileUserId, skills});
+        //console.log(data)
+    }
+    const handleSaveBackend = async (userId,profileUserId,skills)=>{
+        console.log(userId,profileUserId,skills);
+        const data = await saveBackend({userId, profileUserId, skills});
+    }
+    const handleSaveOther = async(userId,profileUserId,skills)=>{
+        console.log(userId,profileUserId,skills);
+        const data = await saveOther({userId, profileUserId, skills});
+    }
+
   return (
     
     <section id="about"
-    className="min-h-screen flex items-center justify-center py-20">
+    className="min-h-screen flex items-center justify-center ">
     <RevealOnScroll>
-      <div className="max-w-3xl mx-auto px-4">
+      <div className="max-w-5xl mx-auto px-4 ">
         <h2 className="text-3xl font-bold mb-8 bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent text-center">About Me</h2>
         <div className="rounded-xl p-8 border-white/10 border hover:-translate-y-1 transition-all">
-            <p className="text-gray-300 mb-6">Passionate developer with expertise in building scalable web applications and creating innovative solutions</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {isEdit ? (
+                <div className="flex flex-row items-start justify-center gap-3 w-full ">
+                    <div className="flex w-full  items-center justify-center ">
+                    <TextArea
+                    icon={Text}
+                    placeholder="Describe about yourself in few words (500 chars)"
+                    onChange={(e) => setAboutInfo({...userProfile.aboutInfo,userDesc:e.target.value})}
+                    rows={5}      
+                    value={aboutInfo.userDesc}  
+                    name="userDesc"
+                    />
+                    </div>
+                    <div className="flex flex-col gap-3 ">
+                        <X title="Edit" className="size-5 bg-amber-300 hover:-translate-y-0.5 rounded 
+                    hover:shadow-[0_0_25px_rgba(255,255,255,0.8)] cursor-pointer" onClick={()=> setIsEdit(!isEdit)}/>
+                        <Save title="Edit" className="size-5 bg-blue-300 hover:-translate-y-0.5 rounded 
+                    hover:shadow-[0_0_25px_rgba(255,255,255,0.8)] cursor-pointer" onClick={handleSaveUserAbout}/>
+                    </div>
+                </div>
+            ) :
+            (
+                <div className="flex gap-3">
+                    
+                    <div className="flex  items-center justify-center w-full">
+                    <p className="text-lg  text-gray-300 mb-6 ">{aboutInfo.userDesc}</p>
+                    </div>
+                    <div>
+                    <Edit title="Edit" className="size-5 bg-amber-300 hover:-translate-y-0.5 rounded 
+                    hover:shadow-[0_0_25px_rgba(255,255,255,0.8)] cursor-pointer" onClick={()=> setIsEdit(!isEdit)}/>
+                    </div>
+                    
+                </div>
+            )
+            }
+            
+            <div className="flex gap-3 flex-wrap">
                 <div className='rounded-xl p-6 hover:-translate-y-1 transition-all'>
-                    <h3 className="text-xl font-bold mb-4">Frontend</h3>
-                    <div className="flex flex-wrap gap-2">
-                        {frontendSkills.map((tech,key)=>(
-                            <span className="bg-blue-500/10 text-blue-500 py-1 px-3 rounded-full 
-                            text-sm hover:bg-blue-500/20 hover:shadow-[0_2px_8px_rgba(59,130,246,0.2)] 
-                            transition " key={key}>{tech}</span>
-                        ))}
+                     <div className="flex flex-wrap  gap-6 w-100">
+                      <ItemList title={`Frontend Skills`} itemList={frontendSkills} userId={userId} profileUserId={profileUserId} handleSave={handleSaveFrontend}/>
                     </div>
                 </div>
                 <div className='rounded-xl p-6 hover:-translate-y-1 transition-all'>
-                    <h3 className="text-xl font-bold mb-4">Backend</h3>
-                    <div className="flex flex-wrap gap-2">
-                        {backendSkills.map((tech,key)=>(
-                            <span className="bg-blue-500/10 text-blue-500 py-1 px-3 rounded-full 
-                            text-sm hover:bg-blue-500/20 hover:shadow-[0_2px_8px_rgba(59,130,246,0.2)] 
-                            transition " key={key}>{tech}</span>
-                        ))}
+                    <div className="flex flex-wrap gap-6 w-100">
+                      <ItemList title={`Backend Skills`} itemList={backendSkills} userId={userId} profileUserId={profileUserId} handleSave={handleSaveBackend}/>
+                    </div>
+                </div>
+                <div className='rounded-xl p-6 hover:-translate-y-1 transition-all'>
+                    <div className="flex flex-wrap gap-6 w-100">
+                        <ItemList title={`Other Skills`} itemList={otherSkills} userId={userId} profileUserId={profileUserId} handleSave={handleSaveOther}/>
                     </div>
                 </div>
             </div>
@@ -39,60 +124,10 @@ const About = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
                         <div>
-                            <div className="rounded-xl p-6 border-white/10 border hover:-translate-y-1 transition-all">
-                                <h3 className="text-xl font-bold mb-4">📚Education</h3>
-                                <ul className="list-disc list-inside text-gray-300 space-y-2">
-                                    <li>
-                                        <strong>Master of Computer Applications</strong> - Bharathiar University (1998)
-                                    </li>
-                                    <li>
-                                        <strong>BSc Physics</strong> - Pondicherry University (1995)
-                                    </li>
-                                </ul>
-                            </div>
-                            <div className="rounded-xl p-6 border-white/10 border hover:-translate-y-1 transition-all">
-                                <h3 className="text-xl font-bold mb-4">📜Certifications</h3>
-                                <ul className="list-disc list-inside text-gray-300 space-y-2">
-                                    <li>
-                                        <strong>Master’s program - Artificial Intelligence Engineer :  </strong> - Simplilearn
-                                    </li>
-                                    <li>
-                                        <strong>Certified Sun Certified Enterprise Architect (SCEA certified )</strong> -2007
-                                    </li>
-                                </ul>
-                            </div>
+                            <EducationList/>
+                            <CertificationList/>
                         </div>
-
-                        <div className="rounded-xl p-6 border-white/10 border hover:-translate-y-1 transition-all">
-                            <h3 className="text-xl font-bold mb-4">💼 Work Experience</h3>
-                            <div className="space-y-4 text-gray-300">
-                                <div>
-                                    <h4 className="font-semibold">Consulting software engineer at ThoughtInks pvt. Ltd, Bangalore (2022- Present)</h4>
-                                    <p>Currently associated with ThoughtInks as a consulting software engineer. 
-                                    </p>
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold">ADM at Bamboorose Pvt. Ltd, Bangalore (2008- 2018)</h4>
-                                    <p>Application Development Manager, Bamboorose – Oversaw the full SDLC of PLM module of TradeStone application(Bamboorose).  
-                                    </p>
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold">Professional Access Software Development Pvt. Ltd, Bangalore (2006- 2008)</h4>
-                                    <p>Worked as Team Lead .  
-                                    </p>
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold">Sonata Software Pvt. Ltd, Bangalore (2001- 2006)</h4>
-                                    <p>Software Engineer at Sonata Software.  
-                                    </p>
-                                </div>
-                                <div>
-                                    <h4 className="font-semibold">Tata Consultancy Services, Mumbai (2000- 2001)</h4>
-                                    <p>Software Programmer at TCS.  
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+                        <WorkExpList/>
         </div>
       </div>
       </RevealOnScroll>

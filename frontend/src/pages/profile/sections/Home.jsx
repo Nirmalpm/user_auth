@@ -5,10 +5,11 @@ import Input from '../../../components/Input';
 import TextArea from '../../../components/TextArea';
 
 import { motion } from 'framer-motion';
-import { File, Text, User } from 'lucide-react';
+import { File, Text, User, Edit, X } from 'lucide-react';
 
 import { useUserStore } from '../../../store/userStore';
 import { uploadImage } from '../../../utils/fileupload';
+import { useAuthStore } from '../../../store/authStore';
 
 
 const Home = () => {
@@ -17,19 +18,16 @@ const Home = () => {
   const [userProfileHome, setUserProfileHome]= useState({userId:'',fullName:'',userDesc:'',imagePath:'',id:null});
   const [isHomeSetOrUpdated, setIsHomeSetOrUpdated] = useState(false);
   
-  const {addUserHome,userProfile,isUserProfileHomePresent} = useUserStore();
+  const {addUpdateUserHome,userProfile} = useUserStore();
+  const {user} = useAuthStore();
 
   useEffect(()=>{
-    console.log(userProfile)
-    const fetchData = async ()=>{
-      const userHome = await isUserProfileHomePresent(userProfile);
-      if(userHome.id){
-        setUserProfileHome({...userHome});
-        setIsHomeSetOrUpdated(true);          
-      }
-      }
-    fetchData();  
-  },[isHomeSetOrUpdated]);
+    console.log(userProfile);
+    if(userProfile?.homeInfo){
+      setUserProfileHome({...userProfile.homeInfo});
+      setIsHomeSetOrUpdated(true);
+    }    
+  },[userProfile]);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -37,20 +35,19 @@ const Home = () => {
 
   const handleSubmit  = async (e) => {
     e.preventDefault();
-    console.log(userProfile.userId, userProfileHome);
-    let imagePath = "";
+    console.log(userProfile, userProfileHome);
+    let imagePath = userProfile?.homeInfo?.imagePath;
     if (file) {
       const imageData = await uploadImage(file);
       imagePath = imageData.filePath;
       // Now you can use the uploaded image path + form data
       console.log('Uploaded file path:', imagePath);
     }
-    const userProfileWithHome = await addUserHome({...userProfileHome,userId:userProfile.userId, imagePath:imagePath});
-    userProfileWithHome?.user && setUserProfileHome({...userProfileWithHome.user});
+    await addUpdateUserHome({...userProfileHome,userId:user._id,
+      profileUserId:userProfileHome.userId, imagePath:imagePath, isUpdate:!isHomeSetOrUpdated});
     setIsHomeSetOrUpdated(true)
   };
 
- 
 
   return (
     
@@ -59,7 +56,7 @@ const Home = () => {
         { isHomeSetOrUpdated ? (
       <div className="flex">
         <div className="text-center z-10 px-4">
-        <img src={`${userProfileHome?.imagePath}`} alt="Description" width="300" className="rounded-full"/>;
+        <img src={`http://localhost:5000${userProfileHome?.imagePath}`} alt="Description" width="300" className="rounded-full"/>;
         </div>
         <div className="text-center z-10 px-4">
           <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-500 
@@ -77,11 +74,19 @@ const Home = () => {
               transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_0_15px_rgba(59,130,246,0.2)] 
               hover:bg-blue-500/10"
               >Contact Me</a>
+             
+             <Edit title="Edit" className="size-5 bg-amber-300 hover:-translate-y-0.5 rounded 
+                    hover:shadow-[0_0_25px_rgba(255,255,255,0.8)] cursor-pointer" onClick={()=> setIsHomeSetOrUpdated(!isHomeSetOrUpdated)}/>
           </div>
         </div>
       </div>):(
         <div className="p-5 flex w-md  flex-col border-1 border-green-800 rounded">
-          <h2 className="text-gray-100 font-bold text-center mb-5">Describe about Yourself</h2>
+          <div className="p-5 gap-6 flex  justify-center">
+            <h2 className="text-gray-100 font-bold text-center mb-5">Describe about Yourself</h2>
+            <X  title="Edit" className="size-5 bg-amber-300 hover:-translate-y-0.5 rounded 
+                    hover:shadow-[0_0_25px_rgba(255,255,255,0.8)] cursor-pointer" onClick={()=> setIsHomeSetOrUpdated(!isHomeSetOrUpdated)}/>
+          </div>
+          
           <p className="text-gray-100 font-mono text-center mb-5">This will be your profile landing page</p>
           <form
           onSubmit={handleSubmit}
@@ -103,7 +108,7 @@ const Home = () => {
             placeholder="Describe about yourself in few words (500 chars)"
             onChange={(e) => setUserProfileHome({...userProfileHome,userDesc:e.target.value})}
             rows={5}      
-            value={userProfileHome.desc}  
+            value={userProfileHome.userDesc}  
             name="desc"    
             required={true}
             />

@@ -3,10 +3,12 @@ import { formatDate } from "../utils/date.js";
 import { useAuthStore } from "../store/authStore";
 import { NavLink } from "react-router";
 import { useUserStore } from "../store/userStore.js";
+import { useState } from "react";
 
 const DashboardPage = () => {
 	const { user, logout } = useAuthStore();
-	const {reset} = useUserStore();
+	const {reset} = useUserStore();	
+	
 
 	const handleLogout = () => {
 		reset();

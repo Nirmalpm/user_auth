@@ -7,7 +7,6 @@ const API_URL =
     : "/api/user";
 
 export const useUserStore = create((set) => ({
-  isUserProfileAdded: false,
   userProfile: null,
   error: null,
   addUserProfile: async (user) => {
@@ -19,17 +18,11 @@ export const useUserStore = create((set) => ({
         name: user.name,
       });
       set({
-        userProfile: {
-          email: user.email,
-          userId: user._id,
-          name: user.name,
-        },
-        isUserProfileAdded: true,
+        userProfile: response.data.userProfile,
       });
     } catch (error) {
       set({
-        error: error.response.data.message || "Error adding profile",
-        isUserProfileAdded: false,
+        error: error.message || "Error adding profile",
       });
       throw error;
     }
@@ -40,54 +33,50 @@ export const useUserStore = create((set) => ({
       const response = await axios.post(`${API_URL}/loadUserProfile`, {
         userId: user._id,
       });
-      //set({ user, isUserProfileAdded: true });
-    } catch (error) {
-      set({
-        error: error.response.data.message || "Error adding profile",
-        isUserProfileAdded: false,
-      });
-      throw error;
-    }
-  },
-  isUserProfilePresent: async (user) => {
-    console.log("inside isUserProfilePresent:", user);
-    try {
-      const response = await axios.post(`${API_URL}/isUserPresent`, {
-        userId: user._id,
-      });
       console.log(response.data);
-      const { id } = await response.data;
-      set({
-        isUserProfileAdded: id !== undefined && id !== null,
-        userProfile: { userId: id },
-      });
-      return { userId: id };
+      set({ userProfile: response.data });
+      return response.data;
     } catch (error) {
       set({
-        error: error.message || "Error in isUserProfilePresent",
-        isUserProfileAdded: false,
+        error: error.message || "Error adding profile",
       });
       throw error;
     }
   },
-  addUserHome: async ({ userId, fullName, userDesc, imagePath }) => {
-    console.log("inside addUserHome:", userId, fullName, userDesc, imagePath);
+  addUpdateUserHome: async ({
+    userId,
+    profileUserId,
+    fullName,
+    userDesc,
+    imagePath,
+    isUpdate,
+  }) => {
+    console.log(
+      "inside addUserHome:",
+      userId,
+      profileUserId,
+      fullName,
+      userDesc,
+      imagePath,
+      isUpdate
+    );
     try {
-      const response = await axios.post(`${API_URL}/addUserHome`, {
+      const response = await axios.post(`${API_URL}/addUpdateUserHome`, {
         userId,
+        profileUserId,
         fullName,
         userDesc,
         imagePath,
+        isUpdate,
       });
       set({
-        isUserProfileAdded: true,
-        userProfile: { userId, fullName, userDesc, imagePath },
+        userProfile: response.data,
       });
       return response.data;
     } catch (error) {
       if (error.response?.status === 409) {
         // Handle gracefully — no red error in console
-        console.log("User already exists. Skipping insert.");
+        console.log("User Home already exists. Skipping insert.");
         // Optional: Show a toast, snackbar, or silent UI feedback
       } else {
         // Only log other errors
@@ -95,27 +84,163 @@ export const useUserStore = create((set) => ({
       }
     }
   },
-  isUserProfileHomePresent: async ({ userId }) => {
-    console.log("inside isUserProfileHomePresent:", userId);
+  addUpdateUserAbout: async ({ userId, profileUserId, userDesc, isUpdate }) => {
+    console.log(
+      "inside addUpdateUserAbout:",
+      userId,
+      profileUserId,
+      userDesc,
+      isUpdate
+    );
     try {
-      const response = await axios.post(`${API_URL}/isUserProfileHomePresent`, {
+      const response = await axios.post(`${API_URL}/addUpdateUserAbout`, {
         userId,
+        profileUserId,
+        userDesc,
+        isUpdate,
+      });
+      set({
+        userProfile: response.data,
+      });
+      return response.data;
+    } catch (error) {
+      if (error.response?.status === 409) {
+        // Handle gracefully — no red error in console
+        console.log("User Home already exists. Skipping insert.");
+        // Optional: Show a toast, snackbar, or silent UI feedback
+      } else {
+        // Only log other errors
+        console.error("Unexpected error while adding user:", error);
+      }
+    }
+  },
+  saveFrontend: async ({ userId, profileUserId, skills }) => {
+    console.log("inside saveFrontEnd:", userId, profileUserId, skills);
+    try {
+      const response = await axios.post(`${API_URL}/addFrontendSkills`, {
+        userId,
+        profileUserId,
+        skills,
       });
       console.log(response.data);
-      set({
-        isUserProfileAdded: true,
-        userProfile: { ...response.data.user },
-      });
-      return response.data.user;
+      set({ userProfile: response.data });
+      return response.data;
     } catch (error) {
       set({
-        error: error.message || "Error in isUserProfileHomePresent",
-        isUserProfileAdded: false,
+        error: error.message || "Error at saveFrontEnd",
+      });
+      throw error;
+    }
+  },
+  saveBackend: async ({ userId, profileUserId, skills }) => {
+    console.log("inside saveBackend:", userId, profileUserId, skills);
+    try {
+      const response = await axios.post(`${API_URL}/addBackendSkills`, {
+        userId,
+        profileUserId,
+        skills,
+      });
+      console.log(response.data);
+      set({ userProfile: response.data });
+      return response.data;
+    } catch (error) {
+      set({
+        error: error.message || "Error at saveBackend",
+      });
+      throw error;
+    }
+  },
+  saveOther: async ({ userId, profileUserId, skills }) => {
+    console.log("inside saveOther:", userId, profileUserId, skills);
+    try {
+      const response = await axios.post(`${API_URL}/addOtherSkills`, {
+        userId,
+        profileUserId,
+        skills,
+      });
+      console.log(response.data);
+      set({ userProfile: response.data });
+      return response.data;
+    } catch (error) {
+      set({
+        error: error.message || "Error at saveOther",
+      });
+      throw error;
+    }
+  },
+  saveEducation: async (userId, profileUserId, education) => {
+    console.log("inside updateEducation:", userId, profileUserId, education);
+    try {
+      const response = await axios.post(`${API_URL}/updateEducation`, {
+        userId,
+        profileUserId,
+        education,
+      });
+      console.log(response.data);
+      set({ userProfile: response.data });
+      return response.data;
+    } catch (error) {
+      set({
+        error: error.message || "Error at saveEducation",
+      });
+      throw error;
+    }
+  },
+  saveWork: async (userId, profileUserId, workexp) => {
+    console.log("inside saveWork:", userId, profileUserId, workexp);
+    try {
+      const response = await axios.post(`${API_URL}/updateWorkExp`, {
+        userId,
+        profileUserId,
+        workexp,
+      });
+      console.log(response.data);
+      set({ userProfile: response.data });
+      return response.data;
+    } catch (error) {
+      set({
+        error: error.message || "Error at saveWork",
+      });
+      throw error;
+    }
+  },
+  saveCertification: async (userId, profileUserId, certification) => {
+    console.log("inside saveWork:", userId, profileUserId, certification);
+    try {
+      const response = await axios.post(`${API_URL}/updateCertification`, {
+        userId,
+        profileUserId,
+        certification,
+      });
+      console.log(response.data);
+      set({ userProfile: response.data });
+      return response.data;
+    } catch (error) {
+      set({
+        error: error.message || "Error at saveCertification",
+      });
+      throw error;
+    }
+  },
+  saveProject: async (userId, profileUserId, project) => {
+    console.log("inside saveProject:", userId, profileUserId, project);
+    try {
+      const response = await axios.post(`${API_URL}/updateProject`, {
+        userId,
+        profileUserId,
+        project,
+      });
+      console.log(response.data);
+      set({ userProfile: response.data });
+      return response.data;
+    } catch (error) {
+      set({
+        error: error.message || "Error at saveProject",
       });
       throw error;
     }
   },
   reset: () => {
-    set({ isUserProfileAdded: false, userProfile: null, error: null });
+    set({ userProfile: null, error: null });
   },
 }));

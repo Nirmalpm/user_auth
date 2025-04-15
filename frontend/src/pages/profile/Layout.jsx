@@ -62,21 +62,18 @@ import { useUserStore } from "../../store/userStore";
 function Layout() {
   const [isLoaded, setIsLoaded] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isProfilePresent, setIsProfilePresent] = useState(false);
 
   const {user} =  useAuthStore();
-  const {isUserProfileAdded, userProfile,isUserProfilePresent} = useUserStore();
+  const {userProfile, loadUserProfile} = useUserStore();
 
-  useEffect(()=>{
-    const fetchData = async ()=>{
-      const result = await isUserProfilePresent(user);
-      if(result.userId){
-        setIsProfilePresent(true)
-      }
-      console.log(isUserProfileAdded,userProfile,result)
-    }
-    fetchData();  
-  },[isUserProfilePresent]);
+  const refreshData = async ()=>{
+    const userProfile = await loadUserProfile(user);
+    console.log(userProfile);
+  }
+
+  useEffect(()=>{    
+    refreshData();  
+  },[]);
 
   const comp = () => {
     return (
@@ -101,7 +98,7 @@ function Layout() {
   }
   return (
     <>
-    {isUserProfileAdded ? comp() : 
+    {true ? comp() : 
     <div className="text-amber-300 text-2xl font-bold flex items-center flex-col">
        <p>Please set up your portfolio  </p>
        <motion.div
