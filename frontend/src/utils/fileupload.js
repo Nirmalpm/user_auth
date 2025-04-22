@@ -5,14 +5,16 @@ const API_URL =
     ? "http://localhost:5000/fileupload/upload"
     : "/fileupload/upload";
 
-export const uploadImage = async (file) => {
+export const uploadImage = async (file, username) => {
   const formData = new FormData();
   formData.append("image", file);
-
-  const res = await fetch(`${API_URL}`, {
-    method: "POST",
-    body: formData,
-  });
+  const res = await fetch(
+    `${API_URL}?username=${encodeURIComponent(username)}`,
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
   const data = await res.json();
 
   console.log("Uploaded image path:", data.filePath);

@@ -11,9 +11,11 @@ import {
 
 import { User } from "../models/user.model.js";
 import { addUser } from "./user.controller.js";
+import { set } from "mongoose";
 
 export const signup = async (req, res) => {
-  const { email, password, name } = req.body;
+  const { email, password, name, phoneNumber } = req.body;
+  console.log(email, password, name, phoneNumber);
   try {
     if (!email || !password || !name) {
       throw new Error("All fields are required");
@@ -35,6 +37,7 @@ export const signup = async (req, res) => {
       email,
       password: hashPassword,
       name,
+      phoneNumber,
       verificationToken,
       verificationTokenExpiresAt: Date.now() + 24 * 60 * 60 * 1000, /// 24 hours
     });
@@ -111,7 +114,7 @@ export const login = async (req, res) => {
       res.status(400).json({ success: false, message: "Invalid credentials" });
     }
 
-    generateTokenAndSetCookie(res, user._id);
+    generateTokenAndSetCookie(res, user);
 
     user.lastLogin = new Date();
     await user.save();
@@ -205,9 +208,10 @@ export const logout = async (req, res) => {
 };
 
 export const checkAuth = async (req, res) => {
-  //console.log(req.userId);
+  console.log("checkAuth", req.user);
+  const { userId } = req.user;
   try {
-    const user = await User.findById(req.userId).select("-password"); // This will select the user record without password
+    const user = await User.findById(userId).select("-password"); // This will select the user record without password
     if (!user) {
       return res
         .status(400)
@@ -217,5 +221,114 @@ export const checkAuth = async (req, res) => {
   } catch (error) {
     console.log("Error in checkAuth");
     return res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+export const searchUsers = async (req, res) => {
+  const { query } = req.query;
+  let users = [];
+  try {
+    if (query) {
+      const safeQuery = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // Optional: escape regex chars
+      const regex = new RegExp(safeQuery, "i"); // 'i' for case-insensitive
+      users = await User.find({ name: { $regex: regex } });
+    } else {
+      users = await User.find();
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Users returned ",
+      users,
+    });
+  } catch (error) {
+    console.log("Error in searchUsers");
+    return res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+export const createUser = async (req, res) => {
+  const { name, email, password, phoneNumber } = req.body;
+  console.log(name, email, password, phoneNumber);
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
+
+    const newUser = new User({
+      email,
+      password: hashedPassword,
+      name,
+      phoneNumber,
+      isVerified: true,
+      lastLogin: new Date(),
+      roles: ["user"], // Add roles here (e.g., 'admin', 'user')
+    });
+
+    // Save the new user
+    await newUser
+      .save()
+      .then((user) => {
+        console.log("User added successfully:", user);
+      })
+      .catch((err) => {
+        console.error("Error adding user:", err);
+      });
+    return res.status(200).json({
+      success: true,
+      message: "New user added successfully ",
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const usersByRole = async (req, res) => {
+  const { role } = req.query;
+  let users = [];
+  try {
+    if (role) {
+      users = await User.find({ roles: role });
+    } else {
+      users = await User.find();
+    }
+
+    res.status(200).json({ success: true, users });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateRole = async (req, res) => {
+  const { userId, role } = req.body;
+  console.log(userId, role);
+  try {
+    await User.updateOne(
+      { _id: userId },
+      {
+        $addToSet: { roles: role },
+      }
+    );
+    res.status(200).json({
+      success: true,
+      message: `New role, ${role}, added to the user with id, ${userId}`,
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const removeRole = async (req, res) => {
+  const { userId, role } = req.body;
+  try {
+    await User.updateOne(
+      { _id: userId },
+      {
+        $pull: { roles: role },
+      }
+    );
+    res.status(200).json({
+      success: true,
+      message: `${role} role removed for the user with id, ${userId}`,
+    });
+  } catch (error) {
+    throw error;
   }
 };

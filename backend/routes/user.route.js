@@ -21,7 +21,11 @@ import {
   updateCertification,
   updateWorkExp,
   updateProject,
+  deleteSkill,
 } from "../controllers/user.controller.js";
+
+import { getFreeNews } from "../controllers/freenewsapi.controller.js";
+
 
 const router = express.Router();
 
@@ -48,5 +52,10 @@ router.post("/updateEducation", updateEducation);
 router.post("/updateCertification", updateCertification);
 router.post("/updateWorkExp", updateWorkExp);
 router.post("/updateProject", updateProject);
+
+router.post("/deleteSkill", deleteSkill);
+
+router.get("/getFreeNews", getFreeNews);
+
 
 export default router;

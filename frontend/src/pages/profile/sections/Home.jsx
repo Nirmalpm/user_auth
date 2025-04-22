@@ -10,19 +10,20 @@ import { File, Text, User, Edit, X } from 'lucide-react';
 import { useUserStore } from '../../../store/userStore';
 import { uploadImage } from '../../../utils/fileupload';
 import { useAuthStore } from '../../../store/authStore';
+import toast from 'react-hot-toast';
 
 
 const Home = () => {
-
+  const initialState = {userId:'',fullName:'',userDesc:'',imagePath:'',id:null};
   const [file, setFile] = useState(null);
-  const [userProfileHome, setUserProfileHome]= useState({userId:'',fullName:'',userDesc:'',imagePath:'',id:null});
+  const [userProfileHome, setUserProfileHome]= useState(initialState);
   const [isHomeSetOrUpdated, setIsHomeSetOrUpdated] = useState(false);
   
   const {addUpdateUserHome,userProfile} = useUserStore();
   const {user} = useAuthStore();
 
   useEffect(()=>{
-    console.log(userProfile);
+    console.log(userProfile,user );
     if(userProfile?.homeInfo){
       setUserProfileHome({...userProfile.homeInfo});
       setIsHomeSetOrUpdated(true);
@@ -35,31 +36,38 @@ const Home = () => {
 
   const handleSubmit  = async (e) => {
     e.preventDefault();
-    console.log(userProfile, userProfileHome);
+    console.log(userProfile, userProfileHome,user);
     let imagePath = userProfile?.homeInfo?.imagePath;
     if (file) {
-      const imageData = await uploadImage(file);
+      const imageData = await uploadImage(file, user.name);
       imagePath = imageData.filePath;
       // Now you can use the uploaded image path + form data
       console.log('Uploaded file path:', imagePath);
     }
-    await addUpdateUserHome({...userProfileHome,userId:user._id,
-      profileUserId:userProfileHome.userId, imagePath:imagePath, isUpdate:!isHomeSetOrUpdated});
-    setIsHomeSetOrUpdated(true)
+    try {
+      await addUpdateUserHome({...userProfileHome,userId:user._id,
+        profileUserId:userProfile.profileUserId, imagePath:imagePath, isUpdate:!isHomeSetOrUpdated});
+      setIsHomeSetOrUpdated(true)
+    } catch (error) {
+      toast.error(error.message);
+      console.log('handleSubmit:', error);
+    }
   };
 
 
   return (
     
-    <section id="home" className="min-h-screen flex items-center justify-center relative">
+    <section id="home" className="min-h-screen flex items-center justify-center  flex-col gap-10">
+       <h1 className="text-3xl md:text-7xl font-bold m-6 bg-gradient-to-r from-red-500 
+          to-cyan-400 bg-clip-text text-transparent leading-right">Portfolio Builder</h1>
       <RevealOnScroll>
         { isHomeSetOrUpdated ? (
-      <div className="flex">
+      <div className="flex ">
         <div className="text-center z-10 px-4">
-        <img src={`http://localhost:5000${userProfileHome?.imagePath}`} alt="Description" width="300" className="rounded-full"/>;
+        <img src={`${userProfileHome?.imagePath}`} alt="Description" width="300" className="rounded-full"/>;
         </div>
-        <div className="text-center z-10 px-4">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-500 
+        <div className=" z-10 px-4">
+          <h1 className="text-3xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-500 
           to-cyan-400 bg-clip-text text-transparent leading-right">{`Hi, I'm ${userProfileHome.fullName}`}</h1>
           <p className="text-gray-400 text-lg mb-8 max-w-lg mx-auto">
           {userProfileHome.userDesc}
@@ -80,7 +88,7 @@ const Home = () => {
           </div>
         </div>
       </div>):(
-        <div className="p-5 flex w-md  flex-col border-1 border-green-800 rounded">
+        <div className="p-5 flex   flex-col border-1 border-green-800 rounded">
           <div className="p-5 gap-6 flex  justify-center">
             <h2 className="text-gray-100 font-bold text-center mb-5">Describe about Yourself</h2>
             <X  title="Edit" className="size-5 bg-amber-300 hover:-translate-y-0.5 rounded 
@@ -90,7 +98,7 @@ const Home = () => {
           <p className="text-gray-100 font-mono text-center mb-5">This will be your profile landing page</p>
           <form
           onSubmit={handleSubmit}
-          className="flex w-full flex-col"
+          className="flex  flex-col"
           >
             <Input
             icon={User}
@@ -116,7 +124,7 @@ const Home = () => {
           </form>
           <form method="post" encType="multipart/form-data" onSubmit={handleSubmit} className="mt-5">
           <div className="flex flex-col items-center justify-between w-full">
-              <div className="flex flex-col  w-full">
+              <div className="flex flex-col  ">
                 <label htmlFor="upload" className="text-gray-100 font-semibold">Upload your profile picture</label>
                 <Input
                   icon={File}

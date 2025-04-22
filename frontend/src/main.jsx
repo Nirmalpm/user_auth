@@ -7,11 +7,17 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import SignUpPage from './pages/SignUpPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import EmailVerificationPage from './pages/EmailVerificationPage.jsx';
-import DashboardPage from './pages/DashboardPage.jsx';
 import { ProtectedRoute, RedirectAuthenticatedUser } from './pages/RedirectAuthenticatedUser.jsx';
 import ForgotPasswordPage from './pages/ForgotPasswordPage.jsx';
 import ResetPasswordPage from './pages/ResetPasswordPage.jsx';
-import Layout from './pages/profile/Layout.jsx';
+import Layout from './pages/profile/ProfileLayout.jsx';
+import { Component } from 'lucide-react';
+import AppLayout from './pages/AppLayout.jsx';
+import TestPage from './pages/TestPage.jsx';
+import DashboardPage from './pages/dashboard/home.jsx';
+import UserAdmin from './admin/Admin.jsx';
+import BlogPage from './pages/blogs/BlogPage.jsx';
+import BlogDiscussion from './pages/blogs/BlogDiscussion.jsx';
 
 
 const router = createBrowserRouter([
@@ -20,8 +26,21 @@ const router = createBrowserRouter([
     Component: App,
     children:[
       {
-        index:true,
-        Component:()=><ProtectedRoute> <DashboardPage/></ProtectedRoute>
+        Component:()=><ProtectedRoute> <AppLayout/></ProtectedRoute>,
+        children:[
+          {index:true, Component: DashboardPage},
+          {path:"admin", Component: UserAdmin},
+          //{path:"blogs",Component:BlogPage},
+          {path:"test", Component: TestPage}
+        ]
+      },
+      {
+        path: "blogs",
+        Component: BlogPage
+      },
+      {
+        path: "blogs/:id",
+        Component: BlogDiscussion
       },
       {
         path: "login",
@@ -45,7 +64,7 @@ const router = createBrowserRouter([
       },
       {
         path:"portfolio",
-        Component: ()=><Layout/>
+        Component: ()=><ProtectedRoute> <Layout/></ProtectedRoute>
       }
     ]
   },

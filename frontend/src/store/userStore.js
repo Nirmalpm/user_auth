@@ -16,6 +16,7 @@ export const useUserStore = create((set) => ({
         email: user.email,
         userId: user._id,
         name: user.name,
+        phoneNumber: user.phoneNumber,
       });
       set({
         userProfile: response.data.userProfile,
@@ -81,23 +82,17 @@ export const useUserStore = create((set) => ({
       } else {
         // Only log other errors
         console.error("Unexpected error while adding user:", error);
+        throw error;
       }
     }
   },
-  addUpdateUserAbout: async ({ userId, profileUserId, userDesc, isUpdate }) => {
-    console.log(
-      "inside addUpdateUserAbout:",
-      userId,
-      profileUserId,
-      userDesc,
-      isUpdate
-    );
+  addUpdateUserAbout: async ({ userId, profileUserId, userDesc }) => {
+    console.log("inside addUpdateUserAbout:", userId, profileUserId, userDesc);
     try {
       const response = await axios.post(`${API_URL}/addUpdateUserAbout`, {
         userId,
         profileUserId,
         userDesc,
-        isUpdate,
       });
       set({
         userProfile: response.data,
@@ -112,6 +107,7 @@ export const useUserStore = create((set) => ({
         // Only log other errors
         console.error("Unexpected error while adding user:", error);
       }
+      throw error;
     }
   },
   saveFrontend: async ({ userId, profileUserId, skills }) => {
@@ -236,6 +232,41 @@ export const useUserStore = create((set) => ({
     } catch (error) {
       set({
         error: error.message || "Error at saveProject",
+      });
+      throw error;
+    }
+  },
+  deleteSkill: async (userId, profileUserId, id, tableName) => {
+    console.log("inside deleteSkill:", userId, profileUserId, id, tableName);
+    try {
+      const response = await axios.post(`${API_URL}/deleteSkill`, {
+        userId,
+        profileUserId,
+        id,
+        tableName,
+      });
+      console.log(response.data);
+      set({ userProfile: response.data });
+      return response.data;
+    } catch (error) {
+      set({
+        error: error.message || "Error at deleteSkill",
+      });
+      throw error;
+    }
+  },
+  getFreeNews: async (category) => {
+    console.log("inside getFreeNews:", category);
+    try {
+      const response = await axios.get(
+        `${API_URL}/getFreeNews?category=${category}`
+      );
+      // console.log(response.data);
+
+      return response.data;
+    } catch (error) {
+      set({
+        error: error.message || "Error at getFreeNews",
       });
       throw error;
     }

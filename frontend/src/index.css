@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Roboto Flex';
+  src: url('/assets/fonts/RobotoFlex.ttf') format('truetype');
+  font-weight: 100 1000; /* variable weight range */
+  font-stretch: 25% 151%; /* optional, for width axis */
+  font-style: normal; /* or 'oblique' if supported */
+}
+
+
 @layer utilities {
     @keyframes blink {
       0%, 100%{

@@ -12,7 +12,8 @@ export const RedirectAuthenticatedUser = ({children}) => {
 
 export const ProtectedRoute = ({children}) => {
     const {isAuthenticated, user} = useAuthStore();
-    if(!isAuthenticated){
+    console.log(isAuthenticated, user)
+    if(!isAuthenticated ){
         return <Navigate to="/login" replace />
     }
     if(!user.isVerified){

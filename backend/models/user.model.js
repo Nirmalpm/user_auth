@@ -15,9 +15,15 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    phoneNumber: String,
     lastLogin: {
       type: Date,
       default: Date.now,
+    },
+    roles: {
+      type: [String],
+      enum: ["admin", "user", "moderator", "editor"],
+      default: ["user"],
     },
     isVerified: {
       type: Boolean,

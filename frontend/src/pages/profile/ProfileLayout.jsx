@@ -1,53 +1,7 @@
-// import React, { useEffect, useState } from 'react'
-// import { NavLink, Outlet } from 'react-router';
-
-// interface LayoutProps {
-//     isMenuOpen: boolean;
-//     setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
-//   }
-
-// const Layout: React.FC<LayoutProps> = ({isMenuOpen, setIsMenuOpen}) => {
-//     useEffect(()=>{
-//         document.body.style.overflow = isMenuOpen ? "hidden" :""
-//       },[isMenuOpen]);
-
-//   return (
-//     <>
-//     <nav className="fixed top-5 w-full z-40 bg-[rgba(10,10,10,0.8)] backdrop-blur-g border-b border-white/10 shadow-lg">
-//         <NavLink to="" className="mono text-xl font-bold text-white ml-5">
-//             <span className="text-blue-500">{`<< Back`}</span>
-//         </NavLink>
-//         <div className="max-w-5xl mx-auto px-4">
-//             {/* Burger menu - 4Mobile */}
-//             <div className='flex justify-between items-center h-16' >
-//                 <NavLink to="profile/home" className="mono text-xl font-bold text-white ">
-//                     Nirmal<span className="text-blue-500">Z</span>
-//                 </NavLink>
-//                 <div className="w-7 h-5 relative cursor-pointer z-40 md:hidden" onClick={()=>setIsMenuOpen((prev) => !prev)}>
-//                     &#9776;
-//                 </div>
-//                 <div className="hidden md:flex items-center space-x-8">
-//                     <NavLink to="profile/home" className="text-gray-300 hover:text-white transition-colors">Home</NavLink>
-//                     <NavLink to="profile/about" className="text-gray-300 hover:text-white transition-colors">About</NavLink>
-//                     <NavLink to="profile/projects" className="text-gray-300 hover:text-white transition-colors">Projects</NavLink>
-//                     <NavLink to="profile/contact" className="text-gray-300 hover:text-white transition-colors">Contact</NavLink>
-//                 </div>
-//             </div>
-//         </div>
-//     </nav>
-//     <div className={`min-h-screen transition-opacity duration-700  bg-black text-gray-100`} >
-//     <Outlet/>
-//     </div>
-//     </>
-
-//   )
-// }
-
-// export default Layout
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import MobileMenu from "./MobileMenu";
-import Navbar from "./Navbar";
+import Navbar from "./ProfileNavbar";
 import About from "./sections/About";
 import Contact from "./sections/Contact";
 import Home from "./sections/Home";
@@ -58,6 +12,11 @@ import LoadingScreen from "../../components/LoadingScreen";
 import { NavLink } from "react-router";
 import { useAuthStore } from '../../store/authStore';
 import { useUserStore } from "../../store/userStore";
+
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import ProfilePDF from '../../components/ProfilePDF';
+
+import { Download } from 'lucide-react';
 
 function Layout() {
   const [isLoaded, setIsLoaded] = useState(true);
@@ -92,6 +51,20 @@ function Layout() {
         <About/>
         <Projects/>
         <Contact/>
+         <div className="flex fixed bottom-4 right-4 flex-col items-center    ">
+          <PDFDownloadLink
+          document={<ProfilePDF items={[]} />}
+          fileName={`${user?.name}.pdf`}
+          >
+          {({ loading }) =>
+            loading ? "Loading PDF..." : 
+            <button className="flex bg-blue-500 text-white font-bold rounded-lg 
+            shadow-md w-25 cursor-pointer hover:-translate-y-0.5 transition h-10 p-2">Résumé 
+            <Download className="h-6 w-6 text-white-700" />
+            </button>
+          }
+        </PDFDownloadLink>
+      </div>
       </div>
     </>
     )

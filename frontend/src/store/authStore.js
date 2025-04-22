@@ -15,14 +15,16 @@ export const useAuthStore = create((set) => ({
   isLoading: false,
   isCheckingAuth: true,
   message: null,
-
-  signup: async (email, password, name) => {
+  appUsers: [],
+  signup: async (email, password, name, phoneNumber) => {
     set({ isLoading: true, error: null });
+    console.log(email, password, name, phoneNumber);
     try {
       const response = await axios.post(`${API_URL}/signup`, {
         email,
         password,
         name,
+        phoneNumber,
       });
       set({
         user: response.data.user,
@@ -146,6 +148,56 @@ export const useAuthStore = create((set) => ({
           error.response.data.message || "Error sending resetting password",
         isLoading: false,
       });
+      throw error;
+    }
+  },
+  getUsersByRole: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/usersbyrole`);
+      set({ appUsers: response.data.users });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  updateUserRole: async (userId, role) => {
+    try {
+      const response1 = await axios.post(`${API_URL}/updaterole`, {
+        userId,
+        role,
+      });
+      const response2 = await axios.get(`${API_URL}/usersbyrole`);
+      set({ appUsers: response2.data.users });
+      return response2.data.users;
+    } catch (error) {
+      throw error;
+    }
+  },
+  removeUserRole: async (userId, role) => {
+    try {
+      const response1 = await axios.post(`${API_URL}/removerole`, {
+        userId,
+        role,
+      });
+      const response2 = await axios.get(`${API_URL}/usersbyrole`);
+      set({ appUsers: response2.data.users });
+      return response2.data.users;
+    } catch (error) {
+      throw error;
+    }
+  },
+  addUser: async (name, email, password, phoneNumber) => {
+    try {
+      const response1 = await axios.post(`${API_URL}/createuser`, {
+        name,
+        email,
+        password,
+        phoneNumber,
+      });
+      const response2 = await axios.get(`${API_URL}/usersbyrole`);
+      set({ appUsers: response2.data.users });
+      return response2.data.users;
+    } catch (error) {
       throw error;
     }
   },

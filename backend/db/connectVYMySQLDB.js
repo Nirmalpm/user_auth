@@ -12,6 +12,7 @@ const connection = mysql2.createConnection({
   waitForConnections: true,
   connectionLimit: 10, // number of connections
   queueLimit: 0,
+  charset: "utf8mb4",
 });
 
 connection.connect((err) => {

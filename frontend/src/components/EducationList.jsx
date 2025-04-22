@@ -44,7 +44,7 @@ const EducationList = () => {
       }      
     }
   return (
-    <div className="rounded-xl p-6 border-white/10 border hover:-translate-y-1 transition-all">
+    <div className="rounded-xl p-6  border hover:-translate-y-1 transition-all border-gray-700">
         <div className="flex w-full justify-between">
           <h3 className="text-xl font-bold mb-4 text-gray-300">📚Education</h3>
           { showPlus ? 

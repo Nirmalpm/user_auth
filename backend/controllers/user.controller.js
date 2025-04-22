@@ -33,16 +33,18 @@ export const isUserPresent = async (req, res) => {
   }
 };
 export const addUser = async (req, res) => {
-  const { email, name, userId } = req.body;
-  const insertQuery = "INSERT INTO user (name, email, userId) VALUES (?, ?, ?)";
-  const values = [name, email, userId];
+  const { email, name, userId, phoneNumber } = req.body;
+  console.log(email, name, userId, phoneNumber);
+  const insertQuery =
+    "INSERT INTO user (name, email, userId,phoneNumber) VALUES (?, ?, ?, ?)";
+  const values = [name, email, userId, phoneNumber];
 
   try {
     const [row] = await db.query(insertQuery, values);
     return res.status(200).json({
       sucess: true,
       message: "User profile successfully added",
-      userProfile: { userId: row.insertId, name, email },
+      userProfile: { userId: row.insertId, name, email, phoneNumber },
     });
   } catch (error) {
     console.error("User profile table insertion failed:", error);
@@ -93,27 +95,18 @@ export const addUpdateUserHome = async (req, res) => {
   const insertQuery =
     "INSERT INTO user_home (userId, fullName, userDesc, imagePath) VALUES (?, ?, ?, ?)";
   const updateQuery =
-    "UPDATE user_home SET fullName=?, userDesc =?, imagePath=? where userId=?";
+    "UPDATE user_home SET fullName=?, userDesc =?, imagePath=?, updatedTime = NOW() where userId=?";
   const values = [profileUserId, fullName, userDesc, imagePath];
   const updateValues = [fullName, userDesc, imagePath, profileUserId];
 
   try {
-    if (!isUpdate) {
-      const [checkResults] = await db.query(checkQuery, [profileUserId]);
-      if (checkResults.length > 0) {
-        return res.status(409).json({
-          success: false,
-          message: "User Home already exists",
-        });
-      }
-    }
     let row = null;
-    if (isUpdate) {
+    const [checkResults] = await db.query(checkQuery, [profileUserId]);
+    if (checkResults.length > 0) {
       [row] = await db.query(updateQuery, updateValues);
     } else {
       [row] = await db.query(insertQuery, values);
     }
-
     await loadUserProfile(req, res);
   } catch (error) {
     console.error("Error while adding record to user_home:", error);
@@ -125,29 +118,22 @@ export const addUpdateUserHome = async (req, res) => {
 };
 
 export const addUpdateUserAbout = async (req, res) => {
-  const { userId, profileUserId, userDesc, isUpdate } = req.body;
+  const { userId, profileUserId, userDesc } = req.body;
 
-  console.log("addUpdateUserAbout", userId, profileUserId, userDesc, isUpdate);
+  console.log("addUpdateUserAbout", userId, profileUserId, userDesc);
 
   // Check if user profile already exists
   const checkQuery = "SELECT * FROM user_about WHERE userId = ?";
   const insertQuery = "INSERT INTO user_about (userId, userDesc) VALUES (?, ?)";
-  const updateQuery = "UPDATE user_about SET userDesc =? where userId=?";
+  const updateQuery =
+    "UPDATE user_about SET userDesc =?,updatedTime = NOW() where userId=?";
   const values = [profileUserId, userDesc];
   const updateValues = [userDesc, profileUserId];
 
   try {
-    if (!isUpdate) {
-      const [checkResults] = await db.query(checkQuery, [profileUserId]);
-      if (checkResults.length > 0) {
-        return res.status(409).json({
-          success: false,
-          message: "User About already exists",
-        });
-      }
-    }
     let row = null;
-    if (isUpdate) {
+    const [checkResults] = await db.query(checkQuery, [profileUserId]);
+    if (checkResults.length > 0) {
       [row] = await db.query(updateQuery, updateValues);
     } else {
       [row] = await db.query(insertQuery, values);
@@ -172,7 +158,7 @@ export const updateFrontendSkills = async (req, res) => {
   }
   try {
     const updateQuery =
-      "update user_frontend_skills set skillName=?, skillDesc =? where id=? and userId=?";
+      "update user_frontend_skills set skillName=?, skillDesc =?, updatedTime = NOW() where id=? and userId=?";
     const updateSKills = skills.filter((skill) => !!skill.id);
     const updatePromises = updateSKills.map((skill) =>
       db.execute(updateQuery, [
@@ -201,7 +187,7 @@ export const updateBackendSkills = async (req, res) => {
   }
   try {
     const updateQuery =
-      "update user_backend_skills set skillName=?, skillDesc =? where id=? and userId=?";
+      "update user_backend_skills set skillName=?, skillDesc =?, updatedTime = NOW() where id=? and userId=?";
     const updateSKills = skills.filter((skill) => !!skill.id);
 
     const updatePromises = updateSKills.map((skill) =>
@@ -230,7 +216,7 @@ export const updateOtherSkills = async (req, res) => {
   }
   try {
     const updateQuery =
-      "update user_other_skills set skillName=?, skillDesc =? where id=? and userId=?";
+      "update user_other_skills set skillName=?, skillDesc =?, updatedTime = NOW() where id=? and userId=?";
     const updateSKills = skills.filter((skill) => !!skill.id);
     const updatePromises = updateSKills.map((skill) =>
       db.execute(updateQuery, [
@@ -255,7 +241,7 @@ export const updateEducation = async (req, res) => {
   console.log("updateEduction:", userId, profileUserId, education);
   try {
     const updateQuery =
-      "update user_education set name=?, university =?, YearOfPassing =? where id=? and userId=?";
+      "update user_education set name=?, university =?, YearOfPassing =?, updatedTime = NOW() where id=? and userId=?";
     const insertQuery =
       "INSERT INTO user_education (name, university, yearOfPassing, userId) VALUES (?, ?, ?, ?)";
     let rows = null;
@@ -290,7 +276,7 @@ export const updateCertification = async (req, res) => {
   console.log("updateCertification:", userId, profileUserId, certification);
   try {
     const updateQuery =
-      "update user_certification set certName=?, certYear =? where id=? and userId=?";
+      "update user_certification set certName=?, certYear =?, updatedTime = NOW() where id=? and userId=?";
     const insertQuery =
       "insert into user_certification (certName, certYear, userId) values (?, ?, ?)";
 
@@ -324,7 +310,7 @@ export const updateWorkExp = async (req, res) => {
   console.log("updateWorkExp:", userId, profileUserId, workexp);
   try {
     const updateQuery =
-      "update user_work_exp set expName=?, expDesc =?, duration =?, lastDesignation =? where id=? and userId=?";
+      "update user_work_exp set expName=?, expDesc =?, duration =?, lastDesignation =?, updatedTime = NOW() where id=? and userId=?";
     const insertQuery =
       "insert into user_work_exp (expName, expDesc, duration, lastDesignation, userId) values (?, ?, ?, ?, ?)";
 
@@ -360,7 +346,7 @@ export const updateProject = async (req, res) => {
   console.log("updateProject:", userId, profileUserId, project);
   try {
     const updateQuery =
-      "update user_projects set projectName=?, projectDesc =?, duration =?, techUsed =? where id=? and userId=?";
+      "update user_projects set projectName=?, projectDesc =?, duration =?, techUsed =?, updatedTime = NOW() where id=? and userId=?";
     const insertQuery =
       "insert into user_projects (projectName, projectDesc, duration, techUsed, userId) values (?, ?, ?, ?, ?)";
 
@@ -712,12 +698,29 @@ export const loadUserProfile = async (req, res) => {
     const [rows] = await db.query("select * from user where userId = ?", [
       userId,
     ]);
-    const { id, name, email } = rows[0];
+    const { id, name, email, phoneNumber } = rows[0];
     console.log(id, name, email);
     const data = await getUserProfile(id);
     //console.log({ userId: id, name, email, ...data });
-    res.status(200).json({ userId, profileUserId: id, name, email, ...data });
+    res
+      .status(200)
+      .json({ userId, profileUserId: id, name, email, phoneNumber, ...data });
   } catch (error) {
     res.status(500).json(error);
+  }
+};
+
+export const deleteSkill = async (req, res) => {
+  const { userId, profileUserId, id, tableName } = req.body;
+  console.log("deleteSkills", userId, profileUserId, id, tableName);
+  try {
+    const deleteQuery = `delete from ${tableName} where id = ${id}`;
+    await db.execute(deleteQuery);
+    await loadUserProfile(req, res);
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: `Skills update error!${error.message}`,
+    });
   }
 };

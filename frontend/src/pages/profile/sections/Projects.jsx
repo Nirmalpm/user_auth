@@ -46,7 +46,7 @@ const Projects = () => {
   return (
    
     <section id="projects" 
-    className="min-h-screen flex items-center justify-center "
+    className="min-h-screen flex items-center justify-center mt-10"
     >
     <RevealOnScroll>
       <div  className="max-w-5xl mx-auto px-4">
