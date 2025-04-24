@@ -12,8 +12,7 @@ const EmailVerificationPage = () => {
     const inputRefs = useRef([]);
     const navigate = useNavigate();
 
-    const {error, isLoading, verifyEmail, user}=useAuthStore();
-    const {addUserProfile} = useUserStore();
+    const {error, isLoading, verifyEmail, user,addUserProfile}=useAuthStore();
     console.log(user)
     // Auto submit when all fields are filled
 	useEffect(() => {

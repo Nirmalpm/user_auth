@@ -51,11 +51,12 @@ export const useBlogStore = create((set, get) => ({
       throw new Error(error);
     }
   },
-  deleteBlog: async (id, userId) => {
+  deleteBlog: async (id, user, authorId) => {
     try {
       const response = await axios.post(`${API_URL}/deleteBlog`, {
         id,
-        userId,
+        user,
+        authorId,
       });
       set({
         blogs: response.data.blogs,
@@ -94,12 +95,14 @@ export const useBlogStore = create((set, get) => ({
       throw new Error(error);
     }
   },
-  deleteComment: async (id, blogId, userId) => {
+  deleteComment: async (id, blogId, user, commentUserId) => {
+    console.log(id, blogId, user, commentUserId)
     try {
       const response = await axios.post(`${API_URL}/deleteComment`, {
         id,
         blogId,
-        userId,
+        user,
+        commentUserId,
       });
       set({
         blogDiscussion: response.data.discussion,
@@ -107,6 +110,7 @@ export const useBlogStore = create((set, get) => ({
       console.log(response.data.discussion);
       return response.data.discussion;
     } catch (error) {
+      console.log(error)
       throw error;
     }
   },

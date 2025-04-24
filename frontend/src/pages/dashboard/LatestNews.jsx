@@ -22,7 +22,7 @@ const LatestNews = () => {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}
                     transition={{ duration: 0.5 }}
-                    className='max-w-sm w-full mx-auto mt-10 p-8 bg-blue-900 bg-opacity-80 backdrop-filter 
+                    className='max-w-sm w-full mx-auto mt-10 p-8 bg-emerald-900 bg-opacity-80 backdrop-filter 
               backdrop-blur-lg rounded-xl shadow-2xl border border-gray-800 min-w-sm   space-y-2'
                 >
          <div className=" gap-1.5 flex flex-wrap">

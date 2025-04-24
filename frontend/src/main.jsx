@@ -30,18 +30,19 @@ const router = createBrowserRouter([
         children:[
           {index:true, Component: DashboardPage},
           {path:"admin", Component: UserAdmin},
-          //{path:"blogs",Component:BlogPage},
+          {path:"blogs",Component:BlogPage},
+          {path:"blogs/:id",Component:BlogDiscussion},
           {path:"test", Component: TestPage}
         ]
       },
-      {
-        path: "blogs",
-        Component: BlogPage
-      },
-      {
-        path: "blogs/:id",
-        Component: BlogDiscussion
-      },
+      // {
+      //   path: "blogs",
+      //   Component: BlogPage
+      // },
+      // {
+      //   path: "blogs/:id",
+      //   Component: BlogDiscussion
+      // },
       {
         path: "login",
         Component: ()=><RedirectAuthenticatedUser><LoginPage/></RedirectAuthenticatedUser>

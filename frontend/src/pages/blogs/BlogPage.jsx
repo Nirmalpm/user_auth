@@ -43,9 +43,9 @@ const BlogPage = () => {
     setBlog({...blog, [e.target.name]:e.target.value})
   }
 
-  const handleDelete= async (id)=>{
+  const handleDelete= async (id,authorId)=>{
     try {
-      const allBlogs = await deleteBlog(id, user._id);
+      const allBlogs = await deleteBlog(id, user,authorId);
       setBloggings([...allBlogs]);
       toast.success("Blog removed successfully")
     } catch (error) {
@@ -72,11 +72,6 @@ const BlogPage = () => {
       >
            <div className="flex  w-full m-2  flex-col justify-center">
             <div className="flex w-full font-sans justify-center  items-end font-bold text-cyan-900 text-4xl ">Blogs</div>
-            <div className="flex w-full font-sans justify-end  items-end font-bold text-gray-100 mr-10">
-            <NavLink to="/">
-              Login
-            </NavLink>
-            </div>
             <div className="flex w-full justify-center items-center ">
               <Input icon={Text} style={{width:"500px"}} placeholder="Search Blogs" onChange={handleSearch} />
             </div>
@@ -86,7 +81,7 @@ const BlogPage = () => {
         {
           bloggings && bloggings.map((blog)=>(
             <div className="flex list-disc list-inside" key={blog.id}>             
-              <Blog  id={blog.id} title={blog.title} handleDelete={handleDelete}/>
+              <Blog  id={blog.id} title={blog.title} authorId={blog.authorId} handleDelete={handleDelete}/>
             </div>
           ))
         }

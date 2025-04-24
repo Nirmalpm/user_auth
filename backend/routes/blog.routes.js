@@ -15,9 +15,9 @@ const router = express.Router();
 router.post("/saveBlog", saveBlog);
 router.get("/getBlogs", getBlogs);
 router.get("/getAllDisplayBlogs", getAllDisplayBlogs);
-router.post("/deleteBlog", verifyToken(["admin", "user"]), deleteBlog);
+router.post("/deleteBlog", deleteBlog);
 router.post("/saveBlogComment", saveBlogComment);
 router.get("/getComments", getComments);
-router.post("/deleteComment", verifyToken(["admin", "user"]), deleteComment);
+router.post("/deleteComment", deleteComment);
 
 export default router;

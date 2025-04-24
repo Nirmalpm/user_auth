@@ -32,28 +32,6 @@ export const isUserPresent = async (req, res) => {
     });
   }
 };
-export const addUser = async (req, res) => {
-  const { email, name, userId, phoneNumber } = req.body;
-  console.log(email, name, userId, phoneNumber);
-  const insertQuery =
-    "INSERT INTO user (name, email, userId,phoneNumber) VALUES (?, ?, ?, ?)";
-  const values = [name, email, userId, phoneNumber];
-
-  try {
-    const [row] = await db.query(insertQuery, values);
-    return res.status(200).json({
-      sucess: true,
-      message: "User profile successfully added",
-      userProfile: { userId: row.insertId, name, email, phoneNumber },
-    });
-  } catch (error) {
-    console.error("User profile table insertion failed:", error);
-    return res.status(500).json({
-      sucess: false,
-      message: `Error while saving user profile ${error.message}`,
-    });
-  }
-};
 
 export const isUserProfileHomePresent = async (req, res) => {
   const { userId } = req.body;

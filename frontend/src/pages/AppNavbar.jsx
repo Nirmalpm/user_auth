@@ -14,7 +14,7 @@ const AppNavbar = () => {
 
     const {logout, user } = useAuthStore();
     const {reset} = useUserStore();	
-    const {roles} = user;
+    const {roles} = user||{};
     console.log(roles)
     const handleLogout = () => {
 		reset();
@@ -37,13 +37,13 @@ const AppNavbar = () => {
                     <div className="dropdown-menu">
                         <NavLink to="/portfolio">Portfolio Builder</NavLink>
                         <NavLink to="/test">Mobile Development</NavLink>
-                        <NavLink to="/test">UI/UX Design</NavLink>
-                        <NavLink to="/blogs">Blogs</NavLink>
+                        <NavLink to="/test">UI/UX Design</NavLink>                        
                         {
                             roles.includes("admin") ?<NavLink to="/admin">Admin screen</NavLink> :null
                         }
                     </div>
-                </div>                 
+                </div>
+                <NavLink to="/blogs" className={({ isActive }) => (isActive ? `${active}` : `${notActive}`)}>Blogs</NavLink>                 
             </div> 
             <div className={`fixed top-0 left-0 w-full bg-[rgba(10,10,10,0.8)] z-40 flex flex-col items-center justify-center 
                     transition-all duration-300 ease-in-out

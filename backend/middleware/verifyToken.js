@@ -8,7 +8,7 @@ export const verifyToken = (roles = []) => {
   console.log("verifyToken:line8", roles);
   return (req, res, next) => {
     const token = req.cookies.token;
-    console.log("verifyToken:line11", token);
+    //console.log("verifyToken:line11", token);
     if (!token)
       return res
         .status(401)
@@ -21,9 +21,10 @@ export const verifyToken = (roles = []) => {
           .json({ success: false, message: "Unauthorized - Invalid token" });
       req.user = decoded;
 
-      console.log("verifyToken:req.user", req.user);
-      const hasRole = roles.length && roles.some(role => req.user.roles.includes(role));
-      console.log("verifyToken:hasRole", hasRole);
+      //console.log("verifyToken:req.user", req.user);
+      const hasRole =
+        roles.length && roles.some((role) => req.user.roles.includes(role));
+      //console.log("verifyToken:hasRole", hasRole);
 
       if (roles.length && !hasRole) {
         return res.status(403).json({ message: "Forbidden" });

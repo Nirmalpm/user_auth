@@ -1,7 +1,6 @@
 import express from "express";
 
 import {
-  addUser,
   isUserPresent,
   loadUserProfile,
   addUpdateUserHome,
@@ -26,10 +25,8 @@ import {
 
 import { getFreeNews } from "../controllers/freenewsapi.controller.js";
 
-
 const router = express.Router();
 
-router.post("/addUser", addUser);
 router.post("/isUserPresent", isUserPresent);
 router.post("/isUserProfileHomePresent", isUserProfileHomePresent);
 router.post("/loadUserProfile", loadUserProfile);
@@ -56,6 +53,5 @@ router.post("/updateProject", updateProject);
 router.post("/deleteSkill", deleteSkill);
 
 router.get("/getFreeNews", getFreeNews);
-
 
 export default router;

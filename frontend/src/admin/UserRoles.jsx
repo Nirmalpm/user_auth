@@ -27,22 +27,22 @@ const UserRoles = () => {
       backdrop-blur-lg rounded-xl shadow-2xl border border-gray-800 min-w-sm justify-center items-center '
       >
         <div className="flex justify-center items-center text-white font-bold w-full">USER ROLES</div>
-        <div className="flex gap-3 justify-items-start text-red-500 font-bold">
-            <div className="w-1/3">Name</div>
-            <div className="w-1/3">Email</div>
-            <div className="w-1/3">Roles</div>
+        <div className="flex gap-3 justify-items-start text-red-500 font-bold ">
+            <div className="w-1/3 flex flex-wrap">Name</div>
+            <div className="w-1/3 flex flex-wrap">Email</div>
+            <div className="w-1/3 flex flex-wrap">Roles</div>
             </div>
         {
           appUsers && appUsers.map((user)=>(
-            <div className="flex gap-3 justify-items-start text-white ">
-            <div className="w-1/3">{user.name}</div>
-            <div className="w-1/3">{user.email}</div>
-            <div className="w-1/3">
+            <div className="flex gap-3 justify-items-start text-white p-2">
+            <div className="w-full flex flex-wrap">{user.name}</div>
+            <div className="w-full flex flex-wrap">{user.email}</div>
+            <div className="w-full flex flex-wrap  gap-1">
             {allRoles.map((role) => {
               const hasRole = user.roles.includes(role);
               return (
-                <div key={role}>
-                  {role + ":"}
+                <div key={role} >
+                  <span>{role + ":"}</span>
                   <input
                     type="checkbox"
                     checked={hasRole}

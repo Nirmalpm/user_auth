@@ -9,25 +9,6 @@ const API_URL =
 export const useUserStore = create((set) => ({
   userProfile: null,
   error: null,
-  addUserProfile: async (user) => {
-    console.log("inside addprofile:", user);
-    try {
-      const response = await axios.post(`${API_URL}/addUser`, {
-        email: user.email,
-        userId: user._id,
-        name: user.name,
-        phoneNumber: user.phoneNumber,
-      });
-      set({
-        userProfile: response.data.userProfile,
-      });
-    } catch (error) {
-      set({
-        error: error.message || "Error adding profile",
-      });
-      throw error;
-    }
-  },
   loadUserProfile: async (user) => {
     console.log("inside loadUserProfile:", user);
     try {

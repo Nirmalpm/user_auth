@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useBlogStore } from '../../store/blogStore';
 import { NavLink } from 'react-router';
 
-const Blog = ({id,title, handleDelete}) => {
+const Blog = ({id,title,authorId, handleDelete}) => {
     
 const {selectedBlog,getBlogById } =  useBlogStore();
 const [opened, setOpened] = useState(false);
@@ -35,7 +35,7 @@ const handleOpen = async() =>{
                   {title}  
               </li>
             </NavLink>
-            <X size={15} className="text-red-800" onClick={()=> handleDelete(id)}/>
+            <X size={15} className="text-red-800" onClick={()=> handleDelete(id,authorId)}/>
             </div>
         </div>
         {
