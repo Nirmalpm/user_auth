@@ -24,6 +24,7 @@ import {
 } from "../controllers/user.controller.js";
 
 import { getFreeNews } from "../controllers/freenewsapi.controller.js";
+import { getQuoteImageUrl } from "../controllers/freenewsapi.controller.js";
 
 const router = express.Router();
 
@@ -53,5 +54,6 @@ router.post("/updateProject", updateProject);
 router.post("/deleteSkill", deleteSkill);
 
 router.get("/getFreeNews", getFreeNews);
+router.get("/getQuoteImageUrl", getQuoteImageUrl);
 
 export default router;

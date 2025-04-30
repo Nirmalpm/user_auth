@@ -13,10 +13,13 @@ import { NavLink } from "react-router";
 import { useAuthStore } from '../../store/authStore';
 import { useUserStore } from "../../store/userStore";
 
-import { PDFDownloadLink } from '@react-pdf/renderer';
+import { pdf } from '@react-pdf/renderer';
 import ProfilePDF from '../../components/ProfilePDF';
+import { isMobile } from 'react-device-detect';
 
 import { Download } from 'lucide-react';
+
+
 
 function Layout() {
   const [isLoaded, setIsLoaded] = useState(true);
@@ -34,12 +37,18 @@ function Layout() {
     refreshData();  
   },[]);
 
+  const handleMobileDownload = async () => {
+    const blob = await pdf(<ProfilePDF />).toBlob();
+    const url = URL.createObjectURL(blob);
+    window.open(url);
+  };
+
   const comp = () => {
     return (
       <>      
       {!isLoaded && <LoadingScreen onComplete={() => setIsLoaded(true)} />}
       <div
-        className={`min-h-screen transition-opacity duration-700 w-full ${
+        className={`min-h-screen transition-opacity duration-700 w-full flex flex-col items-center ${
           isLoaded ? "opacity-100" : "opacity-0"
         } bg-black`}
       >
@@ -52,18 +61,28 @@ function Layout() {
         <Projects/>
         <Contact/>
          <div className="flex fixed bottom-4 right-4 flex-col items-center    ">
-          <PDFDownloadLink
+        {/* <PDFDownloadLink
           document={<ProfilePDF items={[]} />}
           fileName={`${user?.name}.pdf`}
           >
           {({ loading }) =>
             loading ? "Loading PDF..." : 
-            <button className="flex bg-blue-500 text-white font-bold rounded-lg 
-            shadow-md w-25 cursor-pointer hover:-translate-y-0.5 transition h-10 p-2">Résumé 
+            <button className="flex bg-blue-500 text-white font-light rounded-lg 
+            shadow-md  cursor-pointer hover:-translate-y-0.5 transition h-10 hover:bg-blue-300 p-2">Download your Resume 
             <Download className="h-6 w-6 text-white-700" />
             </button>
           }
-        </PDFDownloadLink>
+        </PDFDownloadLink> */}
+         {
+          isMobile ? (
+            <button className="flex bg-blue-500 text-white font-light rounded-lg 
+            shadow-md  cursor-pointer hover:-translate-y-0.5 transition h-10 hover:bg-blue-300 p-2"
+             onClick={handleMobileDownload}>Download/View PDF</button>)
+            :(
+              <NavLink to="/viewresume" className="text-white font-bold">PDF View</NavLink>
+            )
+        }			
+        
       </div>
       </div>
     </>

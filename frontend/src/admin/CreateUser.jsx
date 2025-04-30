@@ -40,7 +40,7 @@ const CreateUser = () => {
 			animate={{ opacity: 1, scale: 1 }}
 			exit={{ opacity: 0, scale: 0.9 }}
 			transition={{ duration: 0.5 }}
-			className=' w-full mx-auto mt-10 p-8 bg-blue-900 bg-opacity-80 backdrop-filter 
+			className=' w-1/4 mx-auto mt-10 p-8 bg-blue-900 bg-opacity-80 backdrop-filter 
       backdrop-blur-lg rounded-xl shadow-2xl border border-gray-800 min-w-sm justify-center items-center '
       >
         <div className="flex justify-center items-center text-white font-bold w-full">CREATE USER</div>

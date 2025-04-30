@@ -208,7 +208,7 @@ export const logout = async (req, res) => {
 };
 
 export const checkAuth = async (req, res) => {
-  console.log("checkAuth", req.user);
+  //console.log("checkAuth", req.user);
   const { userId } = req.user;
   try {
     const user = await User.findById(userId).select("-password"); // This will select the user record without password
@@ -353,5 +353,16 @@ export const addUser = async (req, res) => {
       sucess: false,
       message: `Error while saving user profile ${error.message}`,
     });
+  }
+};
+
+export const getAccessLogs = async (req, res) => {
+  const query =
+    " select distinct username, country, region, region_name, city, lat, lon,DATE_FORMAT(logged_at, '%Y-%m-%d %H:%i') AS logged_at from visitor_geo_logs order by lat, lon, logged_at desc ";
+  try {
+    const [rows] = await db.query(query);
+    res.status(200).json({ success: true, data: rows });
+  } catch (error) {
+    res.status(500).json(error);
   }
 };

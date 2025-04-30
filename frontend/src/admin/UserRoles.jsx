@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 const UserRoles = () => {
   const {user, appUsers,getUsersByRole,updateUserRole,removeUserRole }= useAuthStore();
-  const allRoles = ["user","admin","moderator"];
+  const allRoles = ["user","admin","moderator","spiritual"];
   const [checked, setChecked] = useState(false);
   console.log(user, appUsers);
 

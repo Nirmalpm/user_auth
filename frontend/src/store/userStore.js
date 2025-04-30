@@ -252,6 +252,19 @@ export const useUserStore = create((set) => ({
       throw error;
     }
   },
+  getQuoteImageUrl: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/getQuoteImageUrl`);
+      console.log(response);
+
+      return response.data;
+    } catch (error) {
+      set({
+        error: error.message || "Error at getFreeNews",
+      });
+      throw error;
+    }
+  },
   reset: () => {
     set({ userProfile: null, error: null });
   },

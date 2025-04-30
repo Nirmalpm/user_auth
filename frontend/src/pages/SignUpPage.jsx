@@ -30,10 +30,10 @@ const SignUpPage = () => {
     initial={{opacity:0,y:20}}
     animate={{opacity:1,y:0}}
     transition={{duration:0.5}}
-    className='max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden'
+    className='max-w-md w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-xl rounded-2xl shadow-xl overflow-hidden'
     >
       <div className="p-8">
-        <h1 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-blue-800 to-red-800 text-transparent bg-clip-text">Create Account</h1>
+        <h1 className="text-3xl font-bold mb-6 text-center  bg-blue-800 text-transparent bg-clip-text">Create Account</h1>
         <form onSubmit={handleSignUp}>
             <Input
             icon={User}
@@ -41,6 +41,7 @@ const SignUpPage = () => {
             placeholder="Full Name"
             value={name}
             onChange={(e)=> setName(e.target.value)}
+            style={{backgroundColor:"#fff",color:'#000'}}
             />
             <Input
             icon={Mail}
@@ -48,6 +49,7 @@ const SignUpPage = () => {
             placeholder="Email Address"
             value={email}
             onChange={(e)=> setEmail(e.target.value)}
+            style={{backgroundColor:"#fff",color:'#000'}}
             />
             <Input
             icon={Phone}
@@ -55,6 +57,7 @@ const SignUpPage = () => {
             placeholder="Phone Number"
             value={phoneNumber}
             onChange={(e)=> setPhoneNumber(e.target.value)}
+            style={{backgroundColor:"#fff",color:'#000'}}
             />
             <Input
             icon={LockIcon}
@@ -62,12 +65,13 @@ const SignUpPage = () => {
             placeholder="Password"
             value={password}
             onChange={(e)=> setPassword(e.target.value)}
+            style={{backgroundColor:"#fff",color:'#000'}}
             />
             {error && <p className="text-red-500 font-semibold mt-2">{error}</p>}
             {/*Password strength meter */ }
             <PasswordStrengthMeter password={password}/>
             <motion.button
-            className="mt-5 w-full py-3 px-4 bg-gradient-to-r from-blue-800 to-red-800 text-white font-bold 
+            className="mt-5 w-full py-3 px-4 bg-gradient-to-r bg-blue-800 text-white font-bold 
             rounded-lg shadow-lg hover:from-blue-600 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-green-500 
             focus:ring-offset-2 focus:ring-offset-gray-900 transition duration-200"
             whileHover={{scale:1.02}}

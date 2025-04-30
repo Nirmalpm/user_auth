@@ -37,13 +37,16 @@ const AppNavbar = () => {
                     <div className="dropdown-menu">
                         <NavLink to="/portfolio">Portfolio Builder</NavLink>
                         <NavLink to="/test">Mobile Development</NavLink>
-                        <NavLink to="/test">UI/UX Design</NavLink>                        
+                        <NavLink to="/test">UI/UX Design</NavLink>
                         {
-                            roles.includes("admin") ?<NavLink to="/admin">Admin screen</NavLink> :null
+                            roles?.includes("admin") ?<NavLink to="/admin">Admin screen</NavLink> :null
                         }
                     </div>
                 </div>
-                <NavLink to="/blogs" className={({ isActive }) => (isActive ? `${active}` : `${notActive}`)}>Blogs</NavLink>                 
+                <NavLink to="/blogs" className={({ isActive }) => (isActive ? `${active}` : `${notActive}`)}>Blogs</NavLink>                   
+                {
+                    (roles?.includes("spiritual") || roles?.includes("admin") )?<NavLink to="/spiritual" className={({ isActive }) => (isActive ? `${active}` : `${notActive}`)}>Spiritual</NavLink>   :null
+                }            
             </div> 
             <div className={`fixed top-0 left-0 w-full bg-[rgba(10,10,10,0.8)] z-40 flex flex-col items-center justify-center 
                     transition-all duration-300 ease-in-out
@@ -63,9 +66,13 @@ const AppNavbar = () => {
                         <NavLink to="/blogs" className={`text-2xl font-semibold text-white my-4 transform transition-transform duration-300
                             ${isMobileMenu? "opacity-100 translate-y-0": "opacity-0 translate-y-5"}`} onClick={()=>setIsMobileMenu(false)}>Blogs</NavLink>
                         {
-                            roles.includes("admin") ?<NavLink to="/admin"  className={`text-2xl font-semibold text-white my-4 transform transition-transform duration-300
+                            roles?.includes("admin") ?<NavLink to="/admin"  className={`text-2xl font-semibold text-white my-4 transform transition-transform duration-300
                                 ${isMobileMenu? "opacity-100 translate-y-0": "opacity-0 translate-y-5"}`} onClick={()=>setIsMobileMenu(false)}>Admin screen</NavLink> :null
                         }
+                        {
+                            (roles?.includes("spiritual") || roles?.includes("admin") ) ?<NavLink to="/spiritual" className={`text-2xl font-semibold text-white my-4 transform transition-transform duration-300
+                                ${isMobileMenu? "opacity-100 translate-y-0": "opacity-0 translate-y-5"}`} onClick={()=>setIsMobileMenu(false)}>Spiritual</NavLink> :null
+                        } 
                         <NavLink to="../" className="text-gray-300 hover:text-white transition-colors" onClick={handleLogout} >
                             {`Logout`}
                         </NavLink>  

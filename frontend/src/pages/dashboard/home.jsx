@@ -1,7 +1,9 @@
 import { useAuthStore } from "../../store/authStore.js";
 import { useUserStore } from "../../store/userStore.js";
+import DailyQuotes from "./DailyQuotes.jsx";
 import LatestNews from "./LatestNews.jsx";
 import ProfileActivity from "./ProfileActivity.jsx";
+
 
 const DashboardPage = () => {
 	const { user, logout } = useAuthStore();
@@ -18,11 +20,12 @@ const DashboardPage = () => {
 		reset();
 		logout();
 	};
+	
 	return (
-		<div className="flex gap-3  items-center justify-center  flex-wrap">
-			<ProfileActivity/>
+		<div className="flex gap-1 m-20 justify-center  flex-wrap">
+			<DailyQuotes/>			
 			<LatestNews/>
-			
+			<ProfileActivity/>
 		</div>
 		
 	);

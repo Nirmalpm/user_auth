@@ -18,6 +18,7 @@ const Home = () => {
   const [file, setFile] = useState(null);
   const [userProfileHome, setUserProfileHome]= useState(initialState);
   const [isHomeSetOrUpdated, setIsHomeSetOrUpdated] = useState(false);
+  const [addHome, setAddHome] = useState(false)
   
   const {addUpdateUserHome,userProfile} = useUserStore();
   const {user} = useAuthStore();
@@ -56,18 +57,23 @@ const Home = () => {
 
 
   return (
-    
-    <section id="home" className="min-h-screen flex items-center justify-center  flex-col gap-10">
-       <h1 className="text-3xl md:text-7xl font-bold m-6 bg-gradient-to-r from-red-500 
-          to-cyan-400 bg-clip-text text-transparent leading-right">Portfolio Builder</h1>
+    <div id="home">
+    <div className="flex relative top-20">
+     <h1 className="text-3xl md:text-7xl font-bold m-6 bg-gradient-to-r from-red-500 
+          to-cyan-400 bg-clip-text text-transparent leading-right">Portfolio Builder</h1></div>
+   { (addHome) ?(
+    <section  className=" w-3/4 top-30 min-h-3/4 flex items-center justify-center  flex-col gap-10  relative ">
+      
+      <h1 className="text-white font-light cursor-pointer flex hover:text-amber-500 underline" 
+                        onClick={()=>setAddHome(false)}>Close</h1>
       <RevealOnScroll>
         { isHomeSetOrUpdated ? (
-      <div className="flex ">
-        <div className="text-center z-10 px-4">
-        <img src={`${userProfileHome?.imagePath}`} alt="Description" width="300" className="rounded-full"/>;
+      <div className=" w-full flex ">
+        <div className="w-full min-w-1/4 text-center z-10 flex ">
+        <img src={`${userProfileHome?.imagePath}`} alt="Description" width="150" className="rounded-full"/>;    
         </div>
-        <div className=" z-10 px-4">
-          <h1 className="text-3xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-500 
+        <div className=" w-full min-w-3/4 z-10 px-4 flex items-start flex-col">
+          <h1 className=" text-3xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-500 
           to-cyan-400 bg-clip-text text-transparent leading-right">{`Hi, I'm ${userProfileHome.fullName}`}</h1>
           <p className="text-gray-400 text-lg mb-8 max-w-lg mx-auto">
           {userProfileHome.userDesc}
@@ -156,7 +162,12 @@ const Home = () => {
         </div>
       )}
       </RevealOnScroll>
-    </section>
+    </section>): 
+    <div className="text-white font-light cursor-pointer top-35 flex items-center justify-center relative mt-20 hover:text-amber-500 underline" 
+    onClick={()=>setAddHome(true)}>Introduction Section</div>
+    }
+    
+    </div>
   )
 }
 

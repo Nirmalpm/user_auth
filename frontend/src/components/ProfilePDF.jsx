@@ -1,5 +1,5 @@
 // components/FancyPDF.js
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Document,
   Page,
@@ -11,6 +11,10 @@ import {
 import { useUserStore } from '../store/userStore';
 
 
+const API_URL =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:5000"
+    : "";
 
 const styles = StyleSheet.create({
   page: { padding: 30, fontSize: 12 },
@@ -68,12 +72,46 @@ const styles = StyleSheet.create({
   }
 });
 
+const toBase64FromUrl = async (url) => {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('Network response was not ok');
+    const blob = await response.blob();
+    const mimeType = blob.type; // <-- this gives you 'image/png' or 'image/jpeg' etc.
+    
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () =>{ 
+        const base64data = reader.result.split(',')[1]; // get base64 without the prefix
+        resolve(`data:${mimeType};base64,${base64data}`);
+      }
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch (error) {
+    console.error("Image fetch error: ", err);
+    return null;
+  }
+};
+
 const ProfilePDF = () => {
    const {userProfile} = useUserStore();
    console.log(userProfile)
-   const {imagePath, fullName} = userProfile?.homeInfo || {};
+   const {fullName} = userProfile?.homeInfo || {};
+   const {imagePath} = userProfile?.homeInfo || {imagePath:"/uploads/Portrait_Placeholder.png"};
    const {userDesc} = userProfile?.aboutInfo || {};
    const {education,frontend, backend, other,projects, certification, workexp} = userProfile || {};
+   const [imageSrc, setImageSrc] = useState("xx.jpg");
+
+   useEffect(()=>{
+      const imageSetter = async ()=>{
+        if(imagePath)
+        {console.log(`${API_URL}${imagePath}`)
+        const base64Image = await toBase64FromUrl(`${API_URL}${imagePath}`);
+        setImageSrc(base64Image);}
+      }
+      imageSetter();
+   },[imagePath]);
 
    console.log(imagePath, fullName, userDesc,frontend,backend, other,projects);
    const fskills = ()=>{
@@ -93,7 +131,7 @@ const ProfilePDF = () => {
         </View>
        
         <View style={styles.contact}>
-        <Image src={imagePath|""} style={styles.image} />
+        {imagePath && imageSrc ? <Image src={imageSrc} style={styles.image} /> : null}
         <View >
             <Text style={styles.text}>Email: {userProfile?.email}</Text>
             <Text style={styles.text}>Phone: {userProfile?.phoneNumber}</Text>
@@ -121,7 +159,7 @@ const ProfilePDF = () => {
       {
         education && education.length > 0 && education.map((edu)=>
              (                
-                <View>
+                <View key={edu.id}>
                 <Text style={styles.tableCol}>{edu.name},{edu.university}  ({edu.yearOfPassing})</Text>  
                 </View>            
             )
@@ -132,7 +170,7 @@ const ProfilePDF = () => {
       {
         certification && certification.length > 0 && certification.map((cert)=>
              (                
-                <View>
+                <View key={cert.id}>
                 <Text style={styles.tableCol}>{cert.certName} ({cert.certYear})</Text>  
                 </View>            
             )
@@ -143,7 +181,7 @@ const ProfilePDF = () => {
       {
         workexp && workexp.length > 0 && workexp.map((work)=>
              (                
-                <View>
+                <View key={work.id}>
                 <Text style={styles.projectName}>{work.expName} ({work.duration})</Text>  
                 <Text style={styles.tableCol}>{work.expDesc}</Text>    
                 <Text style={styles.tableCol}>Last Designation : {work.lastDesignation}</Text> 
@@ -157,7 +195,7 @@ const ProfilePDF = () => {
       {
         projects && projects.length > 0 && projects.map((project)=>
              (                
-                <View>
+                <View key={project.id}>
                 <Text style={styles.projectName}>{project.projectName}</Text>  
                 <Text style={styles.tableCol}>{project.projectDesc}</Text>    
                 <Text style={styles.tableCol}>Technologies Used: {project.techUsed}</Text> 

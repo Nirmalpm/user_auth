@@ -22,18 +22,18 @@ const ForgotPasswordPage = () => {
 			initial={{ opacity: 0, y: 20 }}
 			animate={{ opacity: 1, y: 0 }}
 			transition={{ duration: 0.5 }}
-			className='max-w-md w-full bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-xl 
+			className='max-w-md w-full bg-white bg-opacity-50 backdrop-filter backdrop-blur-xl 
             rounded-2xl shadow-xl overflow-hidden'
 		>
 			<div className='p-8'>
-				<h2 className='text-3xl font-bold mb-6 text-center bg-gradient-to-r from-green-400
+				<h2 className='text-3xl font-bold mb-6 text-center bg-blue-800
                  to-emerald-500 text-transparent bg-clip-text'>
 					Forgot Password
 				</h2>
 
 				{!isSubmitted ? (
 					<form onSubmit={handleSubmit}>
-						<p className='text-gray-300 mb-6 text-center'>
+						<p className='text-gray-700 mb-6 text-center'>
 							Enter your email address and we'll send you a link to reset your password.
 						</p>
 						<Input
@@ -43,11 +43,12 @@ const ForgotPasswordPage = () => {
 							value={email}
 							onChange={(e) => setEmail(e.target.value)}
 							required
+							style={{backgroundColor:"#fff",color:'#000'}}
 						/>
 						<motion.button
 							whileHover={{ scale: 1.02 }}
 							whileTap={{ scale: 0.98 }}
-							className='w-full py-3 px-4 bg-gradient-to-r from-green-500 to-emerald-600
+							className='w-full py-3 px-4 bg-gradient-to-r bg-blue-800
                              text-white font-bold rounded-lg shadow-lg hover:from-green-600 hover:to-emerald-700
                               focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2
                                focus:ring-offset-gray-900 transition duration-200'

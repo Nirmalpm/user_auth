@@ -7,7 +7,8 @@ import {formatDate} from '../../utils/date.js'
 const ProfileActivity = () => {
     const { user, logout } = useAuthStore();
     const {reset,getFreeNews} = useUserStore();	
-  
+	/*bg-emerald-900 bg-opacity-80 backdrop-filter 
+      backdrop-blur-lg rounded-xl shadow-2xl border border-gray-800  */
     return (
     <div>
       <motion.div
@@ -15,10 +16,9 @@ const ProfileActivity = () => {
 			animate={{ opacity: 1, scale: 1 }}
 			exit={{ opacity: 0, scale: 0.9 }}
 			transition={{ duration: 0.5 }}
-			className='max-w-md w-full mx-auto mt-10 p-8 bg-emerald-900 bg-opacity-80 backdrop-filter 
-      backdrop-blur-lg rounded-xl shadow-2xl border border-gray-800 min-w-sm h-20%'
+			className='max-w-md w-full mx-auto  min-w-sm h-20%'
 		>
-			<h2 className='text-3xl font-bold mb-6 text-center bg-red-500 text-transparent bg-clip-text'>
+			<h2 className='text-3xl font-bold mb-6 text-center text-blue-900  bg-clip-text'>
 				Activity
 			</h2>
 
@@ -29,9 +29,9 @@ const ProfileActivity = () => {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ delay: 0.2 }}
 				>
-					<h3 className='text-xl font-semibold text-red-500 mb-3 '>Profile Information</h3>
-					<p className='text-green-300'>Name: {user.name}</p>
-					<p className='text-green-300 truncate w-64 flex'>Email: {user.email}</p>
+					<h3 className='text-xl font-semibold text-blue-900 mb-3 '>Profile Information</h3>
+					<p className='text-white'>Name: {user.name}</p>
+					<p className='text-white truncate w-64 flex'>Email: {user.email}</p>
 				</motion.div>
 				<motion.div
 					className='p-4  bg-opacity-50 rounded-lg border border-gray-700'
@@ -39,8 +39,8 @@ const ProfileActivity = () => {
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ delay: 0.4 }}
 				>
-					<h3 className='text-xl font-semibold text-red-500 mb-3'>Account Activity</h3>
-					<p className='text-green-300'>
+					<h3 className='text-xl font-semibold text-blue-900 mb-3'>Account Activity</h3>
+					<p className='text-white'>
 						<span className='font-bold'>Joined: </span>
 						{new Date(user.createdAt).toLocaleDateString("en-US", {
 							year: "numeric",
@@ -48,7 +48,7 @@ const ProfileActivity = () => {
 							day: "numeric",
 						})}
 					</p>
-					<p className='text-green-300'>
+					<p className='text-white'>
 						<span className='font-bold'>Last Login: </span>
 
 						{formatDate(user.lastLogin)}

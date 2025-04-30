@@ -220,4 +220,11 @@ export const useAuthStore = create((set) => ({
       throw error;
     }
   },
+  getAccesLogs: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/getAccessLogs`);
+      console.log(response);
+      return response.data;
+    } catch (error) {}
+  },
 }));

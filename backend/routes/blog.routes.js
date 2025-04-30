@@ -20,4 +20,6 @@ router.post("/saveBlogComment", saveBlogComment);
 router.get("/getComments", getComments);
 router.post("/deleteComment", deleteComment);
 
+router.get("/spiritual", getBlogs);
+
 export default router;

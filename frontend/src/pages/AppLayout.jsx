@@ -4,7 +4,7 @@ import AppNavbar from './AppNavbar'
 
 const AppLayout = () => {
   return (
-    <div className="flex justify-center w-full items-center flex-wrap gap-2 pt-20 ">
+    <div className="flex justify-center w-full items-center flex-wrap gap-2 ">
       <AppNavbar/>
       <Outlet/>
     </div>

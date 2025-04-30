@@ -24,9 +24,9 @@ const MobileMenu = ({isMenuOpen, setIsMenuOpen}) => {
                             &times;
                         </button>
                         <a href="#home" className={`text-2xl font-semibold text-white my-4 transform transition-transform duration-300
-                            ${isMenuOpen? "opacity-100 translate-y-0": "opacity-0 translate-y-5"}`} onClick={()=> setIsMenuOpen(false)}>Home</a>
+                            ${isMenuOpen? "opacity-100 translate-y-0": "opacity-0 translate-y-5"}`} onClick={()=> setIsMenuOpen(false)}>Introduction</a>
                         <a href="#about" className={`text-2xl font-semibold text-white my-4 transform transition-transform duration-300
-                            ${isMenuOpen? "opacity-100 translate-y-0": "opacity-0 translate-y-5"}`} onClick={()=> setIsMenuOpen(false)}> About</a>
+                            ${isMenuOpen? "opacity-100 translate-y-0": "opacity-0 translate-y-5"}`} onClick={()=> setIsMenuOpen(false)}> Tech. Skills</a>
                         <a href="#projects" className={`text-2xl font-semibold text-white my-4 transform transition-transform duration-300
                             ${isMenuOpen? "opacity-100 translate-y-0": "opacity-0 translate-y-5"}`} onClick={()=> setIsMenuOpen(false)}>Projects</a>
                         <a href="#contact" className={`text-2xl font-semibold text-white my-4 transform transition-transform duration-300

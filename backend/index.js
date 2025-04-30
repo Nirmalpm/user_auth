@@ -1,16 +1,17 @@
-import express from "express";
-import { connectDB } from "./db/connectDB.js";
-import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import dotenv from "dotenv";
+import express from "express";
 import path from "path";
+import { connectDB } from "./db/connectDB.js";
 
 import authRoutes from "./routes/auth.route.js";
-import userRoutes from "./routes/user.route.js";
-import uploadRoute from "./routes/upload.route.js";
 import blogRoute from "./routes/blog.routes.js";
+import uploadRoute from "./routes/upload.route.js";
+import userRoutes from "./routes/user.route.js";
 
 import { verifyToken } from "./middleware/verifyToken.js";
+import { visitorLogger } from "./middleware/visitorLogger.js";
 
 dotenv.config(); //Env file values to access we need to make use of dotenv
 
@@ -29,10 +30,9 @@ app.use("/fileupload", uploadRoute);
 
 app.use("/uploads", express.static(path.resolve(__dirname, "../uploads")));
 
-console.log(
-  "Serving static files from:",
-  path.resolve(__dirname, "../../uploads")
-);
+app.get("/track-visit", visitorLogger(), (req, res) => {
+  res.sendStatus(200); // or res.end() or res.send('OK')
+});
 
 console.log(
   "Serving static files from:",
@@ -45,6 +45,14 @@ if (process.env.NODE_ENV === "production") {
     res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
   });
 }
+
+// app.get("/quote-image", async (req, res) => {
+//   const response = await axios.get("https://zenquotes.io/api/image", {
+//     responseType: "stream",
+//   });
+//   res.setHeader("Content-Type", "image/jpeg");
+//   response.data.pipe(res);
+// });
 
 app.listen(PORT, () => {
   connectDB();

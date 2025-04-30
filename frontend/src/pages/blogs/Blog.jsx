@@ -27,15 +27,15 @@ const handleOpen = async() =>{
                   setOpened(false)  
               };
             }}>
-            {opened && (selectedBlog[id]?.id === id) ? <Minus size={15}/> : <Plus size={15}/> }  
+            {opened && (selectedBlog[id]?.id === id) ? <Minus size={15}/> : <Plus size={15} className="text-blue-800 flex "/> }  
             </div>
-            <div className="flex justify-between gap-3">
+            <div className="flex justify-between items-center gap-3">
             <NavLink to={`/blogs/${id}`}>
-              <li className="cursor-pointer  p-1 ml-3 font-sans font-regular hover:text-white truncate w-75 flex" title={title}>
+              <li className="cursor-pointer  p-1 ml-3 font-sans font-regular text-white hover:text-gray-900 truncate w-75 " title={title}>
                   {title}  
               </li>
             </NavLink>
-            <X size={15} className="text-red-800" onClick={()=> handleDelete(id,authorId)}/>
+            <X size={15} className="text-red-800 flex " onClick={()=> handleDelete(id,authorId)}/>
             </div>
         </div>
         {
