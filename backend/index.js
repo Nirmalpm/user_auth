@@ -9,6 +9,7 @@ import authRoutes from "./routes/auth.route.js";
 import blogRoute from "./routes/blog.routes.js";
 import uploadRoute from "./routes/upload.route.js";
 import userRoutes from "./routes/user.route.js";
+import adminRoute from "./routes/admin.route.js";
 
 import { verifyToken } from "./middleware/verifyToken.js";
 import { visitorLogger } from "./middleware/visitorLogger.js";
@@ -27,6 +28,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/user", verifyToken(["user", "admin"]), userRoutes);
 app.use("/api/blogs", blogRoute);
 app.use("/fileupload", uploadRoute);
+app.use("/admin", adminRoute);
 
 app.use("/uploads", express.static(path.resolve(__dirname, "../uploads")));
 

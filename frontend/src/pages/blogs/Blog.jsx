@@ -32,7 +32,7 @@ const handleCancelDelete = () => {
 };
   return (
     <div className="flex  justify-start flex-col overflow-hidden  w-full">
-        <div className="flex items-center cursor-pointer w-full  " > 
+        <div className="flex items-center justify-start cursor-pointer w-full  " > 
             <div onClick={()=>{
               if(!opened) {
                   handleOpen();
@@ -44,11 +44,11 @@ const handleCancelDelete = () => {
             <Minus size={25}  className=" flex text-amber-500 hover:border-amber-300 hover:-translate-0.5 hover:text-blue-800"/> : 
             <Plus size={25} className="text-blue-800 flex  hover:border-amber-300 hover:-translate-0.5 hover:text-amber-500"/> }  
             </div>
-            <div className="flex justify-between items-center gap-3 ">
+            <div className="flex justify-center items-center gap-3 w-full">
             <NavLink to={`/blogs/${id}`}>
-              <li className="cursor-pointer text-xl list-none p-1 ml-3 font-regular text-blue-900 hover:text-gray-900 truncate w-75 " title={title}>
+              <div className="cursor-pointer text-xl list-none p-1 ml-3 font-regular text-blue-900 hover:text-amber-500 truncate w-75 " title={title}>
                   {title}  
-              </li>
+              </div>
             </NavLink>
             <X size={25} className="text-red-800 flex border rounded hover:border-amber-300 hover:-translate-0.5 hover:text-amber-500" onClick={handleDeleteClick}/>
             </div>

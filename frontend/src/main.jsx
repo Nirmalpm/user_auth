@@ -23,6 +23,7 @@ import AmmaQuotes from './pages/spiritual/Amma/Quotes.jsx';
 import BabaQuotes from './pages/spiritual/Baba/Quotes.jsx';
 import BhagavadGita from './pages/spiritual/Gita/BhagavadGita.jsx';
 import SpiritualQuotes from './pages/spiritual/SpiritualQuotes.jsx';
+import AdminContact from './AdminContact.jsx';
 
 
 const ErrorPage = () => {
@@ -91,13 +92,13 @@ const router = createBrowserRouter([
         path:"viewresume",
         Component: ()=><ProtectedRoute><ErrorBoundary><ViewResumePDF/></ErrorBoundary> </ProtectedRoute>
       },
-      // {
-      //   path:"spiritual",
-      //   Component: ()=><SpiritualQuotes/>
-      // },
+      {
+        path:"admin-contact",
+        Component: ()=><AdminContact/>
+      },
       { 
         path:"*",
-        Component: ErrorPage
+        Component: ErrorBoundary
       
       },
 

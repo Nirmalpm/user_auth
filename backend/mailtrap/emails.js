@@ -2,6 +2,7 @@ import {
   PASSWORD_RESET_REQUEST_TEMPLATE,
   PASSWORD_RESET_SUCCESS_TEMPLATE,
   VERIFICATION_EMAIL_TEMPLATE,
+  APP_ERROR_CONTENT,
 } from "./emailTemplate.js";
 import { mailtrapClient, sender } from "./mailtrap.config.js";
 
@@ -76,5 +77,31 @@ export const sendResetSuccessEmail = async (email) => {
     throw new Error(
       `Error sending password reset success email: ${error.message}`
     );
+  }
+};
+
+export const sendErrorMailToAdmin = async (name, email, content) => {
+  const recipients = [{ email: "admin@virtuours.com" }];
+  const replacements = {
+    "{error_content}": content,
+    "{sender_name}": name,
+    "{sender_email}": email,
+  };
+  const html = APP_ERROR_CONTENT.replace(
+    /{error_content}|{sender_name}|{sender_email}/g,
+    (matched) => replacements[matched]
+  );
+  try {
+    const response = await mailtrapClient.send({
+      from: sender,
+      to: recipients,
+      subject: " Exception in the application",
+      html: html,
+      category: "Application Exception",
+    });
+    console.log("Email sent successfully", response);
+  } catch (error) {
+    console.error("Error sending exception email ", error.message);
+    throw new Error(`Error sending exception email: ${error.message}`);
   }
 };
