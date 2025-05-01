@@ -44,13 +44,13 @@ const Education = ({education, isNew, showPlus,removeBlank}) => {
       </div>
       {isEdit? (
         <div className="flex flex-col">
-          <Input icon={Text} type="text" placeholder="Enter the course name" name="name" value={editedData.name} onChange={handleChange}/>
-          <Input icon={Text} type="text" placeholder="Enter the university name" name="university" value={editedData.university} onChange={handleChange}/>
-          <Input icon={Text} type="text" placeholder="Enter the Year of passing" name="yearOfPassing" value={editedData.yearOfPassing} onChange={handleChange}/>
+          <Input icon={Text} type="text" placeholder="Enter the course name" name="name" value={editedData.name} onChange={handleChange} style={{backgroundColor:'#bbb',color:'#000'}}/>
+          <Input icon={Text} type="text" placeholder="Enter the university name" name="university" value={editedData.university} onChange={handleChange} style={{backgroundColor:'#bbb',color:'#000'}}/>
+          <Input icon={Text} type="text" placeholder="Enter the Year of passing" name="yearOfPassing" value={editedData.yearOfPassing} onChange={handleChange} style={{backgroundColor:'#bbb',color:'#000'}}/>
         </div>
       ) : (
         
-          <span>{education?.name} {education?.university} ({education?.yearOfPassing})</span> 
+          <span className="text-gray-800">{education?.name} {education?.university} ({education?.yearOfPassing})</span> 
        
       )}
     </div>

@@ -44,13 +44,13 @@ const Certification = ({certification, isNew, showPlus,removeBlank}) => {
       </div>
       {isEdit? (
         <div className="flex flex-col">
-          <Input icon={Text} type="text" placeholder="Enter the certification Name" name="certName" value={editedData.certName} onChange={handleChange}/>
-          <Input icon={Text} type="text" placeholder="Certification year" name="certYear" value={editedData.certYear} onChange={handleChange}/>
+          <Input icon={Text} type="text" placeholder="Enter the certification Name" name="certName" value={editedData.certName} onChange={handleChange} style={{backgroundColor:'#bbb',color:'#000'}}/>
+          <Input icon={Text} type="text" placeholder="Certification year" name="certYear" value={editedData.certYear} onChange={handleChange} style={{backgroundColor:'#bbb',color:'#000'}}/>
         </div>
       ) : (
         
         
-            <><span>{certification.certName}  </span> <>({certification.certYear})</></>
+            <><span  className="text-gray-800">{certification.certName}  </span> <>({certification.certYear})</></>
         
        
       )}

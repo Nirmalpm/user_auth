@@ -65,7 +65,7 @@ const About = () => {
     <div id="about">
     {(addAbout) ? (
     <section id="about"
-    className=" min-h-3/4  top-35 flex items-center justify-center relative mt-20">
+    className=" min-h-3/4 flex items-center justify-center relative mt-10">
          
     <RevealOnScroll>
       <div className="max-w-5xl mx-auto px-4 ">
@@ -73,7 +73,7 @@ const About = () => {
             <h2 className="text-3xl font-bold  bg-gradient-to-r from-blue-500 to-cyan-400 bg-clip-text text-transparent text-center">Brief your tech. skills</h2>
             <Edit title="Edit" className="size-5 bg-amber-300 hover:-translate-y-0.5 rounded text-gray-900
                         hover:shadow-[0_0_25px_rgba(255,255,255,0.8)] cursor-pointer" onClick={()=> setIsEdit(!isEdit)}/>
-            <h1 className="text-white font-light cursor-pointer flex mt-20 hover:text-amber-500 underline" 
+            <h1 className="text-gray-600 font-light cursor-pointer flex mt-20 hover:text-amber-500 underline" 
                         onClick={()=>setAddAbout(false)}>Close</h1>
         </div>
         <div className="rounded-xl p-8 border-white/10 border hover:-translate-y-1 transition-all">
@@ -87,6 +87,7 @@ const About = () => {
                     rows={5}      
                     value={aboutInfo.userDesc}  
                     name="userDesc"
+                    style={{backgroundColor:'#bbb',color:'#000'}}
                     />
                     </div>
                     <div className="flex flex-col gap-3 ">
@@ -98,7 +99,7 @@ const About = () => {
                 </div>
             ) :
             (
-               <p className="text-lg  text-gray-300 mb-6 ">{aboutInfo?.userDesc}</p>                    
+               <p className="text-lg  text-gray-800 mb-6 ">{aboutInfo?.userDesc}</p>                    
             )
             }
             
@@ -122,7 +123,7 @@ const About = () => {
       </div>
       </RevealOnScroll>
     </section>): 
-    <div className="text-white font-light cursor-pointer top-35 flex items-center justify-center relative mt-20 hover:text-amber-500 underline" 
+    <div className="text-gray-800 font-light cursor-pointer flex items-center justify-center relative mt-20 hover:text-amber-500 underline" 
     onClick={()=>setAddAbout(true)}>Technical Skills Section</div>
     }
     </div>

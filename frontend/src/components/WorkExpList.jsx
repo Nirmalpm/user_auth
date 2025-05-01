@@ -47,7 +47,7 @@ const WorkExpList = () => {
   return (
     <div className="rounded-xl p-6 border-gray-700 border hover:-translate-y-1 transition-all">
         <div className="flex w-full justify-between">
-            <h3 className="text-xl font-bold mb-4 text-gray-300">💼 Work Experience</h3>
+            <h3 className="text-xl font-bold mb-4 text-gray-800">💼 Work Experience</h3>
             <div className="space-y-4 text-gray-300">
                 { showPlus ? 
                 <Plus  className="size-5 bg-amber-500 rounded hover:-translate-y-0.5  text-gray-900 mb-2 

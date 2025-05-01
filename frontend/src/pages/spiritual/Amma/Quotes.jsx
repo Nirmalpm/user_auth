@@ -16,7 +16,9 @@ const API_URL =
 const Quotes = () => {
   const coverText=` Om Bhur Bhuva Suvah
                    Tat savitur varenyam
-                   Bhargo Devasya Deemahi`;
+                   Bhargo Devasya Deemahi
+                   Dhiyo Yona Prachodayaath
+                   `;
   const [searchText, setSearchText] = useState("");
   const [quotes, setQuotes] = useState([])
 

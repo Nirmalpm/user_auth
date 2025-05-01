@@ -50,7 +50,7 @@ function Layout() {
       <div
         className={`min-h-screen transition-opacity duration-700 w-full flex flex-col items-center ${
           isLoaded ? "opacity-100" : "opacity-0"
-        } bg-black`}
+        } bg-gray-300`}
       >
          <Navbar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen}/>
         
@@ -79,7 +79,7 @@ function Layout() {
             shadow-md  cursor-pointer hover:-translate-y-0.5 transition h-10 hover:bg-blue-300 p-2"
              onClick={handleMobileDownload}>Download/View PDF</button>)
             :(
-              <NavLink to="/viewresume" className="text-white font-bold">PDF View</NavLink>
+              <NavLink to="/viewresume" className="text-white font-bold  bg-blue-500 text-white p-2 rounded hover:bg-amber-400">PDF View</NavLink>
             )
         }			
         

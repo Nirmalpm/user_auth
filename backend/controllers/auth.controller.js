@@ -358,7 +358,7 @@ export const addUser = async (req, res) => {
 
 export const getAccessLogs = async (req, res) => {
   const query =
-    " select distinct username, country, region, region_name, city, lat, lon,DATE_FORMAT(logged_at, '%Y-%m-%d %H:%i') AS logged_at from visitor_geo_logs order by lat, lon, logged_at desc ";
+    " select distinct username, country, region, region_name, city, lat, lon,DATE_FORMAT(logged_at, '%Y-%m-%d %H:%i') AS logged_at from visitor_geo_logs order by logged_at desc, city  desc ";
   try {
     const [rows] = await db.query(query);
     res.status(200).json({ success: true, data: rows });

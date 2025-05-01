@@ -44,14 +44,14 @@ const WorkExp = ({workexp, isNew, showPlus,removeBlank}) => {
       </div>
       {isEdit? (
         <div className="flex flex-col">
-          <Input icon={Text} type="text" placeholder="Enter the work experience" name="expName" value={editedData.expName} onChange={handleChange}/>
-          <Input icon={Text} type="text" placeholder="Describe your work" name="expDesc" value={editedData.expDesc} onChange={handleChange}/>
-          <Input icon={Text} type="text" placeholder="Duration" name="duration" value={editedData.duration} onChange={handleChange}/>
-          <Input icon={Text} type="text" placeholder="Last Designation here" name="lastDesignation" value={editedData.lastDesignation} onChange={handleChange}/>
+          <Input icon={Text} type="text" placeholder="Enter the work experience" name="expName" value={editedData.expName} onChange={handleChange} style={{backgroundColor:'#bbb',color:'#000'}}/>
+          <Input icon={Text} type="text" placeholder="Describe your work" name="expDesc" value={editedData.expDesc} onChange={handleChange} style={{backgroundColor:'#bbb',color:'#000'}}/>
+          <Input icon={Text} type="text" placeholder="Duration" name="duration" value={editedData.duration} onChange={handleChange} style={{backgroundColor:'#bbb',color:'#000'}}/>
+          <Input icon={Text} type="text" placeholder="Last Designation here" name="lastDesignation" value={editedData.lastDesignation} onChange={handleChange} style={{backgroundColor:'#bbb',color:'#000'}}/>
         </div>
       ) : (
         
-        <div>
+        <div  className="text-gray-800">
         <h4 className="font-semibold">{workexp.expName} ({workexp.duration})</h4>
         <p>{workexp.expDesc}</p>
         <p>Last designation:{workexp.lastDesignation}</p>

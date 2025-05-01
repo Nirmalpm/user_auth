@@ -48,7 +48,7 @@ const Projects = () => {
    <div id="projects">
    { (addProjects) ?
     (<section  
-    className=" flex items-center justify-center mt-10  top-35 relative"
+    className=" min-h-3/4 flex items-center justify-center relative mt-20"
     >
     <RevealOnScroll>
       <div  className="max-w-5xl mx-auto px-4">
@@ -61,7 +61,7 @@ const Projects = () => {
                 hover:shadow-[0_0_25px_rgba(255,255,255,0.8)] cursor-pointer" onClick={handleNew}/>
                 : null  
                 }
-                <h1 className="text-white font-light cursor-pointer flex hover:text-amber-500 underline" 
+                <h1 className="text-gray-600 font-light cursor-pointer flex hover:text-amber-500 underline" 
                         onClick={()=>setAddProjects(false)}>Close</h1>
             </div>  
         </div>
@@ -83,7 +83,7 @@ const Projects = () => {
       </div>
       </RevealOnScroll>
     </section>): 
-    <div className="text-white font-light cursor-pointer top-35 flex items-center justify-center relative mt-20 hover:text-amber-500 underline" 
+    <div className="text-gray-800 font-light cursor-pointer  flex items-center justify-center relative  hover:text-amber-500 underline" 
     onClick={()=>setAddProjects(true)}>Projects Section</div>
     }
     

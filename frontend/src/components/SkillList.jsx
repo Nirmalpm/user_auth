@@ -57,7 +57,7 @@ const ItemList = (props) => {
   return (   
   <div className='rounded-xl p-2 hover:-translate-y-1 transition-all border-1 border-gray-700'>
     <div className="flex flex-row gap-2 items-start">
-        <h3 className="text-xl font- mb-4 font-semibold text-gray-300">{props.title}</h3>
+        <h3 className="text-xl font- mb-4 font-semibold text-gray-800">{props.title}</h3>
         {isEditMode || props.itemList?.length === 0 ?<Plus className="size-5 bg-amber-300 hover:-translate-y-0.5 rounded hover:shadow-[0_0_25px_rgba(255,255,255,0.8)] " onClick={handleAddItem}/> : null}
         <RefreshCw className="size-5 bg-amber-300 hover:-translate-y-0.5 rounded hover:shadow-[0_0_25px_rgba(255,255,255,0.8)] " onClick={()=> {
         setItems([...props.itemList]);
@@ -79,7 +79,7 @@ const ItemList = (props) => {
         <div className="flex flex-row items-center justify-center m-2 gap-2" key={item.id}>
             <Input icon={Text} className="m-1 pl-2 bg-green-100 rounded w-75" type="text" 
             name="name" key={item.id} value={item.name} onChange={(e)=>handleItemChange(e, index)} 
-            ref={(el) => (inputRefs.current[index] = el)} />
+            ref={(el) => (inputRefs.current[index] = el)} style={{backgroundColor:'#bbb',color:'#000'}}/>
             <Minus className="size-5 bg-amber-300 hover:-translate-y-0.5 rounded 
             hover:shadow-[0_0_25px_rgba(255,255,255,0.8)] " onClick={
                 (e)=>{

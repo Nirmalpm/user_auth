@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAuthStore } from '../../store/authStore';
 import { useUserStore } from '../../store/userStore';
+import { NavLink } from 'react-router';
 
 
 const MobileMenu = ({isMenuOpen, setIsMenuOpen}) => {
@@ -31,6 +32,10 @@ const MobileMenu = ({isMenuOpen, setIsMenuOpen}) => {
                             ${isMenuOpen? "opacity-100 translate-y-0": "opacity-0 translate-y-5"}`} onClick={()=> setIsMenuOpen(false)}>Projects</a>
                         <a href="#contact" className={`text-2xl font-semibold text-white my-4 transform transition-transform duration-300
                             ${isMenuOpen? "opacity-100 translate-y-0": "opacity-0 translate-y-5"}`} onClick={()=> setIsMenuOpen(false)}>Contact</a>
+                        <NavLink to="../" className={`text-2xl font-semibold text-white my-4 transform transition-transform duration-300
+                            ${isMenuOpen? "opacity-100 translate-y-0": "opacity-0 translate-y-5"}`} onClick={()=> setIsMenuOpen(false)}>
+                       {`Dashboard`}
+                        </NavLink>
                         <a href="#" onClick={handleLogout} className="text-2xl font-semibold text-white">Logout</a>
     </div>
   );

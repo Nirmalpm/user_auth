@@ -9,6 +9,7 @@
 }
 
 
+
 @layer utilities {
     @keyframes blink {
       0%, 100%{
@@ -45,3 +46,5 @@
     opacity:1;
     transform:translateY(0);
   }
+
+
