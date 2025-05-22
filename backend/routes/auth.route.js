@@ -13,6 +13,7 @@ import {
   updateRole,
   removeRole,
   getAccessLogs,
+  deleteAccessLogs,
 } from "../controllers/auth.controller.js";
 
 import { verifyToken } from "../middleware/verifyToken.js";
@@ -37,5 +38,6 @@ router.post("/updaterole", verifyToken("admin"), updateRole);
 router.post("/removerole", verifyToken("admin"), removeRole);
 
 router.get("/getAccessLogs", verifyToken("admin"), getAccessLogs);
+router.post("/deleteAccessLogs", verifyToken("admin"), deleteAccessLogs);
 
 export default router;

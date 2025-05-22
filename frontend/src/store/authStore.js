@@ -18,7 +18,7 @@ export const useAuthStore = create((set) => ({
   appUsers: [],
   signup: async (email, password, name, phoneNumber) => {
     set({ isLoading: true, error: null });
-    console.log(email, password, name, phoneNumber);
+    //console.log(email, password, name, phoneNumber);
     try {
       const response = await axios.post(`${API_URL}/signup`, {
         email,
@@ -94,7 +94,7 @@ export const useAuthStore = create((set) => ({
     }
   },
   addUserProfile: async (user) => {
-    console.log("inside addprofile:", user);
+    //console.log("inside addprofile:", user);
     try {
       const response = await axios.post(`${API_URL}/addUser`, {
         email: user.email,
@@ -223,7 +223,17 @@ export const useAuthStore = create((set) => ({
   getAccesLogs: async () => {
     try {
       const response = await axios.get(`${API_URL}/getAccessLogs`);
-      console.log(response);
+      //console.log(response);
+      return response.data;
+    } catch (error) {}
+  },
+  deleteAccessLogs: async (selectedIds) => {
+    //console.log(selectedIds)
+    try {
+      const response = await axios.post(`${API_URL}/deleteAccessLogs`, {
+        ids: selectedIds,
+      });
+      //console.log(response);
       return response.data;
     } catch (error) {}
   },

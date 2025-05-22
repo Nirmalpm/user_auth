@@ -7,9 +7,9 @@ const Education = ({education, isNew, showPlus,removeBlank}) => {
     const [isEdit,setIsEdit] = useState(isNew);
     const [editedData, setEditedData] = useState({...education});
 
-    console.log("education",education);
+    //console.log("education",education);
      const {userProfile, saveEducation} = useUserStore();
-     console.log(userProfile);
+     //console.log(userProfile);
     const handleChange = (e) => {
       setEditedData({...editedData, [e.target.name]: e.target.value});
     }
@@ -17,7 +17,7 @@ const Education = ({education, isNew, showPlus,removeBlank}) => {
     const handleSave = async () => {
       setIsEdit(false);
       showPlus(true)
-      console.log(userProfile?.userId,userProfile?.profileUserId,editedData);
+      //console.log(userProfile?.userId,userProfile?.profileUserId,editedData);
       await saveEducation(userProfile?.userId,userProfile?.profileUserId,editedData);
     }
   return (

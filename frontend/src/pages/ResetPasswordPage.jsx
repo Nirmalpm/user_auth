@@ -13,7 +13,7 @@ const ResetPasswordPage = () => {
 
 	const { token } = useParams();
 	const navigate = useNavigate();
-    console.log("token",token)
+    //console.log("token",token)
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();

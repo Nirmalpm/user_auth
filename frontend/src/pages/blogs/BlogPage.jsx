@@ -21,7 +21,7 @@ const BlogPage = () => {
   const[bloggings, setBloggings] = useState([]);
   const [searchText, setSearchText] = useState("");
 
-    console.log(blogs, selectedBlog)
+    //console.log(blogs, selectedBlog)
 
   useEffect(()=>{
     const getAllBlogs = async ()=>{
@@ -33,7 +33,7 @@ const BlogPage = () => {
 
   const handleSubmit = async (e)=>{
     e.preventDefault();
-    console.log(user);
+    //console.log(user);
     const blogWithUser = { ...blog, userId: user._id };
    
     await saveBlog(blogWithUser);
@@ -58,7 +58,7 @@ const BlogPage = () => {
 
   const handleSearch = (e) =>{
     const blgs = blogs.filter((blog)=>blog.title.toLowerCase().includes(e.target.value.toLowerCase()));
-    console.log(blgs)
+    //console.log(blgs)
     setSearchText(e.target.value)
     setBloggings([...blgs])
   }

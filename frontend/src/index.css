@@ -1,14 +1,5 @@
 @import "tailwindcss";
 
-@font-face {
-  font-family: 'Roboto Flex';
-  src: url('/assets/fonts/RobotoFlex.ttf') format('truetype');
-  font-weight: 100 1000; /* variable weight range */
-  font-stretch: 25% 151%; /* optional, for width axis */
-  font-style: normal; /* or 'oblique' if supported */
-}
-
-
 
 @layer utilities {
     @keyframes blink {
@@ -46,5 +37,25 @@
     opacity:1;
     transform:translateY(0);
   }
+
+  /* For WebKit browsers */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f6f6f6; /* gray-100 */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #60a5fa; /* blue-400 */
+  border-radius: 9999px;
+  border: 1px solid #f3f4f6; /* padding around thumb */
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+}
 
 

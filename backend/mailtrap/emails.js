@@ -3,6 +3,7 @@ import {
   PASSWORD_RESET_SUCCESS_TEMPLATE,
   VERIFICATION_EMAIL_TEMPLATE,
   APP_ERROR_CONTENT,
+  USER_CREATION_MAIL,
 } from "./emailTemplate.js";
 import { mailtrapClient, sender } from "./mailtrap.config.js";
 
@@ -19,7 +20,7 @@ export const sendVerificationEmail = async (email, verificationToken) => {
       ),
       category: "Email Verification",
     });
-    console.log("Email sent successfully", response);
+    //console.log("Email sent successfully", response);
   } catch (error) {
     console.error("Error sending verification email ", error.message);
     throw new Error(`Error sending verification email: ${error.message}`);
@@ -39,7 +40,7 @@ export const sendWelcomeEmail = async (email, name) => {
         name: name,
       },
     });
-    console.log("Welcome Email sent successfully", response);
+    //console.log("Welcome Email sent successfully", response);
   } catch (error) {
     console.error("Error sending Welcome email ", error.message);
     throw new Error(`Error sending Welcome email: ${error.message}`);
@@ -99,9 +100,35 @@ export const sendErrorMailToAdmin = async (name, email, content) => {
       html: html,
       category: "Application Exception",
     });
-    console.log("Email sent successfully", response);
+    //console.log("Email sent successfully", response);
   } catch (error) {
     console.error("Error sending exception email ", error.message);
     throw new Error(`Error sending exception email: ${error.message}`);
+  }
+};
+
+export const sendEmployeeAddedMail = async (email, name, empId, pwd) => {
+  const recipients = [{ email }];
+  const replacements = {
+    "{name}": name,
+    "{empId}": empId,
+    "{pwd}": pwd,
+  };
+  const html = USER_CREATION_MAIL.replace(
+    /{empId}|{pwd}|{name}/g,
+    (matched) => replacements[matched]
+  );
+  try {
+    const response = await mailtrapClient.send({
+      from: sender,
+      to: recipients,
+      subject: " Employee enrolled to the system",
+      html: html,
+      category: "Employee enroll",
+    });
+    //console.log("Email sent successfully", response);
+  } catch (error) {
+    console.error("Error sending employee added email ", error.message);
+    throw new Error(`Error sending employee added email: ${error.message}`);
   }
 };

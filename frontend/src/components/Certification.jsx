@@ -7,9 +7,9 @@ const Certification = ({certification, isNew, showPlus,removeBlank}) => {
     const [isEdit,setIsEdit] = useState(isNew);
     const [editedData, setEditedData] = useState({...certification});
 
-    console.log("certification",certification);
+    //console.log("certification",certification);
      const {userProfile, saveCertification} = useUserStore();
-     console.log(userProfile);
+     //console.log(userProfile);
     const handleChange = (e) => {
       setEditedData({...editedData, [e.target.name]: e.target.value});
     }
@@ -17,7 +17,7 @@ const Certification = ({certification, isNew, showPlus,removeBlank}) => {
     const handleSave = async () => {
       setIsEdit(false);
       showPlus(true)
-      console.log(userProfile?.userId,userProfile?.profileUserId,editedData);
+      //console.log(userProfile?.userId,userProfile?.profileUserId,editedData);
       await saveCertification(userProfile?.userId,userProfile?.profileUserId,editedData);
     }
   return (

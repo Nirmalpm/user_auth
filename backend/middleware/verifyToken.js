@@ -5,7 +5,7 @@ export const verifyToken = (roles = []) => {
   if (typeof roles === "string") {
     roles = [roles];
   }
-  console.log("verifyToken:line8", roles);
+  //console.log("verifyToken:line8", roles);
   return (req, res, next) => {
     const token = req.cookies.token;
     //console.log("verifyToken:line11", token);

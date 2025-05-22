@@ -25,6 +25,11 @@ import BhagavadGita from './pages/spiritual/Gita/BhagavadGita.jsx';
 import SpiritualQuotes from './pages/spiritual/SpiritualQuotes.jsx';
 import AdminContact from './AdminContact.jsx';
 
+import HospitalLayout from './pages/hospital/Layout.jsx';
+import Home from './pages/hospital/Home.jsx';
+import Admin from './pages/hospital/Admin.jsx';
+import Ward from './pages/hospital/Ward.jsx';
+
 
 const ErrorPage = () => {
   return <h2>Oops! Something went wrong. Please try again later.</h2>;
@@ -48,13 +53,13 @@ const router = createBrowserRouter([
       },
       {
         path: "/spiritual",
-        Component: AppLayout,
+        Component:AppLayout,
         children:[
           {
             Component: SpiritualQuotes,
             children:[
-              {index:true, Component: BabaQuotes},
-              {path:"amma",Component:AmmaQuotes},
+              {path:"swami", Component: BabaQuotes},
+              {index:true,Component:AmmaQuotes},
               {path:"gita",Component:BhagavadGita},
             ]
           }
@@ -101,14 +106,22 @@ const router = createBrowserRouter([
         Component: ErrorBoundary
       
       },
+      {
+        path:"hospital",
+        Component: HospitalLayout,
+        children:[
+          {index:true, Component:Home},
+          {path:"admin", Component:Admin},
+          {path:"ward/:wardId", Component:Ward}
+        ]
+      }
 
     ]
   },
   
 ]);
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <RouterProvider router={router}/>   
-  </StrictMode>,
-)
+const Root = import.meta.env.MODE === 'development'
+  ? <StrictMode><RouterProvider router={router}/></StrictMode>
+  : <RouterProvider router={router}/>
+createRoot(document.getElementById('root')).render(Root)

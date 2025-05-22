@@ -1,4 +1,4 @@
-import { Outlet } from "react-router"
+import { Outlet, useLocation } from "react-router"
 import FloatingShape from "./components/FloatingShape"
 import { Toaster } from "react-hot-toast"
 import { useAuthStore } from "./store/authStore"
@@ -8,6 +8,11 @@ import bgImage from './assets/images/bg-1.webp';
 import { Buffer } from 'buffer';
 
 window.Buffer = Buffer;
+
+const API_URL =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:5000"
+    : "";
 
 function App() {
 
@@ -22,8 +27,19 @@ function App() {
 
   const {isCheckingAuth, checkAuth} =  useAuthStore();
   useEffect(()=>{
+    //console.log('Environment:', import.meta.env.MODE);
     checkAuth()
   },[checkAuth]);
+
+    const location = useLocation();
+    useEffect(() => {
+        //console.log('User accessed page:', location.pathname);
+        fetch(`${API_URL}/track-visit?page=${location.pathname}`, {
+          method: 'GET',
+          credentials: 'include' // this sends cookies!
+        });
+    }, [location]);
+
 
  if(isCheckingAuth) return <LoadingSpinner/>;
 

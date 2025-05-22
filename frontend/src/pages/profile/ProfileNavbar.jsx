@@ -30,7 +30,7 @@ const Navbar = ({isMenuOpen, setIsMenuOpen}) => {
                     &#9776;
                 </div>
                 <div className="hidden md:flex items-center space-x-8 justify-end">
-                    <a href="#home" className="text-gray-300 hover:text-white transition-colors">Introduction</a>
+                    <a href="#home" className="text-gray-300 hover:text-white transition-colors">Introductions</a>
                     <a href="#about" className="text-gray-300 hover:text-white transition-colors">Tech. Skills</a>
                     <a href="#projects" className="text-gray-300 hover:text-white transition-colors">Projects</a>
                     <a href="#contact" className="text-gray-300 hover:text-white transition-colors">Contact</a>

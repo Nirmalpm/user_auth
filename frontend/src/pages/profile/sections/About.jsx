@@ -22,7 +22,7 @@ const About = () => {
     const {addUpdateUserAbout,saveFrontend, saveBackend, saveOther, userProfile} = useUserStore();   
 
     useEffect(()=>{
-        console.log(userProfile,userId, profileUserId)
+        //console.log(userProfile,userId, profileUserId)
         if(userProfile){
             const fskills  = userProfile.frontend.map((skill)=>{
                 return {id:skill.id, name:skill.skillName}
@@ -48,16 +48,16 @@ const About = () => {
     }
 
     const handleSaveFrontend = async (userId,profileUserId,skills )=>{
-        console.log(userId,profileUserId,skills);
+        //console.log(userId,profileUserId,skills);
         const data = await saveFrontend({userId, profileUserId, skills});
-        //console.log(data)
+        ////console.log(data)
     }
     const handleSaveBackend = async (userId,profileUserId,skills)=>{
-        console.log(userId,profileUserId,skills);
+        //console.log(userId,profileUserId,skills);
         const data = await saveBackend({userId, profileUserId, skills});
     }
     const handleSaveOther = async(userId,profileUserId,skills)=>{
-        console.log(userId,profileUserId,skills);
+        //console.log(userId,profileUserId,skills);
         const data = await saveOther({userId, profileUserId, skills});
     }
 

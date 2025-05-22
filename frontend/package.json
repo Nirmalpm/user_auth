@@ -15,7 +15,6 @@
     "@vitejs/plugin-react": "^4.3.4",
     "axios": "^1.8.4",
     "buffer": "^6.0.3",
-    "email-js": "^2.0.3",
     "framer-motion": "^12.6.3",
     "keen-slider": "^6.8.6",
     "lucide-react": "^0.487.0",

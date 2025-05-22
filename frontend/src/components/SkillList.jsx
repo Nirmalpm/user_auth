@@ -10,7 +10,7 @@ const ItemList = (props) => {
   const [items, setItems] = useState([...props.itemList]);
   const [isEditMode, setIsEditMode]    = useState(false);
   const {userId, profileUserId, handleSave} = props;
-   //console.log(items),console.log(inputRefs.current)
+   ////console.log(items),//console.log(inputRefs.current)
    const {deleteSkill} = useUserStore();
 
   useEffect(() => {

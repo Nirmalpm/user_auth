@@ -8,9 +8,9 @@ const Project = ({project, isNew, showPlus,removeBlank}) => {
     const [isEdit,setIsEdit] = useState(isNew);
     const [editedData, setEditedData] = useState({...project});
 
-    console.log("project",project);
+    //console.log("project",project);
      const {userProfile, saveProject} = useUserStore();
-     console.log(userProfile);
+     //console.log(userProfile);
     const handleChange = (e) => {
       setEditedData({...editedData, [e.target.name]: e.target.value});
     }
@@ -18,7 +18,7 @@ const Project = ({project, isNew, showPlus,removeBlank}) => {
     const handleSave = async () => {
       setIsEdit(false);
       showPlus(true)
-      console.log(userProfile?.userId,userProfile?.profileUserId,editedData);
+      //console.log(userProfile?.userId,userProfile?.profileUserId,editedData);
       await saveProject(userProfile?.userId,userProfile?.profileUserId,editedData);
     }
   return (

@@ -10,7 +10,7 @@ const generateSlug = (title) => {
 
 export const saveBlog = async (req, res) => {
   const { id, title, content, userId } = req.body;
-  console.log("line 13", title, content, userId);
+  //console.log("line 13", title, content, userId);
   const insertScript = `
         INSERT INTO blogs (title, content, authorId, slug)
         VALUES (?, ?, ?, ?)
@@ -31,7 +31,7 @@ export const saveBlog = async (req, res) => {
     const results = await db.query("select * from blogs where slug= ?", [
       generateSlug(title),
     ]);
-    console.log(results[0]);
+    //console.log(results[0]);
     if (results[0].length > 0) {
       return res.status(400).json({
         success: false,
@@ -69,13 +69,13 @@ export const getBlogs = async (req, res) => {
   let results = null;
   try {
     if (id) {
-      console.log(selectIdQuery);
+      //console.log(selectIdQuery);
       results = await db.execute(selectIdQuery, [id]);
     } else if (query) {
-      console.log(selectSearchQuery);
+      //console.log(selectSearchQuery);
       results = await db.execute(selectSearchQuery, [`%${query}%`]);
     } else {
-      console.log(selectAllQuery);
+      //console.log(selectAllQuery);
       results = await db.execute(selectAllQuery);
     }
     res.status(200).json({ success: true, blogs: results[0] });
@@ -89,7 +89,7 @@ export const getAllDisplayBlogs = async (req, res) => {
     "select id, title, authorId from blogs order by createdTime desc";
   try {
     const results = await db.execute(query);
-    console.log({ success: true, blogs: results[0] });
+    //console.log({ success: true, blogs: results[0] });
     res.status(200).json({ success: true, blogs: results[0] });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -110,7 +110,7 @@ export const deleteBlog = async (req, res) => {
       const result = await db.execute(delQuery, [id, authorId]);
       delete req.body.id;
     } else {
-      console.log(113, user, authorId, profileUserId);
+      //console.log(113, user, authorId, profileUserId);
       const err = new Error("Forbidden");
       err.status = 403;
       throw err;
@@ -124,7 +124,7 @@ export const deleteBlog = async (req, res) => {
 
 export const saveBlogComment = async (req, res) => {
   const { id, parentId, userId, blogId, comment } = req.body;
-  console.log("line 117", id, parentId, userId, blogId, comment);
+  //console.log("line 117", id, parentId, userId, blogId, comment);
   const insertScript = parentId
     ? `
         INSERT INTO blog_discussion (parentId, userId,blogId, comment)
@@ -169,7 +169,7 @@ export const saveBlogComment = async (req, res) => {
 };
 
 export const getComments = async (req, res) => {
-  console.log(req.body?.blogId, req.query?.blogId);
+  //console.log(req.body?.blogId, req.query?.blogId);
   const blogId = req.body?.blogId ?? req.query?.blogId;
 
   const selectIdQuery = `
@@ -227,7 +227,7 @@ export const deleteComment = async (req, res) => {
     ]);
     const userRow = userProfile[0];
     const userProfileId = userRow[0].id;
-    console.log(user.roles, commentUserId, userProfileId);
+    //console.log(user.roles, commentUserId, userProfileId);
 
     if (user.roles.includes("admin") || commentUserId === userProfileId) {
       results = await db.execute(deleteQuery, [id, blogId, commentUserId]);

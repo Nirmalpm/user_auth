@@ -16,7 +16,7 @@ const Projects = () => {
       }
     },[userProfile]);
 
-    console.log(projects)
+    //console.log(projects)
 
     const handleSaveAll = (updateProject) => {
         setProjects((prev) => prev.id === updateProject.id ? updateProject : prev);

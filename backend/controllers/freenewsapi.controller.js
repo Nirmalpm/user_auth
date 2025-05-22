@@ -10,7 +10,7 @@ export const getFreeNews = async (req, res) => {
     const response = await axios.get(url);
     res.status(200).json(response.data.member);
   } catch (error) {
-    console.log("Error on accessing apidata:", error);
+    //console.log("Error on accessing apidata:", error);
   }
 };
 
@@ -21,7 +21,7 @@ export const getFreeNews = async (req, res) => {
 //     const response = await axios.get(url);
 //     res.status(200).json(response.data);
 //   } catch (error) {
-//     console.log("Error on accessing apidata:", error);
+//     //console.log("Error on accessing apidata:", error);
 //   }
 // };
 
@@ -36,7 +36,7 @@ export const getFreeNews = async (req, res) => {
 //       .jpeg({ quality: 60 }) // compress quality
 //       .toBuffer();
 //     const base64 = compressed.toString("base64");
-//     console.log(base64);
+//     //console.log(base64);
 //     res.status(200).json(base64);
 //   } catch (error) {
 //     console.error("Error fetching image:", error);

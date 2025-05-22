@@ -33,11 +33,11 @@ function TextToJsonConverter() {
     
       if (i === 0) {
         verseLines = [...lines];
-        console.log("verseLines", verseLines);
+        //console.log("verseLines", verseLines);
         verseCount++;
       } else if (i === 1) {
         meaningLines = [...lines];
-        console.log("meaningLines", meaningLines);
+        //console.log("meaningLines", meaningLines);
         i = 0;
     
         acc.push({

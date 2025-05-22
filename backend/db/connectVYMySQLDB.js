@@ -20,16 +20,16 @@ connection.connect((err) => {
     console.error("Connection failed:", err);
     return;
   }
-  console.log("Connected to MySQL on SpidyHost!");
+  //console.log("Connected to MySQL on SpidyHost!");
   // 👇 Keep-alive ping every 5 seconds
   setInterval(() => {
     connection.query("SELECT 1", (err) => {
       if (err) {
         console.error("MySQL keep-alive failed:", err);
-        // } else {
-        //   console.log("💓 MySQL keep-alive ping");
-        // }
+      } else {
+        // console.log("💓 MySQL keep-alive ping");
       }
+      //}
     });
   }, 5000);
 });

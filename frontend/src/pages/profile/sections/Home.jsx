@@ -44,7 +44,7 @@ const Home = () => {
   `;
 
   useEffect(()=>{
-    console.log(userProfile,user );
+    //console.log(userProfile,user );
     if(userProfile?.homeInfo){
       setUserProfileHome({...userProfile.homeInfo});
       setIsHomeSetOrUpdated(true);
@@ -57,13 +57,13 @@ const Home = () => {
 
   const handleSubmit  = async (e) => {
     e.preventDefault();
-    console.log(userProfile, userProfileHome,user);
+    //console.log(userProfile, userProfileHome,user);
     let imagePath = userProfile?.homeInfo?.imagePath;
     if (file) {
       const imageData = await uploadImage(file, user.name);
       imagePath = imageData.filePath;
       // Now you can use the uploaded image path + form data
-      console.log('Uploaded file path:', imagePath);
+      //console.log('Uploaded file path:', imagePath);
     }
     try {
       await addUpdateUserHome({...userProfileHome,userId:user._id,
@@ -71,7 +71,7 @@ const Home = () => {
       setIsHomeSetOrUpdated(true)
     } catch (error) {
       toast.error(error.message);
-      console.log('handleSubmit:', error);
+      //console.log('handleSubmit:', error);
     }
   };
 
@@ -94,7 +94,7 @@ const Home = () => {
         { isHomeSetOrUpdated ? (
       <div className=" w-full flex ">
         <div className="w-full min-w-1/4 text-center z-10 flex items-center">
-        <img src={`${userProfileHome?.imagePath || "/uploads/Portrait_Placeholder.png"}`} alt="Profile Pic" width="150" className="rounded-full"/>    
+        <img src={`${userProfileHome?.imagePath || "/portfolio/Portrait_Placeholder.png"}`} alt="Profile Pic" width="150" className="rounded-full"/>    
         </div>
         <div className=" w-full min-w-3/4 z-10 px-4 flex items-start flex-col">
           <h1 className=" text-3xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-500 

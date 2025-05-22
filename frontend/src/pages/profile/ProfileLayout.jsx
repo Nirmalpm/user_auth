@@ -30,7 +30,7 @@ function Layout() {
 
   const refreshData = async ()=>{
     const userProfile = await loadUserProfile(user);
-    console.log(userProfile);
+    //console.log(userProfile);
   }
 
   useEffect(()=>{    

@@ -20,7 +20,7 @@ const BlogDiscussion = () => {
     const setValues = async () =>{
         const blog = await getBlogById(id);
         const comments = await getComments(id);
-        console.log(blog,comments);
+        //console.log(blog,comments);
         setBlog(blog);
         setComments(comments)
     }
@@ -47,7 +47,7 @@ const BlogDiscussion = () => {
   }
   
   const CommentNode = ({ comment,setComments }) => {
-    console.log(comment)
+    //console.log(comment)
     const [clicked, setClicked] = useState(false);
     const {saveBlogComment, deleteComment} = useBlogStore();
     const [comm, setComm] = useState("");
@@ -76,7 +76,7 @@ const BlogDiscussion = () => {
       setUserId(userId)
     };
     const handleConfirmDelete = () => {
-      console.log("Deleting item with id:", id, blogId,userId);
+      //console.log("Deleting item with id:", id, blogId,userId);
       setIsModalOpen(false);
       handleDeleteComment(id, blogId,userId);
     };

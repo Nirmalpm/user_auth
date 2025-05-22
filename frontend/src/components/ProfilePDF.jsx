@@ -96,7 +96,7 @@ const toBase64FromUrl = async (url) => {
 
 const ProfilePDF = () => {
    const {userProfile} = useUserStore();
-   console.log(userProfile)
+   //console.log(userProfile)
    const {fullName} = userProfile?.homeInfo || {};
    const {imagePath} = userProfile?.homeInfo || {imagePath:"/uploads/Portrait_Placeholder.png"};
    const {userDesc} = userProfile?.aboutInfo || {};
@@ -106,14 +106,14 @@ const ProfilePDF = () => {
    useEffect(()=>{
       const imageSetter = async ()=>{
         if(imagePath)
-        {console.log(`${API_URL}${imagePath}`)
+        {//console.log(`${API_URL}${imagePath}`)
         const base64Image = await toBase64FromUrl(`${API_URL}${imagePath}`);
         setImageSrc(base64Image);}
       }
       imageSetter();
    },[imagePath]);
 
-   console.log(imagePath, fullName, userDesc,frontend,backend, other,projects);
+   //console.log(imagePath, fullName, userDesc,frontend,backend, other,projects);
    const fskills = ()=>{
     return frontend && frontend.reduce((prev,skill)=>prev+=skill.skillName+", ","");
    }

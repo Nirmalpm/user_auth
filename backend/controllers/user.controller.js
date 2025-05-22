@@ -7,7 +7,7 @@ export const isUserPresent = async (req, res) => {
 
   try {
     const [results] = await db.query(selectQuery, values);
-    //console.log(results);
+    ////console.log(results);
     if (results.length > 0) {
       return res.status(200).json({
         success: true,
@@ -40,7 +40,7 @@ export const isUserProfileHomePresent = async (req, res) => {
 
   try {
     const [results] = await db.query(selectQuery, values);
-    console.log(results);
+    //console.log(results);
     if (results.length > 0) {
       return res.status(200).json({
         success: true,
@@ -66,7 +66,7 @@ export const addUpdateUserHome = async (req, res) => {
   const { userId, profileUserId, fullName, userDesc, imagePath, isUpdate } =
     req.body;
 
-  console.log(userId, profileUserId, fullName, userDesc, imagePath, isUpdate);
+  //console.log(userId, profileUserId, fullName, userDesc, imagePath, isUpdate);
 
   // Check if user profile already exists
   const checkQuery = "SELECT * FROM user_home WHERE userId = ?";
@@ -98,7 +98,7 @@ export const addUpdateUserHome = async (req, res) => {
 export const addUpdateUserAbout = async (req, res) => {
   const { userId, profileUserId, userDesc } = req.body;
 
-  console.log("addUpdateUserAbout", userId, profileUserId, userDesc);
+  //console.log("addUpdateUserAbout", userId, profileUserId, userDesc);
 
   // Check if user profile already exists
   const checkQuery = "SELECT * FROM user_about WHERE userId = ?";
@@ -130,7 +130,7 @@ export const addUpdateUserAbout = async (req, res) => {
 
 export const updateFrontendSkills = async (req, res) => {
   const { userId, profileUserId, skills } = req.body;
-  console.log("updateFrontendSkills", userId, profileUserId, skills);
+  //console.log("updateFrontendSkills", userId, profileUserId, skills);
   if (!Array.isArray(skills)) {
     return res.status(400).json({ error: "Skills should be an array" });
   }
@@ -159,7 +159,7 @@ export const updateFrontendSkills = async (req, res) => {
 
 export const updateBackendSkills = async (req, res) => {
   const { userId, profileUserId, skills } = req.body;
-  console.log("updateBackendSkills", userId, profileUserId, skills);
+  //console.log("updateBackendSkills", userId, profileUserId, skills);
   if (!Array.isArray(skills)) {
     return res.status(400).json({ error: "Backend Skills should be an array" });
   }
@@ -188,7 +188,7 @@ export const updateBackendSkills = async (req, res) => {
 
 export const updateOtherSkills = async (req, res) => {
   const { userId, profileUserId, skills } = req.body;
-  console.log("updateOtherSkills", userId, profileUserId, skills);
+  //console.log("updateOtherSkills", userId, profileUserId, skills);
   if (!Array.isArray(skills)) {
     return res.status(400).json({ error: "Other Skills should be an array" });
   }
@@ -216,7 +216,7 @@ export const updateOtherSkills = async (req, res) => {
 
 export const updateEducation = async (req, res) => {
   const { userId, profileUserId, education } = req.body;
-  console.log("updateEduction:", userId, profileUserId, education);
+  //console.log("updateEduction:", userId, profileUserId, education);
   try {
     const updateQuery =
       "update user_education set name=?, university =?, YearOfPassing =?, updatedTime = NOW() where id=? and userId=?";
@@ -251,7 +251,7 @@ export const updateEducation = async (req, res) => {
 
 export const updateCertification = async (req, res) => {
   const { userId, profileUserId, certification } = req.body;
-  console.log("updateCertification:", userId, profileUserId, certification);
+  //console.log("updateCertification:", userId, profileUserId, certification);
   try {
     const updateQuery =
       "update user_certification set certName=?, certYear =?, updatedTime = NOW() where id=? and userId=?";
@@ -285,7 +285,7 @@ export const updateCertification = async (req, res) => {
 
 export const updateWorkExp = async (req, res) => {
   const { userId, profileUserId, workexp } = req.body;
-  console.log("updateWorkExp:", userId, profileUserId, workexp);
+  //console.log("updateWorkExp:", userId, profileUserId, workexp);
   try {
     const updateQuery =
       "update user_work_exp set expName=?, expDesc =?, duration =?, lastDesignation =?, updatedTime = NOW() where id=? and userId=?";
@@ -321,7 +321,7 @@ export const updateWorkExp = async (req, res) => {
 };
 export const updateProject = async (req, res) => {
   const { userId, profileUserId, project } = req.body;
-  console.log("updateProject:", userId, profileUserId, project);
+  //console.log("updateProject:", userId, profileUserId, project);
   try {
     const updateQuery =
       "update user_projects set projectName=?, projectDesc =?, duration =?, techUsed =?, updatedTime = NOW() where id=? and userId=?";
@@ -358,7 +358,7 @@ export const updateProject = async (req, res) => {
 
 export const addFrontendSkills = async (req, res) => {
   const { userId, profileUserId, skills } = req.body;
-  console.log("addFrontendSkills", userId, profileUserId, skills);
+  //console.log("addFrontendSkills", userId, profileUserId, skills);
   if (!Array.isArray(skills)) {
     return res.status(400).json({ error: "Skills should be an array" });
   }
@@ -548,7 +548,7 @@ const getUserProfile = async (userId) => {
       projects,
     };
   } catch (error) {
-    console.log("Error while fetching user about", error);
+    //console.log("Error while fetching user about", error);
     res.status(500).json({
       success: true,
       message: "Error while getting User About Info",
@@ -564,7 +564,7 @@ const getUserHome = async (userId) => {
     const [results] = await db.query(selectQuery, values);
     return results[0] || null;
   } catch (error) {
-    console.log("user_about table access error", error);
+    //console.log("user_about table access error", error);
     throw error;
   }
 };
@@ -575,7 +575,7 @@ const getUserAbout = async (userId) => {
     const [results] = await db.query(aboutQuery, values);
     return results[0] || null;
   } catch (error) {
-    console.log("user_about table access error", error);
+    //console.log("user_about table access error", error);
     throw error;
   }
 };
@@ -584,10 +584,10 @@ const getUserFrontendSkills = async (userId) => {
     const skillQuery = "select * from user_frontend_skills where userId = ?";
     const values = [userId];
     const [results] = await db.query(skillQuery, values);
-    // console.log("Front end skills", results);
+    // //console.log("Front end skills", results);
     return results;
   } catch (error) {
-    console.log("Error while fetching Front end skills", error);
+    //console.log("Error while fetching Front end skills", error);
     throw error;
   }
 };
@@ -597,10 +597,10 @@ const getUserBackendSkills = async (userId) => {
     const skillQuery = "select * from user_backend_skills where userId = ?";
     const values = [userId];
     const [results] = await db.query(skillQuery, values);
-    //console.log("Back end skills", results);
+    ////console.log("Back end skills", results);
     return results;
   } catch (error) {
-    console.log("Error while fetching Back end skills", error);
+    //console.log("Error while fetching Back end skills", error);
     throw error;
   }
 };
@@ -610,10 +610,10 @@ const getUserOtherSkills = async (userId) => {
     const skillQuery = "select * from user_other_skills where userId = ?";
     const values = [userId];
     const [results] = await db.query(skillQuery, values);
-    // console.log("Other skills", results);
+    // //console.log("Other skills", results);
     return results;
   } catch (error) {
-    console.log("Error while fetching Other skills", error);
+    //console.log("Error while fetching Other skills", error);
     throw error;
   }
 };
@@ -623,10 +623,10 @@ const getUserEducation = async (userId) => {
     const eduQuery = "select * from user_education where userId = ?";
     const values = [userId];
     const [results] = await db.query(eduQuery, values);
-    //console.log("Education", results);
+    ////console.log("Education", results);
     return results;
   } catch (error) {
-    console.log("Error while fetching Education", error);
+    //console.log("Error while fetching Education", error);
     throw error;
   }
 };
@@ -636,10 +636,10 @@ const getUserCertification = async (userId) => {
     const certQuery = "select * from user_certification where userId = ?";
     const values = [userId];
     const [results] = await db.query(certQuery, values);
-    // console.log("Certification", results);
+    // //console.log("Certification", results);
     return results;
   } catch (error) {
-    console.log("Error while fetching Certification", error);
+    //console.log("Error while fetching Certification", error);
     throw error;
   }
 };
@@ -649,10 +649,10 @@ const getUserWorkExp = async (userId) => {
     const expQuery = "select * from user_work_exp where userId = ?";
     const values = [userId];
     const [results] = await db.query(expQuery, values);
-    // console.log("Work Experience", results);
+    // //console.log("Work Experience", results);
     return results;
   } catch (error) {
-    console.log("Error while fetching Work Experience", error);
+    //console.log("Error while fetching Work Experience", error);
     throw error;
   }
 };
@@ -662,10 +662,10 @@ const getUserProjects = async (userId) => {
     const expQuery = "select * from user_projects where userId = ?";
     const values = [userId];
     const [results] = await db.query(expQuery, values);
-    // console.log("Work Experience", results);
+    // //console.log("Work Experience", results);
     return results;
   } catch (error) {
-    console.log("Error while fetching user projectse", error);
+    //console.log("Error while fetching user projectse", error);
     throw error;
   }
 };
@@ -677,9 +677,9 @@ export const loadUserProfile = async (req, res) => {
       userId,
     ]);
     const { id, name, email, phoneNumber } = rows[0];
-    console.log(id, name, email);
+    //console.log(id, name, email);
     const data = await getUserProfile(id);
-    //console.log({ userId: id, name, email, ...data });
+    ////console.log({ userId: id, name, email, ...data });
     res
       .status(200)
       .json({ userId, profileUserId: id, name, email, phoneNumber, ...data });
@@ -690,7 +690,7 @@ export const loadUserProfile = async (req, res) => {
 
 export const deleteSkill = async (req, res) => {
   const { userId, profileUserId, id, tableName } = req.body;
-  console.log("deleteSkills", userId, profileUserId, id, tableName);
+  //console.log("deleteSkills", userId, profileUserId, id, tableName);
   try {
     const deleteQuery = `delete from ${tableName} where id = ${id}`;
     await db.execute(deleteQuery);

@@ -15,7 +15,7 @@ const AppNavbar = () => {
     const {logout, user } = useAuthStore();
     const {reset} = useUserStore();	
     const {roles} = user||{};
-    console.log(roles)
+    ////console.log(roles)
     const handleLogout = () => {
 		reset();
 		logout();
@@ -36,7 +36,7 @@ const AppNavbar = () => {
                     <NavLink to="/test"  className={({ isActive }) => (isActive ? `${activeDropdown}` : `${notActive}`)}>Applications</NavLink>
                     <div className="dropdown-menu">
                         <NavLink to="/portfolio">Portfolio Builder</NavLink>
-                        <NavLink to="/test">Mobile Development</NavLink>
+                        <NavLink to="/hospital">Health Care Central</NavLink>
                         <NavLink to="/test">UI/UX Design</NavLink>
                         {
                             roles?.includes("admin") ?<NavLink to="/admin">Admin screen</NavLink> :null
@@ -59,8 +59,8 @@ const AppNavbar = () => {
                         </button>
                         <NavLink to="/portfolio" className={`text-2xl font-semibold text-white my-4 transform transition-transform duration-300
                             ${isMobileMenu? "opacity-100 translate-y-0": "opacity-0 translate-y-5"}`} >Portfolio Builder</NavLink>
-                        <NavLink to="/test" className={`text-2xl font-semibold text-white my-4 transform transition-transform duration-300
-                            ${isMobileMenu? "opacity-100 translate-y-0": "opacity-0 translate-y-5"}`} onClick={()=>setIsMobileMenu(false)}>Mobile Development</NavLink>
+                        <NavLink to="/hospital" className={`text-2xl font-semibold text-white my-4 transform transition-transform duration-300
+                            ${isMobileMenu? "opacity-100 translate-y-0": "opacity-0 translate-y-5"}`} onClick={()=>setIsMobileMenu(false)}>Health Care Central</NavLink>
                         <NavLink to="/test" className={`text-2xl font-semibold text-white my-4 transform transition-transform duration-300
                             ${isMobileMenu? "opacity-100 translate-y-0": "opacity-0 translate-y-5"}`} onClick={()=>setIsMobileMenu(false)}>UI/UX Design</NavLink>
                         <NavLink to="/blogs" className={`text-2xl font-semibold text-white my-4 transform transition-transform duration-300

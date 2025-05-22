@@ -41,19 +41,36 @@ const KaraokePlayer = ({path}) => {
 
   const activeIndex = getActiveLineIndex();
 
+  // useEffect(() => {
+  //   if (lineRefs.current[activeIndex]) {
+  //     lineRefs.current[activeIndex].scrollIntoView({
+  //       behavior: 'smooth',
+  //       block: 'center',
+  //     });
+  //   }
+  // }, [activeIndex]);
+
   useEffect(() => {
-    if (lineRefs.current[activeIndex]) {
-      lineRefs.current[activeIndex].scrollIntoView({
+    const container = audioRef.current;
+    const activeLine = lineRefs.current[activeIndex];
+  
+    if (container && activeLine) {
+      const offsetTop = activeLine.offsetTop;
+      const lineHeight = activeLine.offsetHeight;
+      const containerHeight = container.clientHeight;
+  
+      container.scrollTo({
+        top: offsetTop - containerHeight / 2 + lineHeight / 2,
         behavior: 'smooth',
-        block: 'center',
       });
     }
   }, [activeIndex]);
 
   return (
-    <div className="p-4 flex flex-col justify-center items-center gap-2">
-      <div className="text-2xl text-red-800"><h1>Vishishta Gayathri Mantram</h1></div>
-      <div className="flex w-full flex-col max-w-md mt-4 h-64 overflow-y-auto border p-4 rounded-2xl bg-gradient-to-r from-blue-500 to-emerald-800">
+    <div className="p-4 flex flex-col justify-center items-center">
+      <div className="text-3xl bg-gradient-to-r from-pink-100 to-pink-700 p-3 rounded-t-xl mt-5"><h1>Vishishta Gayathri Mantram</h1></div>
+      <div className="flex w-full flex-col max-w-md  h-120 overflow-y-auto border p-4 rounded-b-2xl 
+      bg-gradient-to-r from-pink-500 to-emerald-800">
         {lyrics.map((line, index) => (
           <p
             key={index}

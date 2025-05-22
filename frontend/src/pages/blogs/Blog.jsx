@@ -12,7 +12,7 @@ const [opened, setOpened] = useState(false);
 const [isModalOpen, setIsModalOpen] = useState(false);
 const [selectedId, setSelectedId] = useState(null);
 
-console.log(selectedBlog)
+//console.log(selectedBlog)
 
 const handleOpen = async() =>{
         setOpened(false)      
@@ -23,7 +23,7 @@ const handleDeleteClick = () => {
   setIsModalOpen(true);
 };
 const handleConfirmDelete = () => {
-  console.log("Deleting item with id:", id, "AuthorId:",authorId);
+  //console.log("Deleting item with id:", id, "AuthorId:",authorId);
   setIsModalOpen(false);
   handleDelete(id,authorId);
 };

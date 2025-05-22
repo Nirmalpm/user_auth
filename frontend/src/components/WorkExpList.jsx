@@ -16,7 +16,7 @@ const WorkExpList = () => {
       }
     },[userProfile]);
 
-    console.log(workexps)
+    //console.log(workexps)
 
     const handleSaveAll = (updatedWork) => {
         setWorkexps((prev) => prev.id === updatedWork.id ? updatedWork : prev);

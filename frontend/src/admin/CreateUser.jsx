@@ -25,7 +25,7 @@ const CreateUser = () => {
 
   const handleAddUser = async(e) =>{
     e.preventDefault(); 
-    console.log(password,cpassword)
+    //console.log(password,cpassword)
     if(password === cpassword){
         await addUser(name,email,password,phoneNumber);
         handleReset();

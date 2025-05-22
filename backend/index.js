@@ -10,6 +10,7 @@ import blogRoute from "./routes/blog.routes.js";
 import uploadRoute from "./routes/upload.route.js";
 import userRoutes from "./routes/user.route.js";
 import adminRoute from "./routes/admin.route.js";
+import pasRoute from "./routes/pas.route.js";
 
 import { verifyToken } from "./middleware/verifyToken.js";
 import { visitorLogger } from "./middleware/visitorLogger.js";
@@ -29,17 +30,19 @@ app.use("/api/user", verifyToken(["user", "admin"]), userRoutes);
 app.use("/api/blogs", blogRoute);
 app.use("/fileupload", uploadRoute);
 app.use("/admin", adminRoute);
+app.use("/api/pas", pasRoute);
 
-app.use("/uploads", express.static(path.resolve(__dirname, "../uploads")));
+app.use("/uploads", express.static(path.resolve(__dirname, "./portfolio")));
+app.use("/docprofile", express.static(path.resolve(__dirname, "./doctor")));
 
 app.get("/track-visit", visitorLogger(), (req, res) => {
   res.sendStatus(200); // or res.end() or res.send('OK')
 });
 
-console.log(
-  "Serving static files from:",
-  path.resolve(__dirname, "../uploads")
-);
+// console.log(
+//   "Serving static files from:",
+//   path.resolve(__dirname, "../uploads")
+// );
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "frontend", "dist")));
@@ -61,4 +64,7 @@ app.listen(PORT, () => {
   console.log("Server is running on port: ", PORT);
 });
 
+app.get("/", (req, res) => {
+  res.send(`Served by process ${process.pid}`);
+});
 //g3Lh4bFrzlwX3yeO

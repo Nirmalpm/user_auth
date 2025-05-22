@@ -15,7 +15,7 @@ const EducationList = () => {
       }
     },[userProfile]);
 
-    console.log(educations)
+    //console.log(educations)
 
     const handleSaveAll = (updatedEducation) => {
         setEducations((prev) => prev.id === updatedEducation.id ? updatedEducation : prev);

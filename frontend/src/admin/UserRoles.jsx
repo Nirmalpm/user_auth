@@ -7,14 +7,14 @@ const UserRoles = () => {
   const {user, appUsers,getUsersByRole,updateUserRole,removeUserRole }= useAuthStore();
   const allRoles = ["user","admin","moderator","spiritual"];
   const [checked, setChecked] = useState(false);
-  console.log(user, appUsers);
+  //console.log(user, appUsers);
 
   useEffect(()=>{
     const getusers = async ()=>{
       await getUsersByRole();      
     }
     getusers();
-    console.log(appUsers)
+    //console.log(appUsers)
   },[getUsersByRole]);
 
   return (
@@ -33,8 +33,8 @@ const UserRoles = () => {
             <div className="w-1/3 flex flex-wrap">Roles</div>
             </div>
         {
-          appUsers && appUsers.map((user)=>(
-            <div className="flex gap-3 justify-items-start text-white p-2">
+          appUsers && appUsers.map((user,ind)=>(
+            <div className="flex gap-3 justify-items-start text-white p-2" key={ind}>
             <div className="w-full flex flex-wrap">{user.name}</div>
             <div className="w-full flex flex-wrap">{user.email}</div>
             <div className="w-full flex flex-wrap  gap-1">

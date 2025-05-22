@@ -9,10 +9,10 @@ const DashboardPage = () => {
 	const { user, logout } = useAuthStore();
 	const {reset,getFreeNews} = useUserStore();	
 
-	console.log(user.roles)
+	////console.log(user.roles)
 	const checkApi = async()=>{
 		const data= await getFreeNews("Business");
-		console.log(data)
+		////console.log(data)
 	}
 	
 

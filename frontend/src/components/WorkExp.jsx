@@ -7,9 +7,9 @@ const WorkExp = ({workexp, isNew, showPlus,removeBlank}) => {
     const [isEdit,setIsEdit] = useState(isNew);
     const [editedData, setEditedData] = useState({...workexp});
 
-    console.log("workexp",workexp);
+    //console.log("workexp",workexp);
      const {userProfile, saveWork} = useUserStore();
-     console.log(userProfile);
+     //console.log(userProfile);
     const handleChange = (e) => {
       setEditedData({...editedData, [e.target.name]: e.target.value});
     }
@@ -17,7 +17,7 @@ const WorkExp = ({workexp, isNew, showPlus,removeBlank}) => {
     const handleSave = async () => {
       setIsEdit(false);
       showPlus(true)
-      console.log(userProfile?.userId,userProfile?.profileUserId,editedData);
+      //console.log(userProfile?.userId,userProfile?.profileUserId,editedData);
       await saveWork(userProfile?.userId,userProfile?.profileUserId,editedData);
     }
   return (

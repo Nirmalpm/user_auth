@@ -11,11 +11,12 @@ import {
 
 import { User } from "../models/user.model.js";
 import db from "../db/connectVYMySQLDB.js";
+import pool from "../db/connectMariaDB.js";
 import { set } from "mongoose";
 
 export const signup = async (req, res) => {
   const { email, password, name, phoneNumber } = req.body;
-  console.log(email, password, name, phoneNumber);
+  //console.log(email, password, name, phoneNumber);
   try {
     if (!email || !password || !name) {
       throw new Error("All fields are required");
@@ -94,7 +95,7 @@ export const verifyEmail = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log("Error in verifyEmail", error.message);
+    //console.log("Error in verifyEmail", error.message);
     return res.status(500).json({
       success: false,
       message: "Server error",
@@ -128,7 +129,7 @@ export const login = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log("Error in login", error);
+    //console.log("Error in login", error);
     return res.status(400).json({ success: false, message: error.message });
   }
 };
@@ -162,7 +163,7 @@ export const forgotPassword = async (req, res) => {
       message: "Password reset link sent to your email",
     });
   } catch (error) {
-    console.log("Error in forgotPassword", error);
+    //console.log("Error in forgotPassword", error);
     return res.status(400).json({ success: false, message: error.message });
   }
 };
@@ -194,7 +195,7 @@ export const passwordReset = async (req, res) => {
       .status(200)
       .json({ success: true, message: "Password reset successful" });
   } catch (error) {
-    console.log("Error in passwordReset", error);
+    //console.log("Error in passwordReset", error);
     return res.status(400).json({ success: false, message: error.message });
   }
 };
@@ -208,7 +209,7 @@ export const logout = async (req, res) => {
 };
 
 export const checkAuth = async (req, res) => {
-  //console.log("checkAuth", req.user);
+  ////console.log("checkAuth", req.user);
   const { userId } = req.user;
   try {
     const user = await User.findById(userId).select("-password"); // This will select the user record without password
@@ -219,7 +220,7 @@ export const checkAuth = async (req, res) => {
     }
     return res.status(200).json({ success: true, user });
   } catch (error) {
-    console.log("Error in checkAuth");
+    //console.log("Error in checkAuth");
     return res.status(400).json({ success: false, message: error.message });
   }
 };
@@ -241,14 +242,14 @@ export const searchUsers = async (req, res) => {
       users,
     });
   } catch (error) {
-    console.log("Error in searchUsers");
+    //console.log("Error in searchUsers");
     return res.status(400).json({ success: false, message: error.message });
   }
 };
 
 export const createUser = async (req, res) => {
   const { name, email, password, phoneNumber } = req.body;
-  console.log(name, email, password, phoneNumber);
+  //console.log(name, email, password, phoneNumber);
   try {
     const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
 
@@ -266,7 +267,7 @@ export const createUser = async (req, res) => {
     await newUser
       .save()
       .then((user) => {
-        console.log("User added successfully:", user);
+        //console.log("User added successfully:", user);
       })
       .catch((err) => {
         console.error("Error adding user:", err);
@@ -298,7 +299,7 @@ export const usersByRole = async (req, res) => {
 
 export const updateRole = async (req, res) => {
   const { userId, role } = req.body;
-  console.log(userId, role);
+  //console.log(userId, role);
   try {
     await User.updateOne(
       { _id: userId },
@@ -335,7 +336,7 @@ export const removeRole = async (req, res) => {
 
 export const addUser = async (req, res) => {
   const { email, name, userId, phoneNumber } = req.body;
-  console.log(email, name, userId, phoneNumber);
+  //console.log(email, name, userId, phoneNumber);
   const insertQuery =
     "INSERT INTO user (name, email, userId,phoneNumber) VALUES (?, ?, ?, ?)";
   const values = [name, email, userId, phoneNumber];
@@ -358,10 +359,36 @@ export const addUser = async (req, res) => {
 
 export const getAccessLogs = async (req, res) => {
   const query =
-    " select distinct username, country, region, region_name, city, lat, lon,DATE_FORMAT(logged_at, '%Y-%m-%d %H:%i') AS logged_at from visitor_geo_logs order by logged_at desc, city  desc ";
+    " select distinct id, username, country, region, region_name, city, lat, lon,DATE_FORMAT(logged_at, '%Y-%m-%d %H:%i') AS logged_at, visited_page from visitor_geo_logs order by logged_at desc, city  desc ";
   try {
     const [rows] = await db.query(query);
     res.status(200).json({ success: true, data: rows });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+export const deleteAccessLogs = async (req, res) => {
+  const { ids } = req.body;
+  //console.log("ids", ids);
+  if (!Array.isArray(ids) || ids.length === 0) {
+    return res
+      .status(400)
+      .json({ message: "Invalid request — ids must be a non-empty array" });
+  }
+
+  try {
+    // Build placeholders (?, ?, ?, ...)
+    const placeholders = ids.map(() => "?").join(",");
+
+    const query = `DELETE FROM visitor_geo_logs WHERE id IN (${placeholders})`;
+    // Execute with ids as parameters
+    const [result] = await db.execute(query, ids);
+
+    res.json({
+      message: "Logs deleted successfully",
+      affectedRows: result.affectedRows,
+    });
   } catch (error) {
     res.status(500).json(error);
   }

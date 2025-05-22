@@ -13,7 +13,7 @@ const EmailVerificationPage = () => {
     const navigate = useNavigate();
 
     const {error, isLoading, verifyEmail, user,addUserProfile}=useAuthStore();
-    console.log(user)
+    //console.log(user)
     // Auto submit when all fields are filled
 	useEffect(() => {
 		if (code.every((digit) => digit !== "")) {
@@ -30,7 +30,7 @@ const EmailVerificationPage = () => {
          navigate("/");
          toast.success("Email verified successfully!");
         } catch (error) {
-          console.log(error)
+          //console.log(error)
         }
     }
 

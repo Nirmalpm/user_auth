@@ -121,3 +121,33 @@ export const APP_ERROR_CONTENT = `
 </body>
 </html>
 `;
+
+export const USER_CREATION_MAIL = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Application Break Down</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="background: linear-gradient(to right, #3ab, #56d); padding: 20px; text-align: center;">
+    <h1 style="color: white; margin: 0;">Employee enrolled to the system</h1>
+  </div>
+  <div style="background-color: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <p>Hello {name},</p>
+    <p>Welcome onboard!</p>
+    <div style="text-align: center; margin: 30px 0;">
+      <span style="font-size: 12px; font-weight: normal;  color: #3ab;">Your employee Id is {empId} and password is {pwd}.
+      You can login to the system using this credentials. Please change your password when logged in for the first time in 
+      order to avoid any login related issues later.
+      </span>
+    </div>
+    <p>Best regards,<br>Admin </p>
+  </div>
+  <div style="text-align: center; margin-top: 20px; color: #888; font-size: 0.8em;">
+    <p>This is an automated message, please do not reply to this email.</p>
+  </div>
+</body>
+</html>
+`;

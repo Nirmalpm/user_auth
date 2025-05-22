@@ -15,7 +15,7 @@ const CertificationList = () => {
       }
     },[userProfile]);
 
-    console.log(certs)
+    //console.log(certs)
 
     const handleSaveAll = (updatedCert) => {
         setCerts((prev) => prev.id === updatedCert.id ? updatedCert : prev);

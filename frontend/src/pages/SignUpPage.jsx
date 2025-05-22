@@ -21,7 +21,7 @@ const SignUpPage = () => {
           await signup(email,password,name,phoneNumber);
           navigate("/verify-email");
         } catch (error) {
-          console.log(error);
+          //console.log(error);
         }
     }
 

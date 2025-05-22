@@ -5,8 +5,8 @@
   "main": "backend/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "NODE_ENV=production nodemon backend/index.js",
-    "start": "node backend/index.js",
+    "dev": "cross-env NODE_ENV=production nodemon backend/index.js",
+    "start": "cross-env NODE_ENV=production node backend/index.js",
     "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "keywords": [],
@@ -25,10 +25,14 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mailtrap": "^4.0.0",
+    "mariadb": "^3.4.2",
     "mongoose": "^8.13.1",
     "multer": "^1.4.5-lts.2",
     "mysql2": "^3.14.0",
-    "sharp": "^0.34.1"
+    "node-cron": "^4.0.5",
+    "qrcode-terminal": "^0.12.0",
+    "sharp": "^0.34.1",
+    "whatsapp-web.js": "^1.28.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.9"
