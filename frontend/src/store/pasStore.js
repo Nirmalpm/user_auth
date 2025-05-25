@@ -23,6 +23,10 @@ const EmpType = {
   ADM: 15,
 };
 export const usePasStore = create((set, get) => ({
+  doctors: [],
+  depts: [],
+  patients: [],
+  wards: [],
   getHealthNews: async (page, pageSize) => {
     //console.log("inside getFreeNews:", category);
     const pg = page || 1;
@@ -70,6 +74,7 @@ export const usePasStore = create((set, get) => ({
   getDoctors: async () => {
     try {
       const response = await axios.get(`${API_URL}/getDoctors`);
+      set({ doctors: response.data });
       return response.data;
     } catch (error) {
       throw error;
@@ -86,6 +91,7 @@ export const usePasStore = create((set, get) => ({
   getWards: async () => {
     try {
       const response = await axios.get(`${API_URL}/getWards`);
+      set({ wards: response.data });
       return response.data;
     } catch (error) {
       throw error;
@@ -95,6 +101,63 @@ export const usePasStore = create((set, get) => ({
     try {
       const response = await axios.get(
         `${API_URL}/getPatientsByWard?wardId=${wardId}`
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  vacatePatientWard: async (wardId, patient_id) => {
+    try {
+      const response = await axios.post(`${API_URL}/vacatePatientWard`, {
+        wardId,
+        patient_id,
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getVacantBeds: async (wardId) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/getVacantBedNumbers?wardId=${wardId}`
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  registerPatient: async (patient) => {
+    try {
+      const response = await axios.post(`${API_URL}/registerPatient`, patient);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getPatients: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/getPatients`);
+      set({ patients: response.data });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  admitPatient: async (patient) => {
+    try {
+      const response = await axios.post(`${API_URL}/admitPatient`, patient);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  addOpConsultation: async (outPatientCounsult) => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/addOpConsultation`,
+        outPatientCounsult
       );
       return response.data;
     } catch (error) {

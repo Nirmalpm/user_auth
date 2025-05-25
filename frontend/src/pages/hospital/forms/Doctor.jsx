@@ -10,7 +10,7 @@ const IMAGE_URL =
     : "";
 
 const Doctor = () => {
-    const initialState = {name:'',degree:'',dept:-1,specialization:'',contact:'',email:'',photo_path:''};
+    const initialState = {name:'',degree:'',dept:-1,specialization:'',contact:'',email:'',photo_path:'',consult_fee:''};
     const  [doctor,setDoctor] = useState(initialState);
     const [doctors, setDoctors] = useState([]);
     const [depts, setDepts] = useState([]);
@@ -64,8 +64,8 @@ const Doctor = () => {
     }));
 }
   return (
-    <div className="flex flex-col mt-3 justify-start items-start  bg-gray-700 h-120 overflow-y-auto">
-        <div className="flex">
+    <div className="flex flex-wrap flex-col mt-3 justify-start items-start  bg-gray-700 h-120 overflow-y-auto">
+        <div className="flex flex-wrap">
             <div className="border-r-2 border-amber-300">
                 <h1 className="text-xl mb-3 text-amber-50 p-3">Add Doctor</h1>
                 <form onSubmit={handleSubmit} className="flex flex-col p-3 gap-2 justify-center items-center">
@@ -98,6 +98,10 @@ const Doctor = () => {
                     <div className="flex justify-between items-center w-sm">
                         <label htmlFor='email' className="text-gray-300">Email</label>
                         <input type="email" name="email" value={doctor.email} onChange={handleChange} className="p-1 ml-2 rounded bg-gray-300"/>
+                    </div>
+                    <div className="flex justify-between items-center w-sm">
+                        <label htmlFor='consult_fee' className="text-gray-300">Consultation Fee</label>
+                        <input type="text" name="consult_fee" value={doctor.consult_fee} onChange={handleChange} className="p-1 ml-2 rounded bg-gray-300"/>
                     </div>
                     <div >
                         <input type="submit" value={"Save"} className="bg-blue-800 pl-2 pr-2 rounded mt-2 text-amber-50 

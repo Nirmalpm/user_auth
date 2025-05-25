@@ -45,7 +45,7 @@ function App() {
 
   return (
     <div  className="min-h-screen bg-gradient-to-br from-gray-100 to-blue-900  
-    flex items-center justify-center relative overflow-hidden font-sans" >
+    flex items-start justify-center relative overflow-hidden font-sans " >
       {/* <FloatingShape color="bg-blue-700" size="w-64 h-64" top="-5%" left="10%" delay={0} />
       <FloatingShape color="bg-red-300" size="w-48 h-48" top="70%" left="80%" delay={5} />   
       <FloatingShape color="bg-gray-300" size="w-30 h-20" top="10%" left="50%" delay={5} />       */}

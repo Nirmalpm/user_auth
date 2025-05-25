@@ -13,6 +13,7 @@ const pool = mariadb.createPool({
   connectionLimit: 10,
   queueLimit: 0,
   charset: "utf8mb4",
+  bigIntAsString: true, // <-- important
 });
 
 // Function to test connection and set keep-alive

@@ -5,6 +5,13 @@ import {
   addDept,
   addEmployee,
   getDoctors,
+  registerPatient,
+  getVacantBedNumbers,
+  getPatients,
+  vacatePatientWard,
+  admitPatient,
+  getPatientsByWard,
+  addOpConsultation,
 } from "../controllers/pas.controller.js";
 
 import {
@@ -28,7 +35,6 @@ import {
   searchCanteenItems,
   getWards,
   searchWards,
-  getPatientsByWard,
 } from "../controllers/pas.mastercontroller.js";
 
 const router = express.Router();
@@ -51,6 +57,10 @@ router.post("/deleteCanteenItem", deleteCanteenItem);
 router.post("/addWard", addWard);
 router.post("/editWard", editWard);
 router.post("/deleteWard", deleteWard);
+router.post("/vacatePatientWard", vacatePatientWard);
+router.post("/registerPatient", registerPatient);
+router.post("/admitPatient", admitPatient);
+router.post("/addOpConsultation", addOpConsultation);
 
 router.get("/getTests", getTests);
 router.get("/searchTests", searchTests);
@@ -61,5 +71,6 @@ router.get("/searchCanteenItems", searchCanteenItems);
 router.get("/getWards", getWards);
 router.get("/searchWards", searchWards);
 router.get("/getPatientsByWard", getPatientsByWard);
-
+router.get("/getVacantBedNumbers", getVacantBedNumbers);
+router.get("/getPatients", getPatients);
 export default router;

@@ -388,39 +388,6 @@ export const searchWards = async (req, res) => {
   }
 };
 
-export const getPatientsByWard = async (req, res) => {
-  const { wardId } = req.query;
-  let conn;
-  const query = `SELECT 
-  w.ward_name ward_name,
-  w.total_beds total_beds,
-  p.name  patient_name,
-  p.email  patient_email, p.address  patient_address,p.blood_group  patient_blood_group,p.medical_history  patient_medical_history,
-  ipw.admission_date admission_date,ipw.bed_number bed_number, d.name doctor_name,d.id doctor_id,
-  (w.total_beds - (
-      SELECT COUNT(*) 
-      FROM InPatientWard ipw2 
-      WHERE ipw2.ward_id = w.id
-  ))  beds_left
-FROM WardMaster w
-LEFT JOIN InPatientWard ipw ON w.id = ipw.ward_id
-LEFT JOIN Doctor d ON d.id = ipw.doctor_id
-LEFT JOIN Patient p ON p.id = ipw.patient_id where w.id = ?`;
-  try {
-    conn = await pool.getConnection();
-    const rows = await conn.query(query, [wardId]);
-    // Convert BigInt to Number
-    const result = rows.map((row) => ({
-      ...row,
-      beds_left: Number(row.beds_left),
-    }));
-    console.log(result)
-    res.status(200).json(result);
-  } catch (error) {
-    throw error;
-  } finally {
-    if (conn) {
-      conn.release();
-    }
-  }
-};
+
+
+

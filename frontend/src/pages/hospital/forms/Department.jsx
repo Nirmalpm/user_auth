@@ -21,7 +21,7 @@ const Department = () => {
     },[depts]);
   return (
     <div className="flex flex-col  justify-center items-center">
-      <h1 className="text-2xl mb-3">Department</h1>
+      <h1 className="text-2xl mb-3">Add Department</h1>
       <form onSubmit={handleSubmit} className="flex justify-center items-center gap-2">
         <div>
             <label htmlFor="name">Name:</label>

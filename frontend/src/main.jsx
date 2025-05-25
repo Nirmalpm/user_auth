@@ -29,6 +29,7 @@ import HospitalLayout from './pages/hospital/Layout.jsx';
 import Home from './pages/hospital/Home.jsx';
 import Admin from './pages/hospital/Admin.jsx';
 import Ward from './pages/hospital/Ward.jsx';
+import PatientsList from './pages/hospital/PatientsList.jsx';
 
 
 const ErrorPage = () => {
@@ -112,7 +113,8 @@ const router = createBrowserRouter([
         children:[
           {index:true, Component:Home},
           {path:"admin", Component:Admin},
-          {path:"ward/:wardId", Component:Ward}
+          {path:"ward/:wardId", Component:Ward},
+          {path:"patientreg", Component:PatientsList}
         ]
       }
 
