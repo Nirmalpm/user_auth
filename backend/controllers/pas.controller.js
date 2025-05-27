@@ -270,7 +270,8 @@ export const getPatients = async (req, res) => {
   try {
     conn = await pool.getConnection();
     const rows = await conn.query(
-      `SELECT p.*,w.ward_id,(select ward_name from WardMaster where id = w.ward_id) ward_name,w.bed_number from Patient p 
+      `SELECT p.*,w.ward_id,(select ward_name from WardMaster where id = w.ward_id) ward_name,w.doctor_id doctor_id,
+      (select name from Doctor where id = w.doctor_id) doctor_name,w.bed_number,w.admission_date from Patient p 
       left outer join InPatientWard w on w.patient_id= p.id and w.status != 'VACATED' order by updated_at desc`
     );
     res.json(rows);
@@ -392,13 +393,15 @@ export const addOpConsultation = async (req, res) => {
     prescription,
     amount,
   } = req.body;
-  console.log(op_id,
+  console.log(
+    op_id,
     visit_date_time,
     doctor_id,
     diagnosis,
     remarks,
     prescription,
-    amount,)
+    amount
+  );
   if (!op_id || !visit_date_time || !doctor_id || !diagnosis || !amount) {
     throw new Error("Required fields missing");
   }

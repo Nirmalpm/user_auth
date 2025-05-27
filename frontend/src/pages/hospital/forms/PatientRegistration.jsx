@@ -38,7 +38,7 @@ const PatientRegistration = ({setRegToggler}) => {
   }
 
   return (
-    <div id="pat_reg" className=" flex flex-col flex-wrap w-2/5 min-w-sm border-1 border-gray-50 justify-center items-center   mb-10 ">
+    <div id="pat_reg" className=" flex flex-col w-full  justify-center items-center   mb-10 ">
       <h1 className="flex flex-wrap text-2xl text-blue-800 underline font-semibold">PATIENT REGISTRATION </h1>
       <div className="overflow-y-auto h-full">
       <form className="flex flex-wrap flex-col " onSubmit={handleSubmit}>

@@ -27,6 +27,68 @@ export const usePasStore = create((set, get) => ({
   depts: [],
   patients: [],
   wards: [],
+  pharmacyItems: [],
+  canteenItems: [],
+  tests: [],
+  isLoading: false,
+  employee: null,
+  isAuthenticated: false,
+  isCheckingAuth: false,
+  error: null,
+  login: async (userId, password) => {
+    console.log(userId, password);
+    set({ isLoading: true, error: null });
+    try {
+      const response = await axios.post(`${API_URL}/login`, {
+        emp_code: userId,
+        password,
+      });
+      set({
+        employee: response.data.employee,
+        isAuthenticated: response.data.isAuthenticated,
+        isLoading: false,
+      });
+      return response.data;
+    } catch (error) {
+      set({
+        error: error.message || "Error at login",
+      });
+      throw error;
+    }
+  },
+  checkAuth: async () => {
+    set({ isCheckingAuth: true });
+    try {
+      const response = await axios.get(`${API_URL}/checkAuth`);
+      set({
+        employee: response.data.employee,
+        isAuthenticated: response.data.isAuthenticated,
+        isLoading: false,
+        isCheckingAuth: false,
+      });
+      return response.data;
+    } catch (error) {
+      set({
+        error: error.message || "Error at check Auth",
+      });
+      throw error;
+    }
+  },
+  logout: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      await axios.post(`${API_URL}/logout`);
+      set({
+        employee: null,
+        isAuthenticated: false,
+        error: null,
+        isLoading: false,
+      });
+    } catch (error) {
+      set({ error: "Error logging out", isLoading: false });
+      throw error;
+    }
+  },
   getHealthNews: async (page, pageSize) => {
     //console.log("inside getFreeNews:", category);
     const pg = page || 1;
@@ -92,6 +154,57 @@ export const usePasStore = create((set, get) => ({
     try {
       const response = await axios.get(`${API_URL}/getWards`);
       set({ wards: response.data });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  addPharmacyItem: async (item) => {
+    try {
+      const response = await axios.post(`${API_URL}/addPharmacyItem`, item);
+      return await get().getPharmacyItems();
+    } catch (error) {
+      throw error;
+    }
+  },
+  getPharmacyItems: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/getPharmacyItems`);
+      set({ pharmacyItems: response.data });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  addCanteenItem: async (item) => {
+    try {
+      const response = await axios.post(`${API_URL}/addCanteenItem`, item);
+      return await get().getPharmacyItems();
+    } catch (error) {
+      throw error;
+    }
+  },
+  getCanteenItems: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/getCanteenItems`);
+      set({ canteenItems: response.data });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  addTest: async (test) => {
+    try {
+      const response = await axios.post(`${API_URL}/addTest`, test);
+      return await get().getTests();
+    } catch (error) {
+      throw error;
+    }
+  },
+  getTests: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/getTests`);
+      set({ tests: response.data });
       return response.data;
     } catch (error) {
       throw error;

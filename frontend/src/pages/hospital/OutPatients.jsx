@@ -12,28 +12,42 @@ const[isConsultModalCompOpen,setIsConsultModalCompOpen] = useState(false);
 const[isAdmitModalCompOpen,setIsAdmitModalCompOpen] = useState(false);
 const [selectedPatient, setSelectedPatient] = useState(null);
 const [checkedItems, setCheckedItems] = useState([]);
+const [inPatientIds,setInpatientIds] = useState([])
 //const {patients} = usePasStore(); 
 useEffect(()=>{
     console.log("---inside OutPatients effect----")
-    //const outPatients =  patients.filter((p)=> p.ip !== 'Y');//filtering out In-Patients
-    console.log(patients)
+    const inPatientIds =  patients.filter((p)=> p.ip === 'Y').map((p)=> p.id);//filtering out In-Patients
+    setInpatientIds(inPatientIds);
+    console.log(patients);
+    console.log(inPatientIds)
     setoutPatients(patients);
     setCheckedItems(patients.map(() => false));
 },[patients]);
 
-const handleSelectPatient = (e,index)=>{
+const handleSelectPatient = (e,index,patient)=>{
       const updatedCheckedItems = [...checkedItems]
       updatedCheckedItems[index] = !updatedCheckedItems[index];
       setCheckedItems(updatedCheckedItems);
+      console.log(patient.id)
       if(selectedPatient && e.target.checked){
         toast.error("You can allocate only one patient at a time.")
         updatedCheckedItems[index] = false;
         setCheckedItems(updatedCheckedItems);
       }else if(e.target.checked){
-        setSelectedPatient(outPatients[index])    
+        setSelectedPatient(patient)    
       }else{
         setSelectedPatient(null)  
       }           
+  }
+
+  const handleAdmit = () =>{
+    if(selectedPatient && inPatientIds.includes(selectedPatient.id)){
+      toast.error("Already allocated ward for the patient");
+      setSelectedPatient(null);
+      setCheckedItems(patients.map(() => false));
+    }else{
+      setIsAdmitModalCompOpen(true)
+    }
   }
 
   const resetSelection = () =>{
@@ -41,7 +55,7 @@ const handleSelectPatient = (e,index)=>{
     setSelectedPatient(null)  
   }
   return (
-    <div  id="out_pat" className="flex flex-col border-1 min-w-sm border-gray-50 justify-start items-center  mb-10 w-3/4 h-1/2 overflow-y-auto">
+    <div  id="out_pat" className="flex flex-col  justify-center items-center  mb-10 w-full h-1/2 overflow-y-auto">
         <h1 className="flex flex-wrap text-2xl text-blue-800 underline font-semibold">Registered Patients </h1>
             <div className="  flex gap-2 w-full justify-center items-center text-gray-50 bg-gray-700">
                 <div className="flex border-r  w-full  whitespace-nowrap truncate">Select</div>
@@ -58,7 +72,7 @@ const handleSelectPatient = (e,index)=>{
         {outPatients && outPatients.map((patient,index)=>(
             <div key={index} className="odd:bg-gray-300 even:bg-gray-400  flex gap-2 w-full justify-center items-stretch border line-clamp-1">
                 <div  className=" border-r  w-full  whitespace-nowrap truncate p-0 flex justify-center" >
-                  <input type="checkbox" className=" h-lh" onChange={(e)=>handleSelectPatient(e,index)} value={patient} checked={checkedItems[index]}/></div>
+                  <input type="checkbox" className=" h-lh" onChange={(e)=>handleSelectPatient(e,index,patient)} value={patient} checked={checkedItems[index]}/></div>
                 <div  className=" border-r  w-full  whitespace-nowrap truncate p-0 flex justify-center" ><input className="flex   w-full  whitespace-nowrap truncate" value={patient.patient_code} title={patient.patient_code} readOnly/></div>
                 <div  className=" border-r  w-full  whitespace-nowrap truncate p-0 flex justify-center" ><input className="flex   w-full  whitespace-nowrap truncate" value={patient.name} title={patient.name} readOnly/></div>
                 <div  className=" border-r  w-full  whitespace-nowrap truncate p-0 flex justify-center" ><input className="flex   w-full  whitespace-nowrap truncate" value={patient.age} title={patient.age} readOnly/></div>
@@ -72,7 +86,7 @@ const handleSelectPatient = (e,index)=>{
         ))}
         <div className="flex w-full bg-gray-700 bottom-0 sticky justify-center">
           <button className={`rounded ${selectedPatient?`bg-blue-700 hover:bg-amber-400`:`bg-gray-400`} p-2 m-1 text-amber-50 cursor-pointer `} onClick={()=>setIsConsultModalCompOpen(true)} disabled={selectedPatient?false:true}>Consultation</button>
-          <button className={`rounded ${selectedPatient?`bg-blue-700 hover:bg-amber-400`:`bg-gray-400`} p-2 m-1 text-amber-50 cursor-pointer `} onClick={()=>setIsAdmitModalCompOpen(true)} disabled={selectedPatient?false:true}>Admit</button>
+          <button className={`rounded ${selectedPatient?`bg-blue-700 hover:bg-amber-400`:`bg-gray-400`} p-2 m-1 text-amber-50 cursor-pointer `} onClick={handleAdmit} disabled={selectedPatient?false:true}>Admit</button>
         </div>
         {selectedPatient ? <ModalComponent
             isOpen={isConsultModalCompOpen}

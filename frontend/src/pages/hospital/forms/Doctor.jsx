@@ -13,17 +13,10 @@ const Doctor = () => {
     const initialState = {name:'',degree:'',dept:-1,specialization:'',contact:'',email:'',photo_path:'',consult_fee:''};
     const  [doctor,setDoctor] = useState(initialState);
     const [doctors, setDoctors] = useState([]);
-    const [depts, setDepts] = useState([]);
-    const {getDepartments, addDoctor, getDoctors} = usePasStore();
+    const {depts, addDoctor, getDoctors} = usePasStore();
      const [file, setFile] = useState(null);
-
-    useEffect(()=>{
-        const fetchDepts = async ()=>{
-            const depts = await getDepartments();
-            setDepts(depts);
-        }
-        fetchDepts();
-    },[depts]);
+    const[count,setCount]  = useState(0);
+   
 
     useEffect(()=>{
         const fetchDocs = async ()=>{
@@ -31,7 +24,7 @@ const Doctor = () => {
             setDoctors(docs);
         }
         fetchDocs();
-    },[doctors]);
+    },[count]);
 
     const handleSubmit = async (e)=>{
         e.preventDefault();
@@ -48,6 +41,7 @@ const Doctor = () => {
             const doctors = await addDoctor(newDoc);
             setDoctors(doctors);
             setDoctor(initialState);
+            setCount((prev)=> prev + 1)
             toast.success("Doctor added successfully!")
         } catch (error) {
              toast.error(`Error: ${error.message}`);

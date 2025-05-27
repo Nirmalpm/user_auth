@@ -27,7 +27,7 @@ function App() {
 
   const {isCheckingAuth, checkAuth} =  useAuthStore();
   useEffect(()=>{
-    //console.log('Environment:', import.meta.env.MODE);
+    console.log('Environment:', import.meta.env.MODE);
     checkAuth()
   },[checkAuth]);
 

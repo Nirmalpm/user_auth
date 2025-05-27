@@ -1,5 +1,10 @@
 import express from "express";
 import {
+  login,
+  checkAuth,
+  logout,
+} from "../controllers/pas.login.controller.js";
+import {
   getHealthNews,
   getDepts,
   addDept,
@@ -36,8 +41,12 @@ import {
   getWards,
   searchWards,
 } from "../controllers/pas.mastercontroller.js";
+import { verifyToken } from "../middleware/verifyPasToken.js";
 
 const router = express.Router();
+
+router.post("/login", login);
+router.post("/logout", logout);
 
 router.get("/getHealthNews", getHealthNews);
 router.get("/getDepts", getDepts);
@@ -62,6 +71,7 @@ router.post("/registerPatient", registerPatient);
 router.post("/admitPatient", admitPatient);
 router.post("/addOpConsultation", addOpConsultation);
 
+router.get("/checkAuth", verifyToken(["user"]), checkAuth);
 router.get("/getTests", getTests);
 router.get("/searchTests", searchTests);
 router.get("/getPharmacyItems", getPharmacyItems);

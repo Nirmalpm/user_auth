@@ -193,13 +193,13 @@ export const searchPharmacyItems = async (req, res) => {
 
 //CANTEEN ITEM MASTER
 export const addCanteenItem = async (req, res) => {
-  const { item_name, item_price, quantity } = req.body;
+  const { item_name, item_price, quantity,expiry_date } = req.body;
   let conn;
   try {
     conn = await pool.getConnection();
     const result = await conn.query(
-      "INSERT INTO CanteenItemMaster ( item_name, item_price, quantity) VALUES (?,?,?)",
-      [item_name, item_price, quantity]
+      "INSERT INTO CanteenItemMaster ( item_name, item_price, quantity,expiry_date) VALUES (?,?,?,?)",
+      [item_name, item_price, quantity,expiry_date]
     );
     res.status(200).json({
       success: true,

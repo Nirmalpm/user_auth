@@ -20,16 +20,16 @@ const PatientsList = () => {
   },[regToggler]);
   
   return (
-    <div className="flex gap-2 justify-center items-start  overflow-y-auto mb-10 m-5 ">
+    <div className="flex flex-col md:flex-row gap-2 justify-center items-start  overflow-y-auto ml-10 mb-10 m-5 ">
       <PatientRegistration setRegToggler={setRegToggler}/>
       <div>
       {patients && patients.length > 0 ? <OutPatients patients={patients}/>: (
-        <div className="flex flex-col border-1 border-gray-50 justify-start items-center mt-30  mb-10 w-3/5 h-1/2 overflow-y-auto">
+        <div className="flex flex-col border-1 border-gray-50 justify-center items-center mt-30  mb-10 w-full h-1/2 overflow-y-auto">
         <h1 className="flex flex-wrap text-2xl text-blue-800  font-semibold p-3">Out Patients Section empty </h1>
         </div>
       )}
       {patients && patients.length > 0 ? <InPatients patients={patients}/>: (
-        <div className="flex flex-col border-1 border-gray-50 justify-start items-center mt-30  mb-10 w-3/5 h-1/2 overflow-y-auto">
+        <div className="flex flex-col border-1 border-gray-50 justify-center items-center mt-30  mb-10w-full h-1/2 overflow-y-auto">
         <h1 className="flex flex-wrap text-2xl text-blue-800  font-semibold p-3">In Patients Section empty </h1>
         </div>
       )}

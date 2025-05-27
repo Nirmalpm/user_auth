@@ -35,7 +35,7 @@ const handleSelectPatient = (e,index)=>{
        
   }
   return (
-    <div  id="in_pat" className="flex flex-col border-1 min-w-sm border-gray-50 justify-center items-center   w-3/4 h-1/2 overflow-y-auto">
+    <div  id="in_pat" className="flex flex-col  justify-center items-center   w-full h-1/2 overflow-y-auto">
         <h1 className="flex flex-wrap text-2xl text-blue-800 underline font-semibold">INPATIENTS </h1>
             <div className="  flex gap-2 w-full justify-center items-center text-gray-50 bg-gray-700">
                 <div className="flex border-r  w-full  whitespace-nowrap truncate">Select</div>
@@ -58,9 +58,9 @@ const handleSelectPatient = (e,index)=>{
                 <div  className=" border-r  w-full  whitespace-nowrap truncate p-0 flex justify-center" ><textarea className="flex  w-full  whitespace-nowrap truncate" value={patient.bed_number}  title={patient.bed_number}readOnly/></div>
              </div>
         ))}
-        <div className="flex w-full bg-gray-700 bottom-0 sticky justify-center">
+        {/* <div className="flex w-full bg-gray-700 bottom-0 sticky justify-center">
           <button className={`rounded ${selectedPatient?`bg-blue-700 hover:bg-amber-400`:`bg-gray-400`} p-2 m-1 text-amber-50 cursor-pointer `} onClick={()=>setIsModalCompOpen(true)} disabled={selectedPatient?false:true}>Allocate ward</button>
-        </div>
+        </div> */}
         {selectedPatient ? <ModalComponent
             isOpen={isModalCompOpen}
             onCancel={()=> setIsModalCompOpen(false)}

@@ -4,12 +4,14 @@ import { usePasStore } from '../../../store/pasStore';
 const Department = () => {
     const [name, setName] = useState("");
     const [depts, setDepts] = useState([]);
+    const[count,setCount]  = useState(0);
     const {addDepartment, getDepartments} = usePasStore();
     const handleSubmit = async (e)=>{
         e.preventDefault();
         const depts = await addDepartment(name);
         setDepts(depts);
         setName("");
+        setCount((prev)=> prev + 1)
     }
 
     useEffect(()=>{
@@ -18,7 +20,7 @@ const Department = () => {
             setDepts(depts);
         }
         fetchDepts();
-    },[depts]);
+    },[count]);
   return (
     <div className="flex flex-col  justify-center items-center">
       <h1 className="text-2xl mb-3">Add Department</h1>
@@ -39,9 +41,9 @@ const Department = () => {
               </div>
         {
             depts && depts.map((dept)=>(
-              <div className="flex">
-                <div key={dept.id} className="p-1 w-3/4 odd:bg-gray-600 even:bg-gray-400 text-amber-50  text-center">{dept.name}</div>
-                <div key={dept.id} className="p-1 w-1/4 odd:bg-gray-600 even:bg-gray-400 text-amber-50  text-center">{dept.doctor_count}</div>
+              <div className="flex"  key={dept.id}>
+                <div className="p-1 w-3/4 odd:bg-gray-600 even:bg-gray-400 text-amber-50  text-center">{dept.name}</div>
+                <div className="p-1 w-1/4 odd:bg-gray-600 even:bg-gray-400 text-amber-50  text-center">{dept.doctor_count}</div>
               </div>
             ))
         }

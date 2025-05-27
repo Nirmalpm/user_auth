@@ -1,17 +1,17 @@
   import React, { useEffect, useState } from 'react'
   import { NavLink, useLocation } from 'react-router'
 import { usePasStore } from '../../store/pasStore';
-import {UserCog ,Home,Layers,TestTube,Bed, UserCheck, Receipt, ArrowLeft} from 'lucide-react'
+import {UserCog ,Home,Layers,TestTube,Bed, UserCheck, Receipt, ArrowLeft,ChefHat, PlusCircle  ,LogOut } from 'lucide-react'
 
   const NavBar = () => {
     const [depts, setDepts] = useState([]);
     const [wards, setWards] = useState([]);
-    const {getDepartments, getWards} = usePasStore();
+    const {getDepartments, getWards,logout} = usePasStore();
     const location = useLocation();
 
-    const isPatientsActive = location.pathname.includes('patientreg');
+    const isPatientsActive = location.pathname.includes('patient');
     const isWardActive = location.pathname.includes('ward');
-   
+    const isDeptActive = location.pathname.includes('dept');
 
     useEffect(()=>{
             const fetchDepts = async ()=>{
@@ -28,24 +28,34 @@ import {UserCog ,Home,Layers,TestTube,Bed, UserCheck, Receipt, ArrowLeft} from '
           }
           fetchWards();
       },[]);
+    const handleClassname = ({isActive})=>{
+      if(isActive){
+        return 'active text-amber-500 font-bold flex  w-full justify-center md:w-auto  p-2 border-b-1 sm:border-b-1 md:border-0 '
+      }else{
+        return 'active text-gray-100 flex  w-full justify-center md:w-auto  p-2 border-b-1 sm:border-b-1 md:border-0' 
+      } 
+    }
 
+    const handleLogout = async ()=>{
+      await logout();
+    }
     return (
-      <nav className="w-full flex justify-between items-start p-3 bg-blue-900 text-gray-100 font-semibold z-50 flex-col sm:flex-col md:flex-row ">
+      <nav className="w-full flex justify-between items-start p-3 bg-blue-900 text-gray-100 font-normal z-50 flex-col sm:flex-col md:flex-row ">
     <div className="text-2xl font-extrabold w-1/2 text-amber-500 bg-blue-900 text-center flex p-3 rounded">Pro-Health Life Care Hospitals</div>
     
-  <div className="flex w-full justify-center md:w-auto  p-2 border-b-1 sm:border-b-1 md:border-0"><NavLink to="/hospital"> <Home size={25} />Home</NavLink></div>
-  <div className="flex w-full justify-center md:w-auto  p-2 border-b-1 sm:border-b-1 md:border-0"><NavLink to="/hospital/admin"> <UserCog size={25} />Admin</NavLink></div>
+  <NavLink className={handleClassname} end to="/hospital"><span><Home size={25}/>Home</span></NavLink>
+  <NavLink className={handleClassname}  to="/hospital/admin"><span><UserCog size={25}/>Admin</span></NavLink>
 
     <div className="dropdown w-full justify-center md:w-auto flex p-2 border-b-1 sm:border-b-1 md:border-0">
-    <div className="flex flex-col p-2"><Layers size={25}/> Departments</div>
-    <div className="dropdown-menu">
+    <div className={`flex flex-col items-center gap-2 ${isDeptActive ? 'text-amber-500 font-bold' : 'text-gray-100'}`}><Layers size={25}/> Departments</div>
+    <div className="dropdown-menu h-100 overflow-y-auto flex p-2">
       {depts && depts.map((dept)=>(
-        <a key={dept.id} className=" text-gray-800 hover:bg-gray-100 border-b-2 border-b-gray-300">{dept.name}</a>
+        <NavLink to="dept" key={dept.id} className=" text-gray-800 hover:bg-gray-100 border-b-2 border-b-gray-300">{dept.name}</NavLink>
       ))}
     </div>
     </div>
 
-  <div className="flex  w-full justify-center md:w-auto  p-2 border-b-1 sm:border-b-1 md:border-0"><div><TestTube size={25} />Tests</div></div>
+  <NavLink to="test" className={handleClassname}><span><TestTube size={25} />Tests</span></NavLink>
   <div className="dropdown flex w-full justify-center md:w-auto  p-2 border-b-1 sm:border-b-1 md:border-0">
     <div className={`flex flex-col items-center gap-2 ${isWardActive ? 'text-amber-500 font-bold' : 'text-gray-100'}`}><Bed size={25} />Wards</div>
     <div className="dropdown-menu h-100 overflow-y-auto flex p-2">
@@ -61,13 +71,17 @@ import {UserCog ,Home,Layers,TestTube,Bed, UserCheck, Receipt, ArrowLeft} from '
       </div>
 
       <div className="dropdown-menu">
-      <NavLink to="patientreg" className="text-gray-800 hover:bg-gray-100 border-b-2  border-b-gray-300">Registration</NavLink>
-      <NavLink to="patientreg" className="  text-gray-800 hover:bg-gray-100 border-b-2  border-b-gray-300">InPatients</NavLink>
-      <NavLink to="patientreg" className="  text-gray-800 hover:bg-gray-100 border-b-2  border-b-gray-300">OutPatients</NavLink>
+      <NavLink to="patientreg" className={handleClassname}>Registration</NavLink>
+      <NavLink to="inpatient" className={handleClassname}>InPatients</NavLink>
+      <NavLink to="outpatient" className={handleClassname}>OutPatients</NavLink>
     </div>
   </div>
-  <div  className="flex  w-full justify-center md:w-auto  p-2 border-b-1 sm:border-b-1 md:border-0"><div><Receipt size={25} />Billing</div></div>
-  <div  className="flex w-full justify-center md:w-auto  p-2 border-b-1 sm:border-b-1 md:border-0"><NavLink to="/"><ArrowLeft size={25} /> Back</NavLink></div>
+  <NavLink to="pharmacy"  className={handleClassname}><span><PlusCircle   size={25} />Pharmacy</span></NavLink>
+  <NavLink to="canteen"  className={handleClassname}><span><ChefHat size={25} />Canteen</span></NavLink>
+  <NavLink to="billing"  className={handleClassname}><span><Receipt size={25} />Billing</span></NavLink>
+  <div className="flex w-full justify-center md:w-auto  p-2 border-b-1 sm:border-b-1 
+  md:border-0 cursor-pointer" onClick={handleLogout}><span><LogOut size={25} /> Logout</span></div>
+  <NavLink to="/"  className="flex w-full justify-center md:w-auto  p-2 border-b-1 sm:border-b-1 md:border-0"><span><ArrowLeft size={25} /> Back</span></NavLink>
 </nav>
 
     )

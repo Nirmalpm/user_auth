@@ -6,6 +6,7 @@ import { useParams } from 'react-router';
 import {formatDate} from '../../utils/date.js'
 import toast from "react-hot-toast";
 import ConfirmModal from '../../components/ConfirmModal.jsx';
+import {Bed, BedDouble} from 'lucide-react'
 
 const Ward = () => {
   const [patients,setPatients] = useState([]);
@@ -45,12 +46,9 @@ const Ward = () => {
   const showBeds = ()=>{
    return  Array.from({ length: totalBeds }, (_, i) => {
         if( bedNumbers.includes((i+1)+'') && getPatient(i+1)?.status !== 'VACATED'){
-            return <div key={i} className={`flex  h-10 w-25 bg-amber-500 rounded text-center text-gray-300 cursor-pointer truncate 
-            font-normal shrink ${selectedPatient?.bed_number === (i+1)+'' ? 'border-1 border-green-900':''}` } 
-            onClick={()=> setSelectedPatient(getPatient(i+1))} title={getPatient(i+1)?.patient_name}>{i+1}-{getPatient(i+1)?.patient_name}</div>
+            return <span className="flex flex-col text-center"><Bed  key={i} size={50} color={'red'} onClick={()=> setSelectedPatient(getPatient(i+1))} title={getPatient(i+1)?.patient_name}/>{i+1}</span>
         }else{
-            return <div  key={i} className="flex  h-10 w-25 bg-emerald-500 rounded text-center text-gray-300  cursor-pointer" 
-            onClick={()=> setSelectedPatient({})}>{i+1}-Available</div>
+            return <Bed  key={i} size={50}  color={'green'} onClick={()=> setSelectedPatient({})}/>
         }
     });
   }
@@ -88,6 +86,7 @@ const Ward = () => {
   return (
     
     <div className="flex gap-3 flex-col justify-start w-full items-center  flex-auto mt-5 mb-10 ">
+     
       <h1 className="flex flex-wrap text-3xl text-blue-700 font-semibold">{wardName}</h1>
       <h1 className="flex flex-wrap text-2xl text-blue-700">Total Beds: {totalBeds}</h1>
       <h1 className="flex flex-wrap text-xl text-blue-700">Remaining Beds: {remainingBeds}</h1>
