@@ -43,6 +43,7 @@ export const usePasStore = create((set, get) => ({
         emp_code: userId,
         password,
       });
+      console.log(response.data);
       set({
         employee: response.data.employee,
         isAuthenticated: response.data.isAuthenticated,
@@ -272,6 +273,106 @@ export const usePasStore = create((set, get) => ({
         `${API_URL}/addOpConsultation`,
         outPatientCounsult
       );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  addPatientConsumables: async (patient_id, items) => {
+    try {
+      const response = await axios.post(`${API_URL}/addPatientConsumables`, {
+        patient_id,
+        items,
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getPatientConsumables: async (patient_id, buy_date) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/getPatientConsumables?patient_id=${patient_id}&buy_date=${buy_date}`
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getPatientConsumablesHistory: async (patient_id) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/getPatientConsumablesHistory?patient_id=${patient_id}`
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  setFullPaidStatus: async (patient_id, buy_date) => {
+    try {
+      const response = await axios.post(`${API_URL}/setFullPaidStatus`, {
+        patient_id,
+        buy_date,
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  setItemPaidStatus: async (id) => {
+    try {
+      const response = await axios.post(`${API_URL}/setItemPaidStatus`, { id });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  addPatientTest: async (patient_id, tests) => {
+    try {
+      const response = await axios.post(`${API_URL}/addPatientTest`, {
+        patient_id,
+        tests,
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getPatientTests: async (patient_id, test_date) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/getPatientTests?patient_id=${patient_id}&test_date=${test_date}`
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getPatientTestHistory: async (patient_id) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/getPatientTestHistory?patient_id=${patient_id}`
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  setFullTestPaidStatus: async (patient_id, test_date) => {
+    try {
+      const response = await axios.post(`${API_URL}/setFullTestPaidStatus`, {
+        patient_id,
+        test_date,
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  setTestPaidStatus: async (id) => {
+    try {
+      const response = await axios.post(`${API_URL}/setTestPaidStatus`, { id });
       return response.data;
     } catch (error) {
       throw error;

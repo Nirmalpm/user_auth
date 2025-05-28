@@ -17,6 +17,16 @@ import {
   admitPatient,
   getPatientsByWard,
   addOpConsultation,
+  addPatientConsumables,
+  getPatientConsumables,
+  getPatientConsumablesHistory,
+  setFullPaidStatus,
+  setItemPaidStatus,
+  setTestPaidStatus,
+  setFullTestPaidStatus,
+  getPatientTestHistory,
+  getPatientTests,
+  addPatientTest,
 } from "../controllers/pas.controller.js";
 
 import {
@@ -83,4 +93,14 @@ router.get("/searchWards", searchWards);
 router.get("/getPatientsByWard", getPatientsByWard);
 router.get("/getVacantBedNumbers", getVacantBedNumbers);
 router.get("/getPatients", getPatients);
+router.post("/addPatientConsumables", addPatientConsumables);
+router.get("/getPatientConsumables", getPatientConsumables);
+router.get("/getPatientConsumablesHistory", getPatientConsumablesHistory);
+router.post("/setFullPaidStatus", setFullPaidStatus);
+router.post("/setItemPaidStatus", setItemPaidStatus);
+router.post("/addPatientTest", addPatientTest);
+router.get("/getPatientTests", getPatientTests);
+router.get("/getPatientTestHistory", getPatientTestHistory);
+router.post("/setFullTestPaidStatus", setFullTestPaidStatus);
+router.post("/setTestPaidStatus", setTestPaidStatus);
 export default router;

@@ -24,13 +24,24 @@ export const login = async (req, res) => {
       res.status(400).json({ success: false, message: "Employee not found!" });
       return;
     }
-    const employee = result[0];
+    let employee = result[0];
     //console.log(employee);
     const isPasswordValid = await bcrypt.compare(password, employee.password);
     if (!isPasswordValid) {
       res.status(400).json({ success: false, message: "Invalid credentials!" });
       return;
     }
+    if (result.length > 0) {
+      delete result[0].password;
+    }
+    if (employee.emp_code.startsWith("DOC")) {
+      const result = await conn.query(
+        "select * from Doctor where emp_code = ?",
+        [employee.emp_code]
+      );
+      employee = { ...employee, doctor: result[0] };
+    }
+    console.log(employee);
     generateTokenAndSetCookie(employee, res);
     res.status(200).json({ success: true, employee, isAuthenticated: true });
   } catch (error) {
@@ -86,14 +97,23 @@ export const checkAuth = async (req, res) => {
       "select id,emp_code,emp_type,verified,active from Employee where id =?",
       [userId]
     );
+    let employee = result[0];
+    
     if (!result[0]) {
       return res
         .status(400)
         .json({ success: false, message: "User not found" });
     }
+    if (employee.emp_code.startsWith("DOC")) {
+      const result = await conn.query(
+        "select * from Doctor where emp_code = ?",
+        [employee.emp_code]
+      );
+      employee = { ...employee, doctor: result[0] };
+    }
     return res
       .status(200)
-      .json({ success: true, employee: result[0], isAuthenticated: true });
+      .json({ success: true, employee: employee, isAuthenticated: true });
   } catch (error) {
     //console.log("Error in checkAuth");
     return res

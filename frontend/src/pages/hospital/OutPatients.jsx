@@ -55,22 +55,24 @@ const handleSelectPatient = (e,index,patient)=>{
     setSelectedPatient(null)  
   }
   return (
-    <div  id="out_pat" className="flex flex-col  justify-center items-center  mb-10 w-full h-1/2 overflow-y-auto">
-        <h1 className="flex flex-wrap text-2xl text-blue-800 underline font-semibold">Registered Patients </h1>
-            <div className="  flex gap-2 w-full justify-center items-center text-gray-50 bg-gray-700">
-                <div className="flex border-r  w-full  whitespace-nowrap truncate">Select</div>
-                <div className="flex border-r  w-full  whitespace-nowrap truncate">Code</div>
-                <div className="flex border-r  w-full  whitespace-nowrap truncate">Name</div>
-                <div className="flex  border-r  w-full  whitespace-nowrap truncate">Age</div>
-                <div className="flex  border-r  w-full  whitespace-nowrap truncate">Gender</div>
-                <div className="flex   border-r  w-full whitespace-nowrap">Reg. Date</div>
-                <div className="flex  border-r  w-full  whitespace-nowrap truncate">Blood Group</div>
-                <div className="flex  border-r  w-full whitespace-nowrap truncate">Address</div>
-                <div className="flex  border-r  w-full  whitespace-nowrap truncate">Contact</div>
-                <div className="flex  border-r  w-full  whitespace-nowrap truncate">Med. History</div>
-             </div>
+    <div  id="out_pat" className="flex flex-col  justify-start items-start  mb-10 w-full gap-2 ">
+      
+        <h1 className="flex  text-2xl text-gray-100  font-semibold  sticky top-0 justify-start ">Registered Patients </h1>
+        <div className=" overflow-y-auto h-100">
+        <div className=" pl-2 flex gap-2 w-full justify-center items-center text-gray-50 bg-gray-700 sticky top-0 ">
+            <div className="flex border-r  w-full  whitespace-nowrap truncate">Select</div>
+            <div className="flex border-r  w-full  whitespace-nowrap truncate">Code</div>
+            <div className="flex border-r  w-full  whitespace-nowrap truncate">Name</div>
+            <div className="flex  border-r  w-full  whitespace-nowrap truncate">Age</div>
+            <div className="flex  border-r  w-full  whitespace-nowrap truncate">Gender</div>
+            <div className="flex   border-r  w-full whitespace-nowrap">Reg. Date</div>
+            <div className="flex  border-r  w-full  whitespace-nowrap truncate">Blood Group</div>
+            <div className="flex  border-r  w-full whitespace-nowrap truncate">Address</div>
+            <div className="flex  border-r  w-full  whitespace-nowrap truncate">Contact</div>
+            <div className="flex  border-r  w-full  whitespace-nowrap truncate">Med. History</div>
+          </div>
         {outPatients && outPatients.map((patient,index)=>(
-            <div key={index} className="odd:bg-gray-300 even:bg-gray-400  flex gap-2 w-full justify-center items-stretch border line-clamp-1">
+            <div key={index} className=" pl-2 odd:bg-gray-300 even:bg-gray-400  flex gap-2 w-full justify-center items-stretch border line-clamp-1 ">
                 <div  className=" border-r  w-full  whitespace-nowrap truncate p-0 flex justify-center" >
                   <input type="checkbox" className=" h-lh" onChange={(e)=>handleSelectPatient(e,index,patient)} value={patient} checked={checkedItems[index]}/></div>
                 <div  className=" border-r  w-full  whitespace-nowrap truncate p-0 flex justify-center" ><input className="flex   w-full  whitespace-nowrap truncate" value={patient.patient_code} title={patient.patient_code} readOnly/></div>
@@ -105,6 +107,7 @@ const handleSelectPatient = (e,index,patient)=>{
             <InPatientWard  patient={selectedPatient} setIsModalCompOpen={setIsAdmitModalCompOpen} resetSelection={resetSelection}/> 
       </ModalComponent>: null}
       </div>
+    </div>
   )
 }
 

@@ -161,7 +161,9 @@ export const getPharmacyItems = async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
-    const result = await conn.query("SELECT * FROM Pharmacy order by name");
+    const result = await conn.query(
+      "SELECT * FROM Pharmacy where stock_quantity > 0 order by name"
+    );
     res.status(200).json(result);
   } catch (error) {
     throw error;
@@ -193,13 +195,13 @@ export const searchPharmacyItems = async (req, res) => {
 
 //CANTEEN ITEM MASTER
 export const addCanteenItem = async (req, res) => {
-  const { item_name, item_price, quantity,expiry_date } = req.body;
+  const { item_name, item_price, quantity, expiry_date } = req.body;
   let conn;
   try {
     conn = await pool.getConnection();
     const result = await conn.query(
       "INSERT INTO CanteenItemMaster ( item_name, item_price, quantity,expiry_date) VALUES (?,?,?,?)",
-      [item_name, item_price, quantity,expiry_date]
+      [item_name, item_price, quantity, expiry_date]
     );
     res.status(200).json({
       success: true,
@@ -387,7 +389,3 @@ export const searchWards = async (req, res) => {
     }
   }
 };
-
-
-
-

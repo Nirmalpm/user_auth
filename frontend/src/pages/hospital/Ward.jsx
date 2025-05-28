@@ -11,7 +11,7 @@ import {Bed, BedDouble} from 'lucide-react'
 const Ward = () => {
   const [patients,setPatients] = useState([]);
   const [selectedPatient,setSelectedPatient] = useState({});
-  const {getPatientsByWard,vacatePatientWard,getVacantBeds} = usePasStore();
+  const {getPatientsByWard,vacatePatientWard,employee} = usePasStore();
   const {wardId} = useParams();
   const [wardName,setWardName] = useState("");
   const [totalBeds,setTotalBeds] = useState(0);
@@ -20,6 +20,7 @@ const Ward = () => {
   const [isModalOpen,setIsModalOpen] = useState(false);
   const [bedPatients,setBedPatients] = useState([]);
   const [bedNumbers,setBedNumbers] = useState([]);
+  const [count,setCount] = useState(0);
 
   useEffect(()=>{
     const fetchPatients = async ()=>{
@@ -34,38 +35,50 @@ const Ward = () => {
         const bedNumbers = bedPatients.map((b)=>(b.bed_no));
         console.log(bedNumbers,bedPatients)
         setBedNumbers(bedNumbers);
+        setSelectedPatient({})
     }
     fetchPatients();
-  },[wardId,vacateCount]);
+    console.log(employee.doctor)
+  },[wardId,vacateCount,count]);
 
   const getPatient = (index) =>{
     const found = bedPatients.find(item => item.hasOwnProperty(index));
     return found ? found[index] : null;
   }
 
+  const handleSelectedPatient = (index)=>{
+    setSelectedPatient(getPatient(index));
+  }
+
   const showBeds = ()=>{
    return  Array.from({ length: totalBeds }, (_, i) => {
-        if( bedNumbers.includes((i+1)+'') && getPatient(i+1)?.status !== 'VACATED'){
-            return <span className="flex flex-col text-center"><Bed  key={i} size={50} color={'red'} onClick={()=> setSelectedPatient(getPatient(i+1))} title={getPatient(i+1)?.patient_name}/>{i+1}</span>
+        if( bedNumbers.includes((i+1)+'') && getPatient(i+1)?.status !== 'VACATED' && employee.doctor && employee.doctor.id === getPatient(i+1)?.doctor_id){
+            return <Bed  key={i} size={30} color={'yellow'} 
+            onClick={()=>handleSelectedPatient(i+1)} title={getPatient(i+1)?.patient_name}/>
+            
+        }else if( bedNumbers.includes((i+1)+'') && getPatient(i+1)?.status !== 'VACATED'){
+            return<Bed  key={i} size={30} color={'red'}/>
         }else{
-            return <Bed  key={i} size={50}  color={'green'} onClick={()=> setSelectedPatient({})}/>
+            return <Bed  key={i} size={30}  color={'green'} onClick={()=> setSelectedPatient({})}/>
         }
     });
+    // <span className="text-xs">{i+1}</span>
   }
 
   const showPatientDetails = () =>
     {
         if (selectedPatient.patient_name){
-            return <div>
+            return <div className="bg-gray-500 m-2 flex flex-col p-2 w-md justify-center">
                 <p>Patient Name: {selectedPatient.patient_name}</p>
+                <p>Bed No.: {selectedPatient.bed_number}</p>
                 <p>Adm. Date: {formatDate(selectedPatient.admission_date)}</p>
                 <p>Address: {selectedPatient.patient_address}</p>
                 <p>Blood Group: {selectedPatient.patient_blood_group}</p>
                 <p>Med. History: {selectedPatient.patient_medical_history}</p>
                 <p>Conslt. Doctor: {selectedPatient.doctor_name}</p>
-                <button className="pl-2 pr-2 bg-blue-800 rounded text-gray-100" onClick={()=> setIsModalOpen(true)}>Vacate</button>
+                <button className="w-50 pl-2 pr-2 bg-blue-800 rounded text-gray-100" onClick={()=> setIsModalOpen(true)}>Vacate</button>
             </div>
-        }else {return <div className="flex text-2xl text-gray-100">Click on each occupied Bed to get the patient details</div>};
+        }
     }
   
     const handleVacate = async() =>{
@@ -85,19 +98,28 @@ const Ward = () => {
 
   return (
     
-    <div className="flex gap-3 flex-col justify-start w-full items-center  flex-auto mt-5 mb-10 ">
-     
-      <h1 className="flex flex-wrap text-3xl text-blue-700 font-semibold">{wardName}</h1>
-      <h1 className="flex flex-wrap text-2xl text-blue-700">Total Beds: {totalBeds}</h1>
-      <h1 className="flex flex-wrap text-xl text-blue-700">Remaining Beds: {remainingBeds}</h1>
-      <div className="flex flex-wrap overflow-y-auto h-3/4 ">
-        <div className="flex gap-3 flex-wrap justify-start w-md items-start">
-        {showBeds()}
-        </div>
-        <div className="flex gap-3 flex-wrap justify-center w-md items-start ">
+    <div className="flex gap-1 flex-col justify-center w-full items-center  flex-auto mt-5 mb-10 bg-blue-900 text-gray-100">
+      <h1 className="flex text-2xl font-bold mt-2">{wardName}</h1>
+      <h1 className="flex ">Total Beds: {totalBeds}</h1>
+      <h1 className="flex ">Remaining Beds: {remainingBeds}</h1>
+      <div className="flex overflow-y-auto h-3/4 justify-center ">
+        <div className="flex gap-2 justify-center w-full items-start">
+          <div className="flex flex-col m-2 ">
+            <div className="flex underline">Click on each your patient bed to get the details</div>
+            <div className="flex  flex-col">
+              <div className="flex gap-1 "><Bed   size={30}  color={'green'} /> Free bed</div>
+              <div className="flex gap-1"><Bed   size={30}  color={'red'} /> Occupied by other patient </div>
+              <div className="flex gap-1"><Bed   size={30}  color={'yellow'} /> Your patient</div>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-1 w-md justify-center m-2">
+          {showBeds()}
+          </div>
+        </div>        
+      </div>
+      <div className="flex gap-3 flex-wrap justify-center w-md items-start ">
         {showPatientDetails()}
         </div>
-      </div>
       <ConfirmModal
         isOpen={isModalOpen}
         title="Confirm Vacate"

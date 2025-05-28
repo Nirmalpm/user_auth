@@ -34,6 +34,8 @@ import UnderConstruction from './pages/hospital/UnderConstruction.jsx';
 import Login from './pages/hospital/Login.jsx';
 import RedirectLogin, { PasProtectedRoute } from './pages/hospital/RedirectLogin.jsx';
 import InPatientsPage from './pages/hospital/InPatientsPage.jsx';
+import BillingsPage from './pages/hospital/BillingsPage.jsx';
+import OutPatientsPage from './pages/hospital/OutpatientsPage.jsx';
 
 
 const ErrorPage = () => {
@@ -124,12 +126,12 @@ const router = createBrowserRouter([
           {path:"ward/:wardId", Component:Ward},
           {path:"patientreg", Component:PatientsList},
           {path:"inpatient", Component:InPatientsPage},
-          {path:"outpatient", Component:UnderConstruction},
+          {path:"outpatient", Component:OutPatientsPage},
           {path:"dept", Component:UnderConstruction},
           {path:"test", Component:UnderConstruction},
           {path:"pharmacy", Component:UnderConstruction},
           {path:"canteen", Component:UnderConstruction},
-          {path:"billing", Component:UnderConstruction},
+          {path:"billing", Component:BillingsPage},
         ]
       }
 

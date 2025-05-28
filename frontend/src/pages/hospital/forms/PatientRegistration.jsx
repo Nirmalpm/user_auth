@@ -3,9 +3,12 @@ import InPatientWard from './InPatientWard'
 import { usePasStore } from '../../../store/pasStore';
 import toast from "react-hot-toast";
 
+const REG_AMOUNT = 600.00;
+
 const PatientRegistration = ({setRegToggler}) => {
   const initialState = {name:'',age:'',date_of_birth:'',gender:'',
-    blood_group:'',address:'',contact_number:'',email:'',medical_history:'',reg_date:'',reg_amount:''};
+    blood_group:'',address:'',contact_number:'',email:'',medical_history:'',
+    reg_date:new Date().toISOString().split('T')[0],reg_amount:REG_AMOUNT};
   const [patient,setPatient] = useState(initialState);
   const [registered, setRegistered] = useState(false);
   const {registerPatient} = usePasStore();
@@ -38,8 +41,8 @@ const PatientRegistration = ({setRegToggler}) => {
   }
 
   return (
-    <div id="pat_reg" className=" flex flex-col w-full  justify-center items-center   mb-10 ">
-      <h1 className="flex flex-wrap text-2xl text-blue-800 underline font-semibold">PATIENT REGISTRATION </h1>
+    <div id="pat_reg" className=" flex flex-col w-full  justify-start items-start   mb-10 ">
+      <h1 className="flex flex-wrap text-2xl text-gray-100  font-semibold ">Patient Registration </h1>
       <div className="overflow-y-auto h-full">
       <form className="flex flex-wrap flex-col " onSubmit={handleSubmit}>
         <div className="grid grid-cols-2 gap-2  bg-gray-400 w-full justify-center p-3">
@@ -94,21 +97,7 @@ const PatientRegistration = ({setRegToggler}) => {
                 <label htmlFor='medical_history'>Medical History:</label>
                 <textarea type="text" name="medical_history" value={patient.medical_history} onChange={handleOnChange} className="border-1 m-1 rounded border-gray-100 bg-gray-50 w-50"/>
             </div>
-            {/* <div className="bg-gray-300 p-2 rounded  flex flex-col">
-                <label htmlFor='patient_type'>Patient Type:</label>
-                <div>
-                    <label>
-                    <input type="radio" name="patient_type" className="border-1 m-1 rounded border-gray-100 bg-gray-50" 
-                    value="1" onChange={handleOnChange}/>
-                    In-Patient
-                    </label>
-                    <label> {` `}
-                    <input type="radio" name="patient_type" className="border-1 m-1 rounded border-gray-100 bg-gray-50"
-                    value="0"   onChange={handleOnChange}/>
-                    Out-Patient
-                    </label>
-                </div>
-            </div> */}
+           
             <div className="bg-gray-300 p-2 rounded  flex flex-col">
                 <label htmlFor='reg_date'>Registration Date:</label>
                 <input type="date" name="reg_date" value={patient.reg_date} onChange={handleOnChange} className="border-1 m-1 rounded border-gray-100 bg-gray-50"/>

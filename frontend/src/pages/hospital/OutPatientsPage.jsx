@@ -6,7 +6,7 @@ import PatientPharmacyItems from './forms/PatientPharmacyItems';
 import AccordionContainer from '../../components/AccordionContainer';
 import PatientTests from './forms/PatientTests';
 
-const InPatientsPage = () => {
+const OutPatientsPage = () => {
   const [inPatients, setInPatients] = useState([]);
   const [searchPatients, setSearchPatients] = useState([]);
   const [selectedPatient, setSelectedPatient] = useState(null);
@@ -16,7 +16,7 @@ const InPatientsPage = () => {
   useEffect(()=>{
       const fetchPatients = async()=>{
           const patients = await getPatients();
-          const inPatients = patients.filter((p)=>p.ip === 'Y');
+          const inPatients = patients.filter((p)=>p.ip !== 'Y');
           setInPatients(inPatients);
           setSearchPatients(inPatients);
           setCheckIndex(inPatients.map((p)=>(false)))
@@ -36,7 +36,7 @@ const InPatientsPage = () => {
 
   return (
 <div className="flex flex-col text-gray-100  min-w-7xl lg:w-5xl min-h-screen justify_center p-3 m-10 gap-2 bg-blue-900">
-    <h1 className="text-2xl text-center fond-bold underline">Inpatients</h1>
+    <h1 className="text-2xl text-center fond-bold underline">Outpatients</h1>
     <div className="flex gap-2 w-full flex-wrap justify-start">
         <div className="flex flex-col">
             <div className="flex  justify-start items-center border-1 rounded">        
@@ -86,4 +86,4 @@ const InPatientsPage = () => {
   )
 }
 
-export default InPatientsPage
+export default OutPatientsPage
