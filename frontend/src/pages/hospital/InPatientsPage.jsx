@@ -5,6 +5,7 @@ import { formatDate } from '../../utils/date';
 import PatientPharmacyItems from './forms/PatientPharmacyItems';
 import AccordionContainer from '../../components/AccordionContainer';
 import PatientTests from './forms/PatientTests';
+import PatientMisc from './forms/PatientMisc';
 
 const InPatientsPage = () => {
   const [inPatients, setInPatients] = useState([]);
@@ -81,6 +82,7 @@ const InPatientsPage = () => {
     </div>
     {selectedPatient ?<AccordionContainer title="Medicines and other purchases"> <PatientPharmacyItems patient={selectedPatient}/> </AccordionContainer>: null}
     {selectedPatient ?<AccordionContainer title="Tests Done">  <PatientTests patient={selectedPatient}/> </AccordionContainer>: null}
+    {selectedPatient ?<AccordionContainer title="Miscellaneous Items">  <PatientMisc patient={selectedPatient}/> </AccordionContainer>: null}
     
 </div>
   )

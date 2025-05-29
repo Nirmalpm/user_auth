@@ -27,6 +27,12 @@ import {
   getPatientTestHistory,
   getPatientTests,
   addPatientTest,
+  getMiscBillItemTypes,
+  getBillings,
+  getItemsByBill,
+  addMiscItems,
+  getMiscItems,
+  getMiscItemsHistory,
 } from "../controllers/pas.controller.js";
 
 import {
@@ -103,4 +109,10 @@ router.get("/getPatientTests", getPatientTests);
 router.get("/getPatientTestHistory", getPatientTestHistory);
 router.post("/setFullTestPaidStatus", setFullTestPaidStatus);
 router.post("/setTestPaidStatus", setTestPaidStatus);
+router.get("/getMiscBillItemTypes", getMiscBillItemTypes);
+router.get("/getBillings", getBillings);
+router.get("/getItemsByBill", getItemsByBill);
+router.post("/addMiscItems", addMiscItems);
+router.get("/getMiscItems", getMiscItems);
+router.get("/getMiscItemsHistory", getMiscItemsHistory);
 export default router;

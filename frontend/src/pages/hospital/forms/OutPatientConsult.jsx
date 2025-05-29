@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 
 const OutPatientConsult = ({patient,setIsModalCompOpen,resetSelection}) => {
-   const initialState = {op_id:patient.id,visit_date_time:'', doctor_id:'',diagnosis:'',remarks:'',prescription:'',amount:''};
+   const initialState = {patient_id:patient.id,visit_date_time:'', doctor_id:'',diagnosis:'',remarks:'',prescription:'',amount:''};
    const {doctors,addOpConsultation} =  usePasStore();
    const [outPatientCounsult, setOutPatientCounsult] = useState(initialState);
  
@@ -51,7 +51,7 @@ console.log(patient)
                 ))}
             </select>
         </div>
-        <div className="bg-gray-300 p-2 rounded  flex flex-col">
+        {/* <div className="bg-gray-300 p-2 rounded  flex flex-col">
             <label htmlFor='diagnosis'>Diagnosis :</label>
             <textarea name="diagnosis" className="border-1 m-1 rounded border-gray-100 bg-gray-50"
              onChange={handleChange}/>
@@ -70,7 +70,7 @@ console.log(patient)
             <label htmlFor='amount'>Amount :</label>
             <input type="number" name="amount" value={outPatientCounsult.amount} className="border-1 m-1 rounded border-gray-100 bg-gray-50"
              onChange={handleChange} readOnly/>
-        </div>
+        </div> */}
         
         
         <div className=" p-2 rounded flex flex-col">               

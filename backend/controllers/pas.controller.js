@@ -391,47 +391,35 @@ LEFT JOIN Patient p ON p.id = ipw.patient_id where w.id = ?`;
 };
 
 export const addOpConsultation = async (req, res) => {
-  const {
-    op_id,
-    visit_date_time,
-    doctor_id,
-    diagnosis,
-    remarks,
-    prescription,
-    amount,
-  } = req.body;
-  console.log(
-    op_id,
-    visit_date_time,
-    doctor_id,
-    diagnosis,
-    remarks,
-    prescription,
-    amount
-  );
-  if (!op_id || !visit_date_time || !doctor_id || !diagnosis || !amount) {
+  const { patient_id, visit_date_time, doctor_id } = req.body;
+  console.log(patient_id, visit_date_time, doctor_id);
+  if (!patient_id || !visit_date_time || !doctor_id) {
     throw new Error("Required fields missing");
   }
 
   let conn;
   try {
     conn = await pool.getConnection();
-    const result = await conn.query(
-      `INSERT INTO OPConsultation ( op_id,visit_date_time, doctor_id,diagnosis,remarks,prescription,amount )
-         VALUES (?, ?, ?, ?, ?, ?,?)`,
-      [
-        op_id,
-        visit_date_time,
-        doctor_id,
-        diagnosis,
-        remarks,
-        prescription,
-        amount,
-      ]
-    );
+    await conn.beginTransaction();
 
+    const doctor = await conn.query(
+      "select consult_fee from Doctor where id = ?",
+      [doctor_id]
+    );
+    const amount = doctor[0].consult_fee;
+    const bill = await conn.query(
+      "insert into PatientBill (patient_id,total_amount,item_type) values (?, ?, ?)",
+      [patient_id, amount, "OP"]
+    );
+    const result = await conn.query(
+      `INSERT INTO OPConsultation ( patient_id,visit_date_time, doctor_id,amount,bill_id )
+         VALUES (?, ?, ?, ?,?)`,
+      [patient_id, visit_date_time, doctor_id, amount, bill.insertId]
+    );
+    await conn.commit();
     res.status(200).json({ success: true, id: Number(result.insertId) });
   } catch (err) {
+    await conn.rollback();
     console.error(err);
     res.status(500).send("Error fetching Patients");
   } finally {
@@ -759,6 +747,198 @@ export const setFullTestPaidStatus = async (req, res) => {
       success: false,
       message: "setFullTestPaidStatus: Test updation failed",
     });
+    throw error;
+  } finally {
+    if (conn) {
+      await conn.release();
+    }
+  }
+};
+
+export const getMiscBillItemTypes = async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const rows = await conn.query(
+      "select * from BillItemType where type_group = ?",
+      ["MISC"]
+    );
+    res.status(200).json(rows);
+  } catch (error) {
+    throw error;
+  } finally {
+    if (conn) {
+      conn.release();
+    }
+  }
+};
+
+export const getBillings = async (req, res) => {
+  const { patient_id } = req.query;
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const rows = await conn.query(
+      "select * from PatientBill where patient_id = ?",
+      [patient_id]
+    );
+    res.status(200).json(rows);
+  } catch (error) {
+    throw error;
+  } finally {
+    if (conn) {
+      conn.release();
+    }
+  }
+};
+
+export const getItemsByBill = async (req, res) => {
+  const { patient_id, bill_id } = req.query;
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const rows = await conn.query(
+      "select * from PatientBill where patient_id = ?  order by id",
+      [patient_id, bill_id]
+    );
+    const retRows = [...rows];
+    for (const row of retRows) {
+      if (row.item_type === "CNS") {
+        const cns = await conn.query(
+          "select *,(select name from Pharmacy where id = item_id) item_name from PatientConsumable where patient_id = ? and bill_id = ?",
+          [patient_id, row.id]
+        );
+        row.consumables = cns;
+      } else if (row.item_type === "TST") {
+        const tests = await conn.query(
+          "select *,(select test_name from TestMaster where id = test_id) test_name from PatientTest where patient_id = ? and bill_id = ?",
+          [patient_id, row.id]
+        );
+        row.tests = tests;
+      } else if (row.item_type === "OP") {
+        const op = await conn.query(
+          "select * from OPConsultation where patient_id = ? and bill_id = ?",
+          [patient_id, row.id]
+        );
+        row.op = op;
+      } else if (row.item_type === "FD") {
+        const foods = await conn.query(
+          "select * from PatientFoodOrder where patient_id = ? and bill_id = ?",
+          [patient_id, row.id]
+        );
+        row.food_order = foods;
+      } else if (row.item_type === "MISC") {
+        const misc = await conn.query(
+          "select *,(select name from BillItemType where code = bill_type_code) name from PatientMisc where patient_id = ? and bill_id = ?",
+          [patient_id, row.id]
+        );
+        row.misc = misc;
+      }
+    }
+    res.status(200).json(retRows);
+  } catch (error) {
+    throw error;
+  } finally {
+    if (conn) {
+      conn.release();
+    }
+  }
+};
+
+export const addMiscItems = async (req, res) => {
+  console.log("addMiscItems");
+  const { patient_id, ward_id, doctor_id, items } = req.body; // items: array of { item_id, quantity, price }
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    await conn.beginTransaction();
+
+    //Insert to PatientBill
+    const bill = await conn.query(
+      "INSERT INTO PatientBill (patient_id, item_type) VALUES (?, ?)",
+      [patient_id, "MISC"]
+    );
+
+    const ward = await conn.query(
+      "select daily_nursing_charge from WardMaster where id = ?",
+      [ward_id]
+    );
+
+    const doctor = await conn.query(
+      "select ip_visit_fee from Doctor where id = ?",
+      [doctor_id]
+    );
+
+    let tot_amount = 0.0;
+    for (const item of items) {
+      let amount = 0;
+      const { bill_type_code } = item;
+      if (bill_type_code === "NRSNG") {
+        amount = ward[0].daily_nursing_charge;
+      } else if (bill_type_code === "DRVST") {
+        amount = doctor[0].ip_visit_fee;
+      }
+      // Insert into PatientConsumable
+      await conn.query(
+        "INSERT INTO PatientMisc (patient_id, bill_type_code, amount, bill_id) VALUES (?, ?, ?, ?)",
+        [patient_id, bill_type_code, amount, bill.insertId]
+      );
+      tot_amount += Number(amount);
+      console.log("Total Amount:", tot_amount);
+    }
+
+    //Udate  PatientBill
+    await conn.query("UPDATE PatientBill set total_amount = ? where id = ? ", [
+      tot_amount,
+      bill.insertId,
+    ]);
+
+    await conn.commit();
+    getMiscItems(req, res);
+  } catch (error) {
+    if (conn) await conn.rollback();
+    res.status(500).json({ success: false, message: "Item addition failed" });
+    throw error;
+  } finally {
+    if (conn) await conn.release();
+  }
+};
+
+export const getMiscItems = async (req, res) => {
+  const { patient_id, item_date } = req.query;
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const rows = await conn.query(
+      `select *, (select name from BillItemType where code = bill_type_code) item_name from PatientMisc 
+      where patient_id = ? and item_date = ? order by item_date desc`,
+      [patient_id, item_date]
+    );
+    res.status(200).json(rows);
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Item retreival failed" });
+    throw error;
+  } finally {
+    if (conn) {
+      await conn.release();
+    }
+  }
+};
+
+export const getMiscItemsHistory = async (req, res) => {
+  const { patient_id } = req.query;
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const rows = await conn.query(
+      `select	pt.*,(select name from BillItemType where code = pt.bill_type_code) item_name from	PatientMisc pt inner 
+      join InPatientWard pw on	pw.patient_id = pt.patient_id where	pt.patient_id = ? 
+      and pt.item_date >= pw.admission_date 	and pw.status = 'OCCUPIED' order by pt.item_date desc`,
+      [patient_id]
+    );
+    res.status(200).json(rows);
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Item retreival failed" });
     throw error;
   } finally {
     if (conn) {

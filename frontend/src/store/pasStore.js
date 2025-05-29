@@ -378,4 +378,65 @@ export const usePasStore = create((set, get) => ({
       throw error;
     }
   },
+  addMiscItems: async (patient_id, ward_id, doctor_id, items) => {
+    try {
+      const response = await axios.post(`${API_URL}/addMiscItems`, {
+        patient_id,
+        ward_id,
+        doctor_id,
+        items,
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getMiscBillItemTypes: async () => {
+    try {
+      const response = await axios.get(`${API_URL}/getMiscBillItemTypes`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getBillings: async (patient_id) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/getMiscBillItemTypes?patient_id=${patient_id}`
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getItemsByBill: async (patient_id) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/getItemsByBill?patient_id=${patient_id}`
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getMiscItems: async (patient_id, item_date) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/getMiscItems?patient_id=${patient_id}&item_date=${item_date}`
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getMiscItemsHistory: async (patient_id) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/getMiscItemsHistory?patient_id=${patient_id}`
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 }));
