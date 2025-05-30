@@ -9,7 +9,7 @@ import CanteenMaster from './forms/CanteenMaster'
 
 const Admin = () => {
   return (
-    <div className="flex flex-col w-full justify-center items-start gap-2 mt-5 mb-15">
+    <div className="flex w-7xl flex-col bg-blue-900  h-[630px] justify-center items-center gap-2 m-1 p-10 overflow-y-auto">
       <AccordionContainer title="Department"><Department/></AccordionContainer>
       <AccordionContainer title="Doctors"><Doctor/></AccordionContainer>
       <AccordionContainer title="Wards"><WardMaster/></AccordionContainer>

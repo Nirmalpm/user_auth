@@ -229,8 +229,8 @@ export const registerPatient = async (req, res) => {
       reg_date,
     ]);
     await conn.query(
-      "insert into PatientBill (patient_id,payment_status,item_type,total_amount) values(?,?,?,?)",
-      [result.insertId, "PAID", "REG", reg_amount]
+      "insert into Billing (user_id,payment_status,item_type,total_amount) values(?,?,?,?)",
+      [patient_code, "PAID", "REG", reg_amount]
     );
     //console.log(result);
     conn.commit();
@@ -391,7 +391,7 @@ LEFT JOIN Patient p ON p.id = ipw.patient_id where w.id = ?`;
 };
 
 export const addOpConsultation = async (req, res) => {
-  const { patient_id, visit_date_time, doctor_id } = req.body;
+  const { patient_code, visit_date_time, doctor_id } = req.body;
   console.log(patient_id, visit_date_time, doctor_id);
   if (!patient_id || !visit_date_time || !doctor_id) {
     throw new Error("Required fields missing");
@@ -408,13 +408,13 @@ export const addOpConsultation = async (req, res) => {
     );
     const amount = doctor[0].consult_fee;
     const bill = await conn.query(
-      "insert into PatientBill (patient_id,total_amount,item_type) values (?, ?, ?)",
-      [patient_id, amount, "OP"]
+      "insert into Billing (user_id,total_amount,item_type) values (?, ?, ?)",
+      [patient_code, amount, "OP"]
     );
     const result = await conn.query(
-      `INSERT INTO OPConsultation ( patient_id,visit_date_time, doctor_id,amount,bill_id )
-         VALUES (?, ?, ?, ?,?)`,
-      [patient_id, visit_date_time, doctor_id, amount, bill.insertId]
+      `INSERT INTO OPConsultation ( patient_id,visit_date_time, doctor_id,amount,bill_id,status )
+         VALUES (?, ?, ?, ?,?,?)`,
+      [patient_id, visit_date_time, doctor_id, amount, bill.insertId, "PAID"]
     );
     await conn.commit();
     res.status(200).json({ success: true, id: Number(result.insertId) });
@@ -430,7 +430,7 @@ export const addOpConsultation = async (req, res) => {
 };
 
 export const addPatientConsumables = async (req, res) => {
-  const { patient_id, items } = req.body; // items: array of { item_id, quantity, price }
+  const { patient_id, patient_code, items } = req.body; // items: array of { item_id, quantity, price }
   let conn;
   try {
     conn = await pool.getConnection();
@@ -439,10 +439,10 @@ export const addPatientConsumables = async (req, res) => {
       (acc, item) => acc + Number(item.price * item.quantity),
       0
     );
-    //Insert to PatientBill
+    //Insert to Billing
     const bill = await conn.query(
-      "INSERT INTO PatientBill (patient_id, total_amount, item_type) VALUES (?, ?, ?)",
-      [patient_id, totalAmount, "CNS"]
+      "INSERT INTO Billing (user_id, total_amount, item_type) VALUES (?, ?, ?)",
+      [patient_code, totalAmount, "CNS"]
     );
     for (const item of items) {
       const { item_id, quantity, price } = item;
@@ -545,7 +545,7 @@ export const setItemPaidStatus = async (req, res) => {
       status = "PARTIAL";
     }
     const bill = await conn.query(
-      "update PatientBill set payment_status = ? where id = ?",
+      "update Billing set payment_status = ? where id = ?",
       [status, rows[0].bill_id]
     );
     await conn.commit();
@@ -579,10 +579,10 @@ export const setFullPaidStatus = async (req, res) => {
       [patient_id, buy_date]
     );
     rows.forEach(async (row) => {
-      await conn.query(
-        "update PatientBill set payment_status = ? where id = ?",
-        ["PAID", row.bill_id]
-      );
+      await conn.query("update Billing set payment_status = ? where id = ?", [
+        "PAID",
+        row.bill_id,
+      ]);
     });
     await conn.commit();
     res.status(200).json({ success: true, message: "Item status set to PAID" });
@@ -601,7 +601,7 @@ export const setFullPaidStatus = async (req, res) => {
 
 //TESTS
 export const addPatientTest = async (req, res) => {
-  const { patient_id, tests } = req.body; // items: array of { item_id, quantity, price }
+  const { patient_id, patient_code, tests } = req.body; // items: array of { item_id, quantity, price }
   let conn;
   try {
     conn = await pool.getConnection();
@@ -610,10 +610,10 @@ export const addPatientTest = async (req, res) => {
       (acc, test) => acc + Number(test.amount),
       0
     );
-    //Insert to PatientBill
+    //Insert to Billing
     const bill = await conn.query(
-      "INSERT INTO PatientBill (patient_id, total_amount, item_type) VALUES (?, ?, ?)",
-      [patient_id, totalAmount, "TST"]
+      "INSERT INTO Billing (user_id, total_amount, item_type) VALUES (?, ?, ?)",
+      [patient_code, totalAmount, "TST"]
     );
 
     for (const item of tests) {
@@ -699,7 +699,7 @@ export const setTestPaidStatus = async (req, res) => {
       status = "PARTIAL";
     }
     const bill = await conn.query(
-      "update PatientBill set payment_status = ? where id = ?",
+      "update Billing set payment_status = ? where id = ?",
       [status, rows[0].bill_id]
     );
     await conn.commit();
@@ -734,10 +734,10 @@ export const setFullTestPaidStatus = async (req, res) => {
       [patient_id, test_date]
     );
     rows.forEach(async (row) => {
-      await conn.query(
-        "update PatientBill set payment_status = ? where id = ?",
-        ["PAID", row.bill_id]
-      );
+      await conn.query("update Billing set payment_status = ? where id = ?", [
+        "PAID",
+        row.bill_id,
+      ]);
     });
     await conn.commit();
     res.status(200).json({ success: true, message: "Test status set to PAID" });
@@ -774,14 +774,13 @@ export const getMiscBillItemTypes = async (req, res) => {
 };
 
 export const getBillings = async (req, res) => {
-  const { patient_id } = req.query;
+  const { patient_code } = req.query;
   let conn;
   try {
     conn = await pool.getConnection();
-    const rows = await conn.query(
-      "select * from PatientBill where patient_id = ?",
-      [patient_id]
-    );
+    const rows = await conn.query("select * from Billing where user_id = ?", [
+      patient_code,
+    ]);
     res.status(200).json(rows);
   } catch (error) {
     throw error;
@@ -793,44 +792,47 @@ export const getBillings = async (req, res) => {
 };
 
 export const getItemsByBill = async (req, res) => {
-  const { patient_id, bill_id } = req.query;
+  const { user_id, bill_id } = req.query;
   let conn;
   try {
     conn = await pool.getConnection();
     const rows = await conn.query(
-      "select * from PatientBill where patient_id = ?  order by id",
-      [patient_id, bill_id]
+      "select * from Billing where user_id = ?  order by id",
+      [user_id, bill_id]
     );
     const retRows = [...rows];
     for (const row of retRows) {
       if (row.item_type === "CNS") {
         const cns = await conn.query(
-          "select *,(select name from Pharmacy where id = item_id) item_name from PatientConsumable where patient_id = ? and bill_id = ?",
-          [patient_id, row.id]
+          `select *,(select name from Pharmacy where id = item_id) item_name from 
+          PatientConsumable where patient_id = (select id from Patient where patient_code = ?) and bill_id = ?`,
+          [user_id, row.id]
         );
         row.consumables = cns;
       } else if (row.item_type === "TST") {
         const tests = await conn.query(
-          "select *,(select test_name from TestMaster where id = test_id) test_name from PatientTest where patient_id = ? and bill_id = ?",
-          [patient_id, row.id]
+          `select *,(select test_name from TestMaster where id = test_id) test_name from 
+          PatientTest where patient_id = (select id from Patient where patient_code = ?) and bill_id = ?`,
+          [user_id, row.id]
         );
         row.tests = tests;
       } else if (row.item_type === "OP") {
         const op = await conn.query(
-          "select * from OPConsultation where patient_id = ? and bill_id = ?",
-          [patient_id, row.id]
+          "select * from OPConsultation where patient_id = (select id from Patient where patient_code = ?) and bill_id = ?",
+          [user_id, row.id]
         );
         row.op = op;
       } else if (row.item_type === "FD") {
         const foods = await conn.query(
-          "select * from PatientFoodOrder where patient_id = ? and bill_id = ?",
-          [patient_id, row.id]
+          "select *,(select item_name from CanteenItemMaster where id = item_id) item_name from FoodOrder where user_id =? and bill_id = ?",
+          [user_id, row.id]
         );
         row.food_order = foods;
       } else if (row.item_type === "MISC") {
         const misc = await conn.query(
-          "select *,(select name from BillItemType where code = bill_type_code) name from PatientMisc where patient_id = ? and bill_id = ?",
-          [patient_id, row.id]
+          `select *,(select name from BillItemType where code = bill_type_code) name from
+           PatientMisc where patient_id = (select id from Patient where patient_code = ?) and bill_id = ?`,
+          [user_id, row.id]
         );
         row.misc = misc;
       }
@@ -847,16 +849,16 @@ export const getItemsByBill = async (req, res) => {
 
 export const addMiscItems = async (req, res) => {
   console.log("addMiscItems");
-  const { patient_id, ward_id, doctor_id, items } = req.body; // items: array of { item_id, quantity, price }
+  const { patient_id, patient_code, ward_id, doctor_id, items } = req.body; // items: array of { item_id, quantity, price }
   let conn;
   try {
     conn = await pool.getConnection();
     await conn.beginTransaction();
 
-    //Insert to PatientBill
+    //Insert to Billing
     const bill = await conn.query(
-      "INSERT INTO PatientBill (patient_id, item_type) VALUES (?, ?)",
-      [patient_id, "MISC"]
+      "INSERT INTO Billing (user_id, item_type) VALUES (?, ?)",
+      [patient_code, "MISC"]
     );
 
     const ward = await conn.query(
@@ -887,8 +889,8 @@ export const addMiscItems = async (req, res) => {
       console.log("Total Amount:", tot_amount);
     }
 
-    //Udate  PatientBill
-    await conn.query("UPDATE PatientBill set total_amount = ? where id = ? ", [
+    //Udate  Billing
+    await conn.query("UPDATE Billing set total_amount = ? where id = ? ", [
       tot_amount,
       bill.insertId,
     ]);
@@ -939,6 +941,272 @@ export const getMiscItemsHistory = async (req, res) => {
     res.status(200).json(rows);
   } catch (error) {
     res.status(500).json({ success: false, message: "Item retreival failed" });
+    throw error;
+  } finally {
+    if (conn) {
+      await conn.release();
+    }
+  }
+};
+
+export const payOutstandingBills = async (req, res) => {
+  const { outstandingBills } = req.body;
+  console.log(outstandingBills);
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    await conn.beginTransaction();
+    if (outstandingBills) {
+      outstandingBills.forEach(async (bill) => {
+        const { bill_id, item_type } = bill;
+        const result = await conn.query(
+          "update Billing set payment_status=? where id = ?",
+          ["PAID", bill_id]
+        );
+        console.log(result);
+        if (item_type === "CNS") {
+          await conn.query(
+            "update PatientConsumable set status=? where bill_id = ?",
+            ["PAID", bill_id]
+          );
+        } else if (item_type === "TST") {
+          await conn.query(
+            "update PatientTest set status=? where bill_id = ?",
+            ["PAID", bill_id]
+          );
+        } else if (item_type === "MISC") {
+          await conn.query(
+            "update PatientMisc set status=? where bill_id = ?",
+            ["PAID", bill_id]
+          );
+        } else if (item_type === "OP") {
+          await conn.query(
+            "update OPConsultation set status=? where bill_id = ?",
+            ["PAID", bill_id]
+          );
+        } else if (item_type === "FD") {
+          await conn.query("update FoodOrder set status=? where bill_id = ?", [
+            "PAID",
+            bill_id,
+          ]);
+        }
+      });
+    }
+    await conn.commit();
+    res
+      .status(200)
+      .json({ success: true, message: "Outstanding Bills' statuses updated" });
+  } catch (error) {
+    await conn.rollback();
+    throw error;
+  } finally {
+    if (conn) {
+      await conn.release();
+    }
+  }
+};
+
+export const getTestPatients = async (req, res) => {
+  const { id } = req.query;
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const rows = await conn.query(
+      `select *,(select test_name from TestMaster where id=?) test_name, 
+      (select name from Patient where id = patient_id) patient_name,(select patient_code from Patient where id = patient_id) patient_code 
+      from PatientTest where test_id = ?`,
+      [id, id]
+    );
+    res.status(200).json(rows);
+  } catch (error) {
+    throw error;
+  } finally {
+    if (conn) {
+      conn.release();
+    }
+  }
+};
+export const getDeptDoctors = async (req, res) => {
+  const { id } = req.query;
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const rows = await conn.query(
+      `select *,(select name from Department where id=dept) dept_name from Doctor where dept = ?`,
+      [id]
+    );
+    res.status(200).json(rows);
+  } catch (error) {
+    throw error;
+  } finally {
+    if (conn) {
+      conn.release();
+    }
+  }
+};
+//FOOD ORDER
+export const addFoodOrder = async (req, res) => {
+  const { user_id, items } = req.body; // items: array of { item_id, quantity, price }
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    await conn.beginTransaction();
+    const totalAmount = items.reduce(
+      (acc, item) => acc + Number(item.price * item.quantity),
+      0
+    );
+    //Insert to Billing
+    const bill = await conn.query(
+      "INSERT INTO Billing (user_id, total_amount, item_type) VALUES (?, ?, ?)",
+      [user_id, totalAmount, "FD"]
+    );
+    for (const item of items) {
+      const { item_id, quantity, price } = item;
+
+      const result = await conn.query(
+        "select quantity from CanteenItemMaster where id=?",
+        [item_id]
+      );
+      let qty = quantity;
+      if (result[0].quantity < quantity) {
+        qty = result[0].quantity;
+      }
+
+      // Insert into PatientConsumable
+      await conn.query(
+        "INSERT INTO FoodOrder (user_id, item_id, item_qty, total_price, bill_id) VALUES (?, ?, ?, ?, ?)",
+        [user_id, item_id, qty, price, bill.insertId]
+      );
+
+      // Update quantity based on quantity used
+      await conn.query(
+        `UPDATE CanteenItemMaster SET quantity = quantity - ? 
+         WHERE id = ? AND quantity >= ?`,
+        [qty, item_id, qty]
+      );
+    }
+
+    await conn.commit();
+    getFoodOrders(req, res);
+  } catch (error) {
+    if (conn) await conn.rollback();
+    res.status(500).json({ success: false, message: "Item addition failed" });
+    throw error;
+  } finally {
+    if (conn) await conn.release();
+  }
+};
+
+export const getFoodOrders = async (req, res) => {
+  const { user_id, buy_date } = req.query;
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const rows = await conn.query(
+      `select *, (select item_name from CanteenItemMaster where id = item_id) item_name from FoodOrder  
+      where user_id = ? and buy_date = ? order by buy_date desc`,
+      [user_id, buy_date]
+    );
+    res.status(200).json(rows);
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Item retreival failed" });
+    throw error;
+  } finally {
+    if (conn) {
+      await conn.release();
+    }
+  }
+};
+
+export const getPatientFoodOrderHistory = async (req, res) => {
+  const { patient_code } = req.query;
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const rows = await conn.query(
+      `select	fd.*,(select item_name from CanteenItemMaster where id = fd.item_id) item_name from	FoodOrder fd inner 
+      join Patient p on	p.patient_code = fd.user_id inner join InPatientWard pw on pw.patient_id = p.id 
+      where	fd.user_id = ? and fd.buy_date >= pw.admission_date 	and pw.status = 'OCCUPIED' order by fd.buy_date desc`,
+      [patient_code]
+    );
+    res.status(200).json(rows);
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Item retreival failed" });
+    throw error;
+  } finally {
+    if (conn) {
+      await conn.release();
+    }
+  }
+};
+
+export const setFoodPaidStatus = async (req, res) => {
+  const { id } = req.body;
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    await conn.beginTransaction();
+    const result = await conn.query(
+      "update FoodOrder set status = 'PAID' where id = ?",
+      [id]
+    );
+
+    const rows = await conn.query(
+      `select count(*) cnt, bill_id from FoodOrder 
+      where bill_id  in ( select bill_id from FoodOrder where id = ?) and status != 'PAID'`,
+      [id, id]
+    );
+    let status = "PAID";
+    if (rows[0].cnt > 0) {
+      status = "PARTIAL";
+    }
+    const bill = await conn.query(
+      "update Billing set payment_status = ? where id = ?",
+      [status, rows[0].bill_id]
+    );
+    await conn.commit();
+    res.status(200).json({ success: true, message: "Item status set to PAID" });
+  } catch (error) {
+    await conn.rollback();
+    res
+      .status(500)
+      .json({ success: false, message: "setPaidStatus: Item updation failed" });
+    throw error;
+  } finally {
+    if (conn) {
+      await conn.release();
+    }
+  }
+};
+
+export const setFullFoodPaidStatus = async (req, res) => {
+  const { user_id, buy_date } = req.body;
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    conn.beginTransaction();
+    const result = await conn.query(
+      "update FoodOrder set status = 'PAID' where user_id = ? and buy_date = ?",
+      [user_id, buy_date]
+    );
+
+    const rows = await conn.query(
+      `select bill_id from FoodOrder where user_id = ? and buy_date = ?`,
+      [user_id, buy_date]
+    );
+    rows.forEach(async (row) => {
+      await conn.query("update Billing set payment_status = ? where id = ?", [
+        "PAID",
+        row.bill_id,
+      ]);
+    });
+    await conn.commit();
+    res.status(200).json({ success: true, message: "Item status set to PAID" });
+  } catch (error) {
+    await conn.rollback();
+    res
+      .status(500)
+      .json({ success: false, message: "setPaidStatus: Item updation failed" });
     throw error;
   } finally {
     if (conn) {

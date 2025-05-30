@@ -98,7 +98,7 @@ const Ward = () => {
 
   return (
     
-    <div className="flex gap-1 flex-col justify-center w-full items-center  flex-auto mt-5 mb-10 bg-blue-900 text-gray-100">
+    <div className="flex gap-1 flex-col justify-center w-7xl items-center m-1  h-[630px] bg-blue-900 text-gray-100">
       <h1 className="flex text-2xl font-bold mt-2">{wardName}</h1>
       <h1 className="flex ">Total Beds: {totalBeds}</h1>
       <h1 className="flex ">Remaining Beds: {remainingBeds}</h1>

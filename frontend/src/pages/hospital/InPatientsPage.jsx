@@ -6,6 +6,7 @@ import PatientPharmacyItems from './forms/PatientPharmacyItems';
 import AccordionContainer from '../../components/AccordionContainer';
 import PatientTests from './forms/PatientTests';
 import PatientMisc from './forms/PatientMisc';
+import FoodOrder from './forms/FoodOrder';
 
 const InPatientsPage = () => {
   const [inPatients, setInPatients] = useState([]);
@@ -36,7 +37,7 @@ const InPatientsPage = () => {
   }
 
   return (
-<div className="flex flex-col text-gray-100  min-w-7xl lg:w-5xl min-h-screen justify_center p-3 m-10 gap-2 bg-blue-900">
+<div className="flex flex-col text-gray-100  min-w-7xl lg:w-5xl h-[630px] justify_center p-3 m-1 gap-2 bg-blue-900 overflow-y-auto">
     <h1 className="text-2xl text-center fond-bold underline">Inpatients</h1>
     <div className="flex gap-2 w-full flex-wrap justify-start">
         <div className="flex flex-col">
@@ -83,6 +84,7 @@ const InPatientsPage = () => {
     {selectedPatient ?<AccordionContainer title="Medicines and other purchases"> <PatientPharmacyItems patient={selectedPatient}/> </AccordionContainer>: null}
     {selectedPatient ?<AccordionContainer title="Tests Done">  <PatientTests patient={selectedPatient}/> </AccordionContainer>: null}
     {selectedPatient ?<AccordionContainer title="Miscellaneous Items">  <PatientMisc patient={selectedPatient}/> </AccordionContainer>: null}
+    {selectedPatient ?<AccordionContainer title="Food Orders">  <FoodOrder patient={selectedPatient}/> </AccordionContainer>: null}
     
 </div>
   )

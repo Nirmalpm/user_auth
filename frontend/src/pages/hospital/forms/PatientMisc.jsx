@@ -71,7 +71,7 @@ const PatientMisc = ({patient}) => {
   const handleAddMiscs = async() =>{
     console.log(miscs)
     try {
-      const addedMiscs = await addMiscItems(patient.id,patient.ward_id,patient.doctor_id, miscs);
+      const addedMiscs = await addMiscItems(patient.id,patient.patient_code,patient.ward_id,patient.doctor_id, miscs);
       setAddedMiscs(addedMiscs);
       setCount((prev)=> prev + 1);
       toast.success("Item addition successful!");
@@ -145,9 +145,11 @@ const PatientMisc = ({patient}) => {
           </div>:null}        
         </div>        
       </div>
-      <div className="flex flex-col w-xl ">
-        <div className="flex cursor-pointer hover:text-blue-800" onClick={handleMiscs}>Added Items</div> 
-           <div className="flex cursor-pointer hover:text-blue-800" onClick={handleMiscHistory}>Show Test History</div>
+      <div className="flex flex-col w-xl ">        
+        <div className="flex w-xl justify-between">
+            <div className="flex cursor-pointer hover:text-blue-800" onClick={handleMiscs}>Added Items</div> 
+            <div className="flex cursor-pointer hover:text-blue-800" onClick={handleMiscHistory}>Show History</div>
+        </div>
         <div className="flex flex-col border-1 w-full  h-[300px]  overflow-y-auto ">
           <div className="flex bg-gray-600 w-full" >
             <div className=" border-r  w-full  whitespace-nowrap truncate pl-1 pr-1 flex justify-center">Name</div>

@@ -22,7 +22,7 @@ const Department = () => {
         fetchDepts();
     },[count]);
   return (
-    <div className="flex flex-col  justify-center items-center">
+    <div className="flex flex-col  justify-center items-center bg-gray-500">
       <h1 className="text-2xl mb-3">Add Department</h1>
       <form onSubmit={handleSubmit} className="flex justify-center items-center gap-2">
         <div>

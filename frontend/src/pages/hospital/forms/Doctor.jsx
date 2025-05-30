@@ -58,7 +58,7 @@ const Doctor = () => {
     }));
 }
   return (
-    <div className="flex flex-wrap flex-col mt-3 justify-start items-start  bg-gray-700 h-120 overflow-y-auto">
+    <div className="flex flex-wrap flex-col mt-3 justify-start items-start  bg-gray-500 h-120 overflow-y-auto">
         <div className="flex flex-wrap">
             <div className="border-r-2 border-amber-300">
                 <h1 className="text-xl mb-3 text-amber-50 p-3">Add Doctor</h1>

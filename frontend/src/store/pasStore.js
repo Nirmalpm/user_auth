@@ -278,9 +278,10 @@ export const usePasStore = create((set, get) => ({
       throw error;
     }
   },
-  addPatientConsumables: async (patient_id, items) => {
+  addPatientConsumables: async (patient_id, patient_code, items) => {
     try {
       const response = await axios.post(`${API_URL}/addPatientConsumables`, {
+        patient_code,
         patient_id,
         items,
       });
@@ -328,10 +329,11 @@ export const usePasStore = create((set, get) => ({
       throw error;
     }
   },
-  addPatientTest: async (patient_id, tests) => {
+  addPatientTest: async (patient_id, patient_code, tests) => {
     try {
       const response = await axios.post(`${API_URL}/addPatientTest`, {
         patient_id,
+        patient_code,
         tests,
       });
       return response.data;
@@ -378,10 +380,11 @@ export const usePasStore = create((set, get) => ({
       throw error;
     }
   },
-  addMiscItems: async (patient_id, ward_id, doctor_id, items) => {
+  addMiscItems: async (patient_id, patient_code, ward_id, doctor_id, items) => {
     try {
       const response = await axios.post(`${API_URL}/addMiscItems`, {
         patient_id,
+        patient_code,
         ward_id,
         doctor_id,
         items,
@@ -399,20 +402,20 @@ export const usePasStore = create((set, get) => ({
       throw error;
     }
   },
-  getBillings: async (patient_id) => {
+  getBillings: async (patient_code) => {
     try {
       const response = await axios.get(
-        `${API_URL}/getMiscBillItemTypes?patient_id=${patient_id}`
+        `${API_URL}/getMiscBillItemTypes?patient_code=${patient_code}`
       );
       return response.data;
     } catch (error) {
       throw error;
     }
   },
-  getItemsByBill: async (patient_id) => {
+  getItemsByBill: async (patient_code) => {
     try {
       const response = await axios.get(
-        `${API_URL}/getItemsByBill?patient_id=${patient_id}`
+        `${API_URL}/getItemsByBill?user_id=${patient_code}`
       );
       return response.data;
     } catch (error) {
@@ -434,6 +437,82 @@ export const usePasStore = create((set, get) => ({
       const response = await axios.get(
         `${API_URL}/getMiscItemsHistory?patient_id=${patient_id}`
       );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  payOutstandingBills: async (outstandingBills) => {
+    try {
+      const response = await axios.post(`${API_URL}/payOutstandingBills`, {
+        outstandingBills,
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getTestPatients: async (id) => {
+    try {
+      const response = await axios.get(`${API_URL}/getTestPatients?id=${id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getDeptDoctors: async (id) => {
+    try {
+      const response = await axios.get(`${API_URL}/getDeptDoctors?id=${id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  addFoodOrder: async (user_id, items) => {
+    try {
+      const response = await axios.post(`${API_URL}/addFoodOrder`, {
+        user_id,
+        items,
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getFoodOrders: async (user_id, buy_date) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/getFoodOrders?user_id=${user_id}&buy_date=${buy_date}`
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getPatientFoodOrderHistory: async (patient_code) => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/getPatientConsumablesHistory?patient_code=${patient_code}`
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  setFullFoodPaidStatus: async (user_id, buy_date) => {
+    try {
+      const response = await axios.post(`${API_URL}/setFullFoodPaidStatus`, {
+        user_id,
+        buy_date,
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  setFoodPaidStatus: async (id) => {
+    try {
+      const response = await axios.post(`${API_URL}/setFoodPaidStatus`, { id });
       return response.data;
     } catch (error) {
       throw error;

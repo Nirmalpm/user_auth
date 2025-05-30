@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 
 const OutPatientConsult = ({patient,setIsModalCompOpen,resetSelection}) => {
-   const initialState = {patient_id:patient.id,visit_date_time:'', doctor_id:'',diagnosis:'',remarks:'',prescription:'',amount:''};
+   const initialState = {patient_id:patient.id,patient_code:patient.patient_code,visit_date_time:'', doctor_id:'',diagnosis:'',remarks:'',prescription:'',amount:''};
    const {doctors,addOpConsultation} =  usePasStore();
    const [outPatientCounsult, setOutPatientCounsult] = useState(initialState);
  

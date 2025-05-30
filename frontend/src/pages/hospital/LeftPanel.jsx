@@ -13,27 +13,27 @@ const LeftPanel = () => {
     useEffect(()=>{
         const fetchNews = async () =>{
             setIsLoading(true);
-            const response = await getHealthNews(page,11);
+            const response = await getHealthNews(page,7);
             console.log(response.data)
             const {totalResults} = response.data;
             setTotal(totalResults);
             setArticles(response.data.articles);
             
-            const pages = Array.from({ length: Math.ceil(totalResults/11) }, (_, i) => i + 1);
+            const pages = Array.from({ length: Math.ceil(totalResults/15) }, (_, i) => i + 1);
             setPages(pages);
             setIsLoading(false);
         }
         fetchNews();
     },[page]);
   return (
-    <div className="flex flex-col  justify-center items-start p-3 m-2 rounded">   
+    <div className="flex flex-col  justify-center items-start m-3 rounded bg-blue-900">   
     {isLoading ? <Loader size={35}  className='size-6 animate-spin mx-auto'/> : (
       <div>
-        <h1 className="text-2xl text-blue-800">Latest in Health</h1>
-      <ul className="list-disc m-2">
+        <h1 className="text-2xl ">Latest in Health</h1>
+      <ul className="list-disc m-2 gap-2 flex flex-col">
         {
             articles && articles.map((article,ind)=>(
-                <li key={ind} className="p2 text-blue-900"><a href={article.url} target='_blank'>{article.title}</a></li>
+                <li key={ind} className="p2 hover:text-amber-500"><a href={article.url} target='_blank'>{article.title}</a></li>
             ))
         }
       </ul>

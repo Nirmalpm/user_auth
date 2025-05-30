@@ -42,7 +42,7 @@ const RightPanelScrolling = () => {
   return (
     <div
       ref={containerRef}
-      className="h-150 w-full overflow-y-auto scrollbar scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200 p-4 bg-white rounded shadow"
+      className="h-150 w-full overflow-y-auto   bg-blue-900 rounded shadow"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -51,7 +51,7 @@ const RightPanelScrolling = () => {
         {interestingStuff.map((item, index) => (
           <li
             key={index}
-            className="p-3 bg-blue-50 rounded border border-blue-200 hover:bg-blue-100 transition"
+            className="p-3 bg-gray-700 rounded border border-blue-200 hover:bg-gray-500 transition"
           >
             {item}
           </li>

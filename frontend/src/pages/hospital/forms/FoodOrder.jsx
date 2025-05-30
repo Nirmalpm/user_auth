@@ -4,13 +4,13 @@ import toast from 'react-hot-toast'
 import { X } from 'lucide-react';
 import { formatDate } from '../../../utils/date';
 
-const PatientPharmacyItems = ({patient}) => {
-  const {addPatientConsumables, getPatientConsumables, getPatientConsumablesHistory, 
-    getPharmacyItems, setItemPaidStatus,setFullPaidStatus} =  usePasStore();
+const FoodOrder = ({patient}) => {
+  const {addFoodOrder, getFoodOrders, getPatientFoodOrderHistory, 
+    getCanteenItems, setFoodPaidStatus,setFullFoodPaidStatus} =  usePasStore();
   const [items, setItems] = useState([]);
   const [purchasedItems, setPurchasedItems] = useState([]);
   const [count, setCount] = useState(0);
-  const [pharmacyItems,setPharmacyItems] = useState([]);
+  const [foodItems,setFoodItems] = useState([]);
   const [buyDate,setBuyDate] = useState(new Date().toISOString().split('T')[0]);
   const [selectedItem, setSelectedItem] = useState({});
   const [quantity, setQuantity] = useState(0);
@@ -21,10 +21,10 @@ const PatientPharmacyItems = ({patient}) => {
   useEffect(()=>{
     console.log(patient)
     const fetchItems = async ()=>{
-      const items = await getPharmacyItems();
-      const pItems = await getPatientConsumables(patient.id,buyDate);
+      const items = await getCanteenItems();
+      const pItems = await getFoodOrders(patient.patient_code,buyDate);
       setPurchasedItems(pItems);
-      setPharmacyItems(items);
+      setFoodItems(items);
     } 
      fetchItems();
     setItems([]);
@@ -36,7 +36,7 @@ const PatientPharmacyItems = ({patient}) => {
   },[items]);
 
   useEffect(()=>{
-    const sumTotal = purchasedItems.filter((item)=>item.status  !== 'PAID').reduce((acc, item) => acc + (item.price * item.quantity), 0);
+    const sumTotal = purchasedItems.filter((item)=>item.status  !== 'PAID').reduce((acc, item) => acc + (item.total_price * item.item_qty), 0);
     setPurTotal(sumTotal)
   },[purchasedItems]);
 
@@ -46,13 +46,13 @@ const PatientPharmacyItems = ({patient}) => {
       toast.error("Please select item and enter quantity");
       return;
     }
-    const itemExists = items.some(item => item.id === selectedItem.id);
+    const itemExists = items.some(item => item.item_id === selectedItem.id);
     if (itemExists) {
       toast.error("Item already added!");
       return;
     }
-    setItems((prev)=>([...prev,{item_id:selectedItem.id,name:selectedItem.name,
-      quantity,price:selectedItem.price_per_unit,total_price:(Number(selectedItem.price_per_unit) * Number(quantity))}]));
+    setItems((prev)=>([...prev,{item_id:selectedItem.id,name:selectedItem.item_name,
+      quantity,price:selectedItem.item_price,total_price:(Number(selectedItem.item_price) * Number(quantity))}]));
     setSelectedItem({});
     setQuantity(0);
     setSelectedIndex(-1);
@@ -67,14 +67,14 @@ const PatientPharmacyItems = ({patient}) => {
 
   const handleItemSelect = (e)=>{    
     const index = e.target.value;
-    const item = pharmacyItems[index];
+    const item = foodItems[index];
     setSelectedItem({...item});
     setSelectedIndex(index)
   }
 
   const handlePurchaseItems = async() =>{
     try {
-      const purchasedItems = await addPatientConsumables(patient.id,patient.patient_code, items);
+      const purchasedItems = await addFoodOrder(patient.patient_code, items);
       setPurchasedItems(purchasedItems);
       setCount((prev)=> prev + 1);
       toast.success("Items purchase successful!");
@@ -85,7 +85,7 @@ const PatientPharmacyItems = ({patient}) => {
 
   const handlePurchaseHistory = async() =>{
     try {
-      const purchasedItems = await getPatientConsumablesHistory(patient.id);
+      const purchasedItems = await getPatientFoodOrderHistory(patient.patient_code);
       setPurchasedItems(purchasedItems);
     } catch (error) {
       toast.error("Error while getting purchases: "+error.message);
@@ -94,7 +94,7 @@ const PatientPharmacyItems = ({patient}) => {
 
   const handlePurchases = async() =>{
     try {
-      const purchasedItems = await getPatientConsumables(patient.id,buyDate);
+      const purchasedItems = await getFoodOrders(patient.patient_code,buyDate);
       setPurchasedItems(purchasedItems);
     } catch (error) {
       toast.error("Error while getting purchases: "+error.message);
@@ -103,7 +103,7 @@ const PatientPharmacyItems = ({patient}) => {
 
   const handleItemPay = async(id) =>{
     try {
-      await setItemPaidStatus(id);
+      await setFoodPaidStatus(id);
       setCount((prev)=> prev + 1);
       toast.success("Item status set to PAID");
     } catch (error) {
@@ -113,7 +113,7 @@ const PatientPharmacyItems = ({patient}) => {
 
   const handleFullPay = async() =>{
     try {
-      await setFullPaidStatus(patient.id,buyDate);
+      await setFullFoodPaidStatus(patient.patient_code,buyDate);
       setCount((prev)=> prev + 1);
       toast.success("All items status set to PAID");
     } catch (error) {
@@ -130,8 +130,8 @@ const PatientPharmacyItems = ({patient}) => {
           <input type="date" value={buyDate} onChange={(e)=>setBuyDate(e.target.value)} className="bg-gray-500 p-2 rounded"/>
           <select onChange={handleItemSelect} className="bg-gray-500 p-2 rounded" value={selectedIndex}>
             <option value="-1">-Select-</option>                     
-            {pharmacyItems && pharmacyItems.map((item,index)=>(
-            <option key={item.id} value={index}>{item.name}</option>
+            {foodItems && foodItems.map((item,index)=>(
+            <option key={item.id} value={index}>{item.item_name}</option>
             ))}          
           </select>
           <input type="number" min="0" value={quantity} onChange={(e)=>setQuantity(e.target.value)} className="bg-gray-500 p-2 rounded w-20"/>
@@ -199,10 +199,10 @@ const PatientPharmacyItems = ({patient}) => {
               <div className="flex  bg-gray-400 w-full" key={item.id}>
                 <div className=" border-r  w-full  whitespace-nowrap truncate pl-1 pr-1 flex justify-center">{item.item_id}</div>
                 <div className=" border-r  w-full  whitespace-nowrap truncate pl-1 pr-1 flex justify-start" title={item.item_name}>{item.item_name}</div>
-                <div className=" border-r  w-full  whitespace-nowrap truncate pl-1 pr-1 flex justify-center">{item.quantity}</div>
+                <div className=" border-r  w-full  whitespace-nowrap truncate pl-1 pr-1 flex justify-center">{item.item_qty}</div>
                 <div className=" border-r  w-full  whitespace-nowrap truncate pl-1 pr-1 flex justify-start" title={formatDate(item.buy_date)}>{formatDate(item.buy_date)}</div>
-                <div className=" border-r  w-full  whitespace-nowrap truncate pl-1 pr-1 flex justify-center">{item.price}</div>
-                <div className=" border-r  w-full  whitespace-nowrap truncate pl-1 pr-1 flex justify-center">{item.price * item.quantity}</div>
+                <div className=" border-r  w-full  whitespace-nowrap truncate pl-1 pr-1 flex justify-center">{item.total_price}</div>
+                <div className=" border-r  w-full  whitespace-nowrap truncate pl-1 pr-1 flex justify-center">{item.total_price * item.item_qty}</div>
                 <div className={`border-r  w-full  whitespace-nowrap truncate 
                 pl-1 pr-1 flex justify-center ${item.status === 'PAID' ? `text-green-700`:`text-yellow-500`}`}>{item.status}</div>
                 <div className=" border-r  w-full  whitespace-nowrap truncate pl-1 pr-1 flex justify-center">
@@ -233,4 +233,4 @@ const PatientPharmacyItems = ({patient}) => {
   )
 }
 
-export default PatientPharmacyItems
+export default FoodOrder

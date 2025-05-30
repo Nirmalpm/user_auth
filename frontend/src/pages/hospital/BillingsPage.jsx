@@ -13,6 +13,10 @@ const BillingsPage = () => {
   const [showItems,setShowItems] = useState(false);
   const [showAll,setShowAll] = useState(false);
   const [total, setTotal] = useState(0);
+  const [itemizedBills, setItemizedBills] = useState([]);
+  const [outstandingBills, setOutstandingBills] = useState([]);
+  const {payOutstandingBills} = usePasStore();
+  const [count,setCount] = useState(0);
 
   useEffect(()=>{
       const fetchPatients = async()=>{
@@ -24,17 +28,20 @@ const BillingsPage = () => {
     },[]);
 
      useEffect(()=>{
+      console.log("Inside useeffect")
       const fetchBills = async()=>{
         if(selectedPatient){
-          const billItems = await getItemsByBill(selectedPatient.id);
+          const billItems = await getItemsByBill(selectedPatient.patient_code);
+          handleItemizedBills(billItems);
           console.log(billItems)
           setBillItems(billItems);
         }          
       }
       fetchBills();
-    },[selectedPatient,showItems]);
+    },[selectedPatient,showItems,count]);
 
   const handleSelectedPatient = (e,index, patient) =>{    
+    console.log(patient)
     setSelectedPatient(patient)   ;
     setShowItems(false);
     setShowAll(false);
@@ -48,7 +55,9 @@ const BillingsPage = () => {
 
   const handleItemsShow = (b)=>{
     setShowItems(true);
-    setShowAll(false)
+    setShowAll(false);
+    setItemizedBills([]);
+    setOutstandingBills([])
     setBill(b);
   }
 
@@ -64,9 +73,10 @@ const BillingsPage = () => {
       }else if(bill.item_type === "TST"){
         items = bill.tests.map((test) => ({item_id:test.test_id,item_name:test.test_name,status:test.status,amount:test.amount,quantity:"-",date:test.test_date}));
       }else if(bill.item_type === "OP"){
-        items = bill.op.map((op) => ({item_id:op.id,item_name:"Consultation",status:"PAID",amount:op.amount,quantity:"-",date:op.visit_date_time}));
+        items = bill.op.map((op) => ({item_id:op.id,item_name:"Consultation",status:op.status,amount:op.amount,quantity:"-",date:op.visit_date_time}));
       }else if(bill.item_type === "FD"){
-        items = [...bill.food_order];
+        items = bill.food_order.map((fd) => ({bill_no:bill.id,item_id:fd.id,item_name:fd.item_name,status:fd.status,amount:fd.total_price,
+            quantity:fd.item_qty,date:fd.buy_date,type:"FD"}));
       }
       return (
         <div className="flex flex-col w-3xl border-1 ">
@@ -93,38 +103,10 @@ const BillingsPage = () => {
   }
 
   const displayFullBill =()=>{
-    let items = [];
-    let total=0;
-     if(billItems){
-      billItems.forEach((bill)=>{
-        if(bill.item_type === "REG"){
-        items.push({bill_no:bill.id,item_name:"Registration",amount:bill.total_amount,date:bill.created_at,status:"PAID",item_id:bill.patient_id});
-        }else if(bill.item_type === "CNS"){
-          const its = bill.consumables.map((item) => ({bill_no:bill.id,item_id:item.item_id,item_name:item.item_name,
-            status:item.status,amount:item.price,quantity:item.quantity,date:item.buy_date}));
-          items.push(...its)
-        }else if(bill.item_type === "MISC"){
-           const its = bill.misc.map((item) => ({bill_no:bill.id,item_id:item.id,item_name:item.name,status:item.status,
-            amount:item.amount,quantity:"-",date:item.item_date}));
-          items.push(...its)
-        }else if(bill.item_type === "TST"){
-           const its = bill.tests.map((test) => ({bill_no:bill.id,item_id:test.test_id,item_name:test.test_name,status:test.status,
-            amount:test.amount,quantity:"-",date:test.test_date}));
-          items.push(...its)
-        }else if(bill.item_type === "OP"){
-           const its = bill.op.map((op) => ({bill_no:bill.id,item_id:op.id,item_name:"Consultation",status:"PAID",amount:op.amount,
-            quantity:"-",date:op.visit_date_time}));
-          items.push(...its)
-        }else if(bill.item_type === "FD"){
-           const its = [...bill.food_order];
-          items.push(...its)
-        }
-      })
-      const sumTotal = items.filter((item)=> item.status !== 'PAID').reduce((acc, test) => acc + Number(test.amount), 0);
-      
+    if(itemizedBills){
       return (
         <div className="flex flex-col w-3xl border-1 ">
-          <div className="flex justify-end bg-gray-500 text-yellow-100 pr-2 ">Total Outstanding: {sumTotal}</div>
+          <div className="flex justify-end bg-gray-500 text-yellow-100 pr-2 ">Total Outstanding: {total}</div>
           <div className="h-[400px] overflow-y-auto">
           <div className="flex w-full border-1 justify-center p-1 bg-gray-700 sticky top-0">
             <div className="w-50 ">Bill#</div>
@@ -134,7 +116,7 @@ const BillingsPage = () => {
             <div className=" flex w-full justify-start">Amount</div>
             <div className=" flex w-full justify-start">Paid Status</div>
           </div>
-          {items && items.map((item)=>(
+          {itemizedBills && itemizedBills.map((item)=>(
           <div className={`flex w-full border-1 justify-center p-1 bg-gray-500 `}>
             <div className="w-50 ">{item.bill_no}</div>
             <div className=" flex w-full justify-start flex-no">{formatDate(item.date)}</div>
@@ -151,10 +133,72 @@ const BillingsPage = () => {
     }
   }
 
+  const handleItemizedBills = (billItems)=>{
+    let items = [];
+     if(billItems){
+      billItems.forEach((bill)=>{
+        if(bill.item_type === "REG"){
+        items.push({bill_no:bill.id,item_name:"Registration",amount:bill.total_amount,date:bill.created_at,status:"PAID",item_id:bill.patient_id});
+        }else if(bill.item_type === "CNS"){
+          const its = bill.consumables.map((item) => ({bill_no:bill.id,item_id:item.item_id,item_name:item.item_name,
+            status:item.status,amount:item.price,quantity:item.quantity,date:item.buy_date,type:"CNS"}));
+          items.push(...its)
+        }else if(bill.item_type === "MISC"){
+           const its = bill.misc.map((item) => ({bill_no:bill.id,item_id:item.id,item_name:item.name,status:item.status,
+            amount:item.amount,quantity:"-",date:item.item_date,type:"MISC"}));
+          items.push(...its)
+        }else if(bill.item_type === "TST"){
+           const its = bill.tests.map((test) => ({bill_no:bill.id,item_id:test.test_id,item_name:test.test_name,status:test.status,
+            amount:test.amount,quantity:"-",date:test.test_date,type:"TST"}));
+          items.push(...its)
+        }else if(bill.item_type === "OP"){
+           const its = bill.op.map((op) => ({bill_no:bill.id,item_id:op.id,item_name:"Consultation",status:op.status,amount:op.amount,
+            quantity:"-",date:op.visit_date_time,type:"OP"}));
+          items.push(...its)
+        }else if(bill.item_type === "FD"){
+           const its = bill.food_order.map((fd) => ({bill_no:bill.id,item_id:fd.id,item_name:fd.item_name,status:fd.status,amount:fd.total_price,
+            quantity:fd.item_qty,date:fd.buy_date,type:"FD"}));
+          items.push(...its)
+        }
+      })      
+    }
+    const outStandingTotal = items.filter((item)=> item.status !== 'PAID').reduce((acc, test) => acc + Number(test.amount), 0);
+    setItemizedBills(items);
+   const billIds = [];
+  const outStandingBills = items
+    .filter((bill) => bill.status !== 'PAID')
+    .filter((bill) => {
+      if (!billIds.includes(bill.bill_no)) {
+        billIds.push(bill.bill_no);
+        return true;
+      }
+      return false;
+    })
+    .map((bill) => ({
+      bill_id: bill.bill_no,
+      item_type: bill.type
+    }));
+
+    setOutstandingBills(outStandingBills)
+    setTotal(outStandingTotal);
+  }
+
+  const handleShowItemizedBills = ()=>{
+    setShowAll(true);
+    setShowItems(false);    
+  }
+
+  const handlePayOutstanding = async() =>{
+    console.log(outstandingBills)
+   await payOutstandingBills(outstandingBills);
+   setCount(prev => prev + 1);
+  }
+
   const handleReset = () =>{
     setSelectedPatient(null);
     setShowAll(false);
-    setShowItems(false)
+    setShowItems(false);
+    setItemizedBills([]);
   }
 
   return (
@@ -204,8 +248,8 @@ const BillingsPage = () => {
       </div>  
       {billItems && billItems.length > 0 ? 
         <div className="flex w-full justify-center gap-2">
-        <button className="w-50 bg-amber-500 hover:bg-amber-400 cursor-pointer" onClick={()=>{setShowAll(true);setShowItems(false)}}>Show Itemized Bills</button>
-        <button className="w-50 bg-amber-500 hover:bg-amber-400 cursor-pointer" onClick={()=>{setShowAll(true);setShowItems(false)}}>Pay Outstanding</button>
+        <button className="w-50 bg-amber-500 hover:bg-amber-400 cursor-pointer" onClick={handleShowItemizedBills}>Show Itemized Bills</button>
+        {outstandingBills.length > 0 ? <button className="w-50 bg-amber-500 hover:bg-amber-400 cursor-pointer" onClick={handlePayOutstanding}>Pay Outstanding</button>:null}
       </div> : null}
       {billItems && billItems.length > 0? 
       <div className="flex gap-2 w-full flex-wrap justify-start">  
@@ -217,11 +261,11 @@ const BillingsPage = () => {
             </div>  
             {
               billItems && billItems.map((b)=>(
-                <div className="flex w-md border-1  justify-between  p-1  bg-gray-500 cursor-pointer" onClick={()=>handleItemsShow(b)}>
+                <div className="flex w-md border-1  justify-between  p-1  bg-gray-500 cursor-pointer" onClick={()=>handleItemsShow(b)} key={b.id}>
                   <div className=" flex w-full justify-start">{b.id}</div>
                   <div className=" flex w-full justify-start">{b.item_type =="MISC" ? 
                   "Miscellaneous" : b.item_type =="CNS" ? 
-                  "Consumables" : b.item_type =="REG" ? 
+                  "Consumables" : b.item_type =="REG" ?  
                   "Registration" :b.item_type =="TST" ?
                   "Tests":b.item_type}
                   </div>
@@ -232,7 +276,7 @@ const BillingsPage = () => {
           </div>   
           
           {showItems ? displayBill(): null }  
-          {showAll ? displayFullBill(): null }             
+          {itemizedBills.length > 0 && showAll ? displayFullBill(): null }             
       </div>     :null}   
     </div>
 </div>

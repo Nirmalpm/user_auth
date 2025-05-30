@@ -4,12 +4,12 @@ import RightPanel from './RightPanel'
 
 const Home = () => {
   return (
-    <div className="flex flex-wrap mt-5  w-full gap-2 h-full overflow-y-auto justify-center">  
+    <div className="flex   w-7xl gap-2 overflow-y-auto justify-between bg-blue-900 text-gray-100 m-1 p-3">  
        {/* Left Panel */}
-      <div className="flex border-1 border-gray-400 flex-col min-w-[220px] md:w-1/5 p-3 h-150 overflow-y-auto scrollbar-thin scrollbar-track-gray-200 scrollbar-thumb-blue-600">
+      <div className="flex border-1 md:w-1/3 border-gray-400 flex-col  h-150 overflow-y-auto scrollbar-thin scrollbar-track-gray-200 scrollbar-thumb-blue-600">
       <LeftPanel />
       </div>
-      <div className="flex text-2xl max-w-5xl flex-wrap w-3/7">
+      <div className="flex text-2xl max-w-5xl flex-wrap w-3/4 bg-blue-900 justify-center items-center p-5">
       <p className="font-thin">Welcome to Pro-Health Life Care Hospital, a state-of-the-art multi-specialty healthcare institution 
         committed to delivering exceptional medical care with compassion and integrity.
         Situated in the heart of the city, Pro-Health Life Care stands as a beacon of hope and healing 
@@ -19,7 +19,7 @@ const Home = () => {
           
      </div>
      {/* Right Panel */}
-      <div className="flex flex-col min-w-[250px] md:w-1/5 p-3  h-150">
+      <div className="flex flex-col  md:w-1/4 h-150 pl-1 pr-1">
       <RightPanel />
       </div>
     </div>

@@ -48,9 +48,9 @@ import {UserCog ,Home,Layers,TestTube,Bed, UserCheck, Receipt, ArrowLeft,ChefHat
 
     <div className="dropdown w-full justify-center md:w-auto flex p-2 border-b-1 sm:border-b-1 md:border-0">
     <div className={`flex flex-col items-center gap-2 ${isDeptActive ? 'text-amber-500 font-bold' : 'text-gray-100'}`}><Layers size={25}/> Departments</div>
-    <div className="dropdown-menu h-100 overflow-y-auto flex p-2">
+    <div className="dropdown-menu h-100 overflow-y-auto flex p-2 ">
       {depts && depts.map((dept)=>(
-        <NavLink to="dept" key={dept.id} className=" text-gray-800 hover:bg-gray-100 border-b-2 border-b-gray-300">{dept.name}</NavLink>
+        <NavLink to={`dept/${dept.id}`} key={dept.id} className=" text-gray-800 hover:bg-gray-100 border-b-2 border-b-gray-300">{dept.name}</NavLink>
       ))}
     </div>
     </div>

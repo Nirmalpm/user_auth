@@ -33,6 +33,14 @@ import {
   addMiscItems,
   getMiscItems,
   getMiscItemsHistory,
+  payOutstandingBills,
+  getTestPatients,
+  getDeptDoctors,
+  addFoodOrder,
+  getFoodOrders,
+  getPatientFoodOrderHistory,
+  setFoodPaidStatus,
+  setFullFoodPaidStatus,
 } from "../controllers/pas.controller.js";
 
 import {
@@ -115,4 +123,12 @@ router.get("/getItemsByBill", getItemsByBill);
 router.post("/addMiscItems", addMiscItems);
 router.get("/getMiscItems", getMiscItems);
 router.get("/getMiscItemsHistory", getMiscItemsHistory);
+router.post("/payOutstandingBills", payOutstandingBills);
+router.get("/getTestPatients", getTestPatients);
+router.get("/getDeptDoctors", getDeptDoctors);
+router.post("/addFoodOrder", addFoodOrder);
+router.get("/getFoodOrders", getFoodOrders);
+router.get("/getPatientFoodOrderHistory", getPatientFoodOrderHistory);
+router.post("/setFoodPaidStatus", setFoodPaidStatus);
+router.post("/setFullFoodPaidStatus", setFullFoodPaidStatus);
 export default router;

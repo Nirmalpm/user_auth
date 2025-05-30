@@ -71,7 +71,7 @@ const PatientTests = ({patient}) => {
   const handleAddTests = async() =>{
     console.log(tests)
     try {
-      const doneTests = await addPatientTest(patient.id, tests);
+      const doneTests = await addPatientTest(patient.id,patient.patient_code, tests);
       setDoneTests(doneTests);
       setCount((prev)=> prev + 1);
       toast.success("Test added to patient successful!");
@@ -167,9 +167,11 @@ const PatientTests = ({patient}) => {
           </div>:null}        
         </div>        
       </div>
-      <div className="flex flex-col w-xl ">
-        <div className="flex cursor-pointer hover:text-blue-800" onClick={handleTests}>Tests Done</div> 
+      <div className="flex flex-col w-xl ">       
+        <div className="flex w-xl justify-between" >
+           <div className="flex cursor-pointer hover:text-blue-800" onClick={handleTests}>Tests Done</div> 
            <div className="flex cursor-pointer hover:text-blue-800" onClick={handleTestHistory}>Show Test History</div>
+        </div>
         <div className="flex flex-col border-1 w-full  h-[300px]  overflow-y-auto ">
           <div className="flex bg-gray-600 w-full" >
             <div className=" border-r  w-full  whitespace-nowrap truncate pl-1 pr-1 flex justify-center">Test Id</div>

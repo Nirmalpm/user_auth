@@ -35,7 +35,7 @@ const OutPatientsPage = () => {
   }
 
   return (
-<div className="flex flex-col text-gray-100  min-w-7xl lg:w-5xl min-h-screen justify_center p-3 m-10 gap-2 bg-blue-900">
+<div className="flex flex-col text-gray-100  min-w-7xl lg:w-5xl h-[630px] justify_center p-3 m-1 gap-2 bg-blue-900 overflow-y-auto">
     <h1 className="text-2xl text-center fond-bold underline">Outpatients</h1>
     <div className="flex gap-2 w-full flex-wrap justify-start">
         <div className="flex flex-col">

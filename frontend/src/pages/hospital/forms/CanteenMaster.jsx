@@ -35,7 +35,7 @@ const CanteenMaster = () => {
         fetchItems();
     },[count]);
   return (
-    <div className="flex flex-col  justify-center items-center">
+    <div className="flex flex-col  justify-center items-center  bg-gray-500">
       <h1 className="text-2xl mb-3">Add Item</h1>
       <form onSubmit={handleSubmit} className="flex flex-col justify-center items-center gap-1 p-2">
         <div>

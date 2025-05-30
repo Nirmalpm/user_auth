@@ -20,7 +20,7 @@ const PatientsList = () => {
   },[regToggler]);
   
   return (
-    <div className="flex  min-w-7xl w-7xl  gap-2 justify-start  m-5 bg-blue-900 p-3">
+    <div className="flex  min-w-7xl w-7xl  gap-2 justify-start  m-1 bg-blue-900 p-3 h-[630px]">
       <PatientRegistration setRegToggler={setRegToggler}/>
       <div>
       {patients && patients.length > 0 ? <OutPatients patients={patients}/>: (
